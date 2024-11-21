@@ -11,6 +11,7 @@ public class ChatClientGUI extends JFrame {
     private JTextArea messageArea;
     private JTextField textField;
     private ChatClient client;
+    private JButton exitButton;
 
     public ChatClientGUI() {
         super("Chat Application");
@@ -29,6 +30,14 @@ public class ChatClientGUI extends JFrame {
             }
         });
         add(textField, BorderLayout.SOUTH);
+
+        // Initialize the exit button
+        exitButton = new JButton("Exit");
+        exitButton.addActionListener(e -> System.exit(0)); // Exit the application
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(textField, BorderLayout.CENTER);
+        bottomPanel.add(exitButton, BorderLayout.EAST);
+        add(bottomPanel, BorderLayout.SOUTH);
 
         // Initialize and start the ChatClient
         try {
