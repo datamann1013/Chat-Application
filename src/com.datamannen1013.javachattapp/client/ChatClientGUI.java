@@ -12,6 +12,7 @@ public class ChatClientGUI extends JFrame {
     private JTextField textField;
     private ChatClient client;
     private JButton exitButton;
+    private String name;
 
     public ChatClientGUI() {
         super("Chat Application");
@@ -33,7 +34,19 @@ public class ChatClientGUI extends JFrame {
 
         // Initialize the exit button
         exitButton = new JButton("Exit");
-        exitButton.addActionListener(e -> System.exit(0)); // Exit the application
+        exitButton.addActionListener(e -> {// Send a departure message to the server
+            String departureMessage = name + " has left the chat.";
+            client.sendMessage(departureMessage);
+
+            // Delay to ensure the message is sent before exiting
+            try {
+                Thread.sleep(1000); // Wait for 1 second to ensure message is sent
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+            }
+
+            // Exit the application
+            System.exit(0);}); // Exit the application
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(textField, BorderLayout.CENTER);
         bottomPanel.add(exitButton, BorderLayout.EAST);
@@ -50,7 +63,7 @@ public class ChatClientGUI extends JFrame {
             System.exit(1);
         }
         // Prompt for user name
-        String name = JOptionPane.showInputDialog(this, "Enter your name:", "Name Entry", JOptionPane.PLAIN_MESSAGE);
+        name = JOptionPane.showInputDialog(this, "Enter your name:", "Name Entry", JOptionPane.PLAIN_MESSAGE);
         this.setTitle("Chat Application - " + name); // Set window title to include user name
 
         // Modify actionPerformed to include the user name and time stamp
