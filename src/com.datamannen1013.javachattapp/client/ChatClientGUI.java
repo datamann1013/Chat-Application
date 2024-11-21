@@ -19,21 +19,43 @@ public class ChatClientGUI extends JFrame {
         setSize(400, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        // Styling variables
+        Color backgroundColor = new Color(240, 240, 240); // Light gray background
+        Color buttonColor = new Color(75, 75, 75); // Darker gray for buttons
+        Color textColor = new Color(50, 50, 50); // Almost black for text
+        Font textFont = new Font("Arial", Font.PLAIN, 14);
+        Font buttonFont = new Font("Arial", Font.BOLD, 12);
+
+        // Apply styles to the message area
         messageArea = new JTextArea();
         messageArea.setEditable(false);
-        add(new JScrollPane(messageArea), BorderLayout.CENTER);
+        messageArea.setBackground(backgroundColor);
+        messageArea.setForeground(textColor);
+        messageArea.setFont(textFont);
+        JScrollPane scrollPane = new JScrollPane(messageArea);
+        add(scrollPane, BorderLayout.CENTER);
 
         textField = new JTextField();
+        textField.setFont(textFont);
+        textField.setForeground(textColor);
+        textField.setBackground(backgroundColor);
+
         textField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                client.sendMessage(textField.getText());
+                String message = "[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] " + name + ": "
+                        + textField.getText();
+                client.sendMessage(message);
                 textField.setText("");
             }
+
         });
         add(textField, BorderLayout.SOUTH);
 
         // Initialize the exit button
         exitButton = new JButton("Exit");
+        exitButton.setFont(buttonFont);
+        exitButton.setBackground(buttonColor);
+        exitButton.setForeground(Color.WHITE);
         exitButton.addActionListener(e -> {// Send a departure message to the server
             String departureMessage = name + " has left the chat.";
             client.sendMessage(departureMessage);
@@ -65,6 +87,7 @@ public class ChatClientGUI extends JFrame {
         // Prompt for user name
         name = JOptionPane.showInputDialog(this, "Enter your name:", "Name Entry", JOptionPane.PLAIN_MESSAGE);
         this.setTitle("Chat Application - " + name); // Set window title to include user name
+        this.setTitle("Chat Application - " + name);
 
         // Modify actionPerformed to include the user name and time stamp
         textField.addActionListener(e -> {
