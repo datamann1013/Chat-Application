@@ -42,10 +42,12 @@ public class ChatClientGUI extends JFrame {
 
         textField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String message = "[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] " + name + ": "
-                        + textField.getText();
-                client.sendMessage(message);
-                textField.setText("");
+                String message = textField.getText();
+                if (!message.isEmpty()) {
+                    String formattedMessage = "[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] " + name + ": " + message;
+                    client.sendMessage(formattedMessage);
+                    textField.setText("");
+                }
             }
 
         });
