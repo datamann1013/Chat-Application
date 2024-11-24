@@ -109,25 +109,23 @@ public class ChatClientGUI extends JFrame {
 
     private void onMessageReceived(String message) {
         SwingUtilities.invokeLater(() -> {
-            if (message.startsWith("User joined: ")) {
+            System.out.println("Received message: " + message);
+            if (message.startsWith("/join ")) {
                 // Handle user join message
-                String userName = message.substring(13);
-                onlineUsersTextArea.append(userName + "\n");
-                client.userJoined(userName);
-            } else if (message.startsWith("User left: ")) {
-                // Handle user leave message
-                String userName = message.substring(11);
-                onlineUsersTextArea.setText(onlineUsersTextArea.getText().replace(userName + "\n", ""));
-                client.userLeft(userName);
-            } else if (message.startsWith("Online users: ")) {
-                // Handle online users message
-                String onlineUsers = message.substring(13);
-                String[] users = onlineUsers.split(",");
-                StringBuilder sb = new StringBuilder();
-                for (String user : users) {
-                    sb.append(user).append("\n");
+                String userName = message.substring(6);
+                if (!onlineUsersTextArea.getText().contains(userName) && !userName.equals("null")) {
+                    onlineUsersTextArea.append(userName + "\n");
                 }
-                onlineUsersTextArea.setText(sb.toString());
+            } else if (message.startsWith("/onlineusers ")) {
+                // Handle online users message
+                String onlineUsers = message.substring(11);
+                String[] users = onlineUsers.split(",");
+                onlineUsersTextArea.setText(""); // Clear the text area
+                for (String user : users) {
+                    if (!user.isEmpty() && !user.equals("null")) {
+                        onlineUsersTextArea.append(user + "\n");
+                    }
+                }
             } else {
                 messageArea.append(message + "\n");
             }

@@ -8,17 +8,34 @@ import java.net.Socket;
 import java.util.List;
 
 public class ClientHandler implements Runnable {
-    public char[] userName;
+    public String userName;
     private Socket clientSocket;
     private List<ClientHandler> clients;
     public PrintWriter out;
     private BufferedReader in;
+    private PrintWriter writer;
 
-    public ClientHandler(Socket socket, List<ClientHandler> clients) throws IOException {
+    public ClientHandler(Socket socket, List<ClientHandler> clients, String message) throws IOException {
         this.clientSocket = socket;
         this.clients = clients;
+        this.userName = message.replace("/join ", "");
         this.out = new PrintWriter(clientSocket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        String onlineUsersMessage = "/onlineusers " + getOnlineUsers();
+        ChatServer.broadcastMessage(onlineUsersMessage);
+        out = new PrintWriter(clientSocket.getOutputStream(), true);
+    }
+
+    private String getOnlineUsers() {
+        StringBuilder onlineUsers = new StringBuilder();
+        for (ClientHandler client : clients) {
+            onlineUsers.append(client.getUserName()).append(",");
+        }
+        return onlineUsers.toString();
+    }
+
+    private String getUserName() {
+        return this.userName;
     }
 
     public void run() {
@@ -41,5 +58,13 @@ public class ClientHandler implements Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void sendMessage(String message) {
+            try {
+                out.println(message);
+            } catch (Exception e) {
+                System.out.println("Error sending message: " + e.getMessage());
+            }
     }
 }

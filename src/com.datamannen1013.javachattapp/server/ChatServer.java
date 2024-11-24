@@ -12,14 +12,21 @@ public class ChatServer {
         ServerSocket serverSocket = new ServerSocket(5000);
         System.out.println("Server started. Waiting for clients...");
 
+
         while (true) {
             Socket clientSocket = serverSocket.accept();
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             System.out.println("Client connected: " + clientSocket);
 
             // Spawn a new thread for each client
-            ClientHandler clientThread = new ClientHandler(clientSocket, clients);
+            ClientHandler clientThread = new ClientHandler(clientSocket, clients, in.readLine());
             clients.add(clientThread);
             new Thread(clientThread).start();
+        }
+    }
+    public static void broadcastMessage(String message) {
+        for (ClientHandler client : clients) {
+            client.sendMessage(message);
         }
     }
 }
