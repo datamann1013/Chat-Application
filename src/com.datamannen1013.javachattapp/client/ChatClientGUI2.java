@@ -11,6 +11,7 @@ public class ChatClientGUI2 extends JFrame {
     private JTextArea messageArea;
     private JTextField textField;
     private ChatClient client;
+    private String name;
 
     public ChatClientGUI2() {
         super("Chat Application");
@@ -32,7 +33,7 @@ public class ChatClientGUI2 extends JFrame {
 
         // Initialize and start the ChatClient
         try {
-            this.client = new ChatClient("127.0.0.1", 5000, this::onMessageReceived);
+            this.client = new ChatClient("127.0.0.1", 5000, name, this::onMessageReceived);
             client.startClient();
         } catch (IOException e) {
             e.printStackTrace();
