@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.Consumer;
 
 public class ChatClientGUI extends JFrame {
     private JTextArea messageArea;
@@ -19,6 +20,11 @@ public class ChatClientGUI extends JFrame {
         super("Chat Application");
         setSize(400, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        String serverAddress = "127.0.0.1";
+        int serverPort = 5000;
+        String userName = name;
+        Consumer<String> onMessageReceived = this::onMessageReceived;
 
         // Styling variables
         Color backgroundColor = new Color(240, 240, 240); // Light gray background
@@ -47,7 +53,7 @@ public class ChatClientGUI extends JFrame {
         onlineUsersPanel.setBorder(BorderFactory.createTitledBorder("Online Users"));
 
         // Create a text area to display online users
-        JTextArea onlineUsersTextArea = new JTextArea(10, 10);
+        onlineUsersTextArea = new JTextArea(10, 10);
         onlineUsersTextArea.setEditable(false);
         onlineUsersTextArea.setBackground(backgroundColor);
         onlineUsersTextArea.setForeground(textColor);
@@ -57,16 +63,7 @@ public class ChatClientGUI extends JFrame {
         // Add the online users panel to the right side of the window
         add(onlineUsersPanel, BorderLayout.EAST);
 
-        textField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String message = textField.getText();
-                if (!message.isEmpty()) {
-                    String formattedMessage = "[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] " + name + ": " + message;
-                    client.sendMessage(formattedMessage);
-                    textField.setText("");
-                }
-            }
-        });
+
         add(textField, BorderLayout.SOUTH);
 
         // Initialize the exit button
@@ -92,27 +89,15 @@ public class ChatClientGUI extends JFrame {
         bottomPanel.add(exitButton, BorderLayout.EAST);
         add(bottomPanel, BorderLayout.SOUTH);
 
-        // Initialize and start the ChatClient
-        try {
-            this.client = new ChatClient("127.0.0.1", 5000, name, this::onMessageReceived);
-            client.startClient();
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error connecting to the server", "Connection error",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
-        }
+
         // Prompt for user name
         name = JOptionPane.showInputDialog(this, "Enter your name:", "Name Entry", JOptionPane.PLAIN_MESSAGE);
-        this.setTitle("Chat Application - " + name); // Set window title to include user name
-        try {
-            this.client = new ChatClient("127.0.0.1", 5000, name, this::onMessageReceived);
-            client.startClient();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error connecting to the server", "Connection error",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
+        if (name != null && !name.isEmpty()) {
+            createClient("127.0.0.1", 5000, name, this::onMessageReceived);
         }
+        this.setTitle("Chat Application - " + name); // Set window title to include user name
+        this.client = new ChatClient(serverAddress, serverPort, userName, onMessageReceived);
+        client.startClient();
 
         // Modify actionPerformed to include the user name and time stamp
         textField.addActionListener(e -> {
@@ -123,23 +108,36 @@ public class ChatClientGUI extends JFrame {
     }
 
     private void onMessageReceived(String message) {
-        final JTextArea onlineUsersTextArea = ChatClientGUI.this.onlineUsersTextArea;
-        String textToAppend = "";
-        if (message.startsWith("User joined: ")) {
-            // Handle user join message
-            String userName = message.substring(13);
-            textToAppend = userName + "\n";
-        } else if (message.startsWith("User left: ")) {
-            // Handle user leave message
-            String userName = message.substring(11);
-            textToAppend = onlineUsersTextArea.getText().replace(userName + "\n", "");
-        } else {
-            textToAppend = message + "\n";
-        }
-        String finalTextToAppend = textToAppend;
         SwingUtilities.invokeLater(() -> {
-            onlineUsersTextArea.setText(finalTextToAppend);
+            if (message.startsWith("User joined: ")) {
+                // Handle user join message
+                String userName = message.substring(13);
+                onlineUsersTextArea.append(userName + "\n");
+                client.userJoined(userName);
+            } else if (message.startsWith("User left: ")) {
+                // Handle user leave message
+                String userName = message.substring(11);
+                onlineUsersTextArea.setText(onlineUsersTextArea.getText().replace(userName + "\n", ""));
+                client.userLeft(userName);
+            } else if (message.startsWith("Online users: ")) {
+                // Handle online users message
+                String onlineUsers = message.substring(13);
+                String[] users = onlineUsers.split(",");
+                StringBuilder sb = new StringBuilder();
+                for (String user : users) {
+                    sb.append(user).append("\n");
+                }
+                onlineUsersTextArea.setText(sb.toString());
+            } else {
+                messageArea.append(message + "\n");
+            }
         });
+    }
+
+    private void createClient(String serverAddress, int serverPort, String name, Consumer<String> onMessageReceived) {
+        this.client = new ChatClient(serverAddress, serverPort, name, onMessageReceived);
+        client.startClient();
+        onlineUsersTextArea.append(name + "\n");
     }
 
     public static void main(String[] args) {

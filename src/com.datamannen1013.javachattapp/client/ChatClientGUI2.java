@@ -6,12 +6,18 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.Consumer;
 
 public class ChatClientGUI2 extends JFrame {
     private JTextArea messageArea;
     private JTextField textField;
     private ChatClient client;
     private String name;
+
+    String serverAddress = "127.0.0.1";
+    int serverPort = 5000;
+    String userName = name;
+    Consumer<String> onMessageReceived = this::onMessageReceived;
 
     public ChatClientGUI2() {
         super("Chat Application");
@@ -32,15 +38,8 @@ public class ChatClientGUI2 extends JFrame {
         add(textField, BorderLayout.SOUTH);
 
         // Initialize and start the ChatClient
-        try {
-            this.client = new ChatClient("127.0.0.1", 5000, name, this::onMessageReceived);
-            client.startClient();
-        } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error connecting to the server", "Connection error",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
-        }
+        this.client = new ChatClient(serverAddress, serverPort, userName, onMessageReceived);
+        client.startClient();
         // Prompt for user name
         String name = JOptionPane.showInputDialog(this, "Enter your name:", "Name Entry", JOptionPane.PLAIN_MESSAGE);
         this.setTitle("Chat Application - " + name); // Set window title to include user name
