@@ -74,4 +74,14 @@ Welcome to my first Java Chat Application! This is a simple, real-time chat syst
 - Add user authentication (e.g., username and password).
 - Enable multiple chat rooms.
 - Improve error handling for server-client disconnections.
+- Improve error handling for client side
+- Thread safety (background threads for sending messages, ex. SwingWorker)
+- Constant UI updates
+- User innput validation (Special characters ot length constraints)
+- User confirmation to leave the application
+- Improve mesasge formatting (Colors for timestamps or names, bold, italian etc.)
+- Graceful shutdown
+- Application customisation for the user
+
+- Optimisation of code
 
