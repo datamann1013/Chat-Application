@@ -109,7 +109,7 @@ public class ChatClientGUI2 extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 // Confirmation dialog before exiting
-                int confirm = JOptionPane.showConfirmDialog(ChatClientGUI.this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
+                int confirm = JOptionPane.showConfirmDialog(ChatClientGUI2.this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
                     String departureMessage = name + " has left the chat."; // Departure message
                     client.sendMessage(departureMessage); // Send departure message to the server
