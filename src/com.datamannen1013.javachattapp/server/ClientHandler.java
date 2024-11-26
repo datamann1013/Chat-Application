@@ -13,15 +13,18 @@ public class ClientHandler implements Runnable {
     private List<ClientHandler> clients;
     public PrintWriter out;
     private BufferedReader in;
-    private PrintWriter writer;
 
     public ClientHandler(Socket socket, List<ClientHandler> clients, String message) throws IOException {
         this.clientSocket = socket;
         this.clients = clients;
-        this.userName = message.replace("/join ", "");
+        this.userName = message.replace("/join", "");
         this.out = new PrintWriter(clientSocket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        clients.add(this);
+
+        // Send current online users
         String onlineUsersMessage = "/onlineusers " + getOnlineUsers();
+        System.out.println(onlineUsersMessage);
         ChatServer.broadcastMessage(onlineUsersMessage);
         out = new PrintWriter(clientSocket.getOutputStream(), true);
     }

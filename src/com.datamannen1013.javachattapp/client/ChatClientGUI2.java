@@ -14,7 +14,6 @@ public class ChatClientGUI2 extends JFrame {
     private static final int SERVER_PORT = 5000;
 
     // Command prefixes for handling specific message types
-    private static final String JOIN_MESSAGE_PREFIX = "/join ";
     private static final String ONLINE_USERS_MESSAGE_PREFIX = "/onlineusers ";
 
     // GUI components
@@ -162,24 +161,10 @@ public class ChatClientGUI2 extends JFrame {
 
     // Method to handle incoming messages
     private void handleMessage(String message) {
-        if (message.startsWith(JOIN_MESSAGE_PREFIX)) { // Check if the message is a join message
-            handleJoinMessage(message); // Handle the join message
-        } else if (message.startsWith(ONLINE_USERS_MESSAGE_PREFIX)) { // Check if the message is about online users
+        if (message.startsWith(ONLINE_USERS_MESSAGE_PREFIX)) { // Check if the message is about online users
             handleOnlineUsersMessage(message); // Handle the online users message
         } else {
             messageArea.append(message + "\n"); // Append the message to the message area
-        }
-    }
-
-    // Method to handle join messages received from the server
-    private void handleJoinMessage(String message) {
-        // Extract the username from the message by removing the JOIN_MESSAGE_PREFIX
-        String userName = message.substring(JOIN_MESSAGE_PREFIX.length());
-
-        // Check if the username is not already in the online users text area and is not "null"
-        if (!onlineUsersTextArea.getText().contains(userName) && !userName.equals("null")) {
-            // Append the new user's name to the online users text area
-            onlineUsersTextArea.append(userName + "\n");
         }
     }
 
@@ -203,7 +188,6 @@ public class ChatClientGUI2 extends JFrame {
             }
         }
     }
-
 
     // Main method to launch the application
     public static void main(String[] args) {

@@ -20,7 +20,6 @@ public class ChatServer {
 
             // Spawn a new thread for each client
             ClientHandler clientThread = new ClientHandler(clientSocket, clients, in.readLine());
-            clients.add(clientThread);
             new Thread(clientThread).start();
         }
     }
