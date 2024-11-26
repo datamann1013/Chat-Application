@@ -64,24 +64,18 @@ Welcome to my first Java Chat Application! This is a simple, real-time chat syst
 ---
 
 ## Known issues / Improvements to be made
-
-
-- The server does not currently handle user authentication.
-- If the server disconnects, the clients may not recover gracefully.
-- Messages are broadcast to all users without private messaging support.
-
-- Implement private messaging.
-- Add user authentication (e.g., username and password).
-- Enable multiple chat rooms.
-- Improve error handling for server-client disconnections.
-- Improve error handling for client side
-- Thread safety (background threads for sending messages, ex. SwingWorker)
-- Constant UI updates
-- User innput validation (Special characters ot length constraints)
-- User confirmation to leave the application
-- Improve mesasge formatting (Colors for timestamps or names, bold, italian etc.)
-- Graceful shutdown
-- Application customisation for the user
-
-- Optimisation of code
-
+| Theme                     | Action                                                                                                                                    |
+|---------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| User Confirmation on Exit | Add a confirmation prompt for users when they attempt to leave the application.                                                           |
+| Application Customization | Allow users to customize their application experience (e.g., themes, fonts).                                                              |
+| User Input Validation     | Validate user inputs to prevent special characters and enforce length constraints for usernames and messages.                             |
+| Multiple Chat Rooms       | Enable the creation and management of multiple chat rooms for users to join.                                                              |
+| User Authentication       | Implement a secure system for user authentication, including username and password management.                                            |
+| Constant UI Updates       | Implement a system for constant updates to the UI to reflect real-time changes and messages.                                              |
+| Message Formatting        | Improve message formatting to include styles such as colors for timestamps, bold or italic text for names, etc.                           |
+| Private Messaging         | Develop a feature for private messaging between users.                                                                                    |
+| Graceful Shutdown         | Implement a mechanism for graceful shutdown of the application to ensure all processes are completed properly.                            |
+| Code Optimization         | Review and optimize the code for better performance and maintainability.                                                                  |
+| Error Handling            | Improve error handling for server-client disconnections to ensure clients can recover gracefully.                                         |
+| Error Handling            | Enhance error handling on the client side to manage unexpected issues more effectively.                                                   |
+| Thread Safety             | Ensure thread safety in the application, particularly for background tasks like sending messages using SwingWorker or similar constructs. |

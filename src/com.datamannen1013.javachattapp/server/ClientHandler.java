@@ -53,6 +53,10 @@ public class ClientHandler implements Runnable {
         try {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
+                if (inputLine.endsWith(" has left the chat.")) {
+                    // Handle client disconnection
+                    disconnect();
+                }
                 broadcastMessage(inputLine);
             }
         } catch (IOException e) {
