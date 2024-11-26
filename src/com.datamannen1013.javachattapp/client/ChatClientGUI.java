@@ -10,8 +10,8 @@ import java.util.function.Consumer;
 public class ChatClientGUI extends JFrame {
 
     // Constants for server address and port
-    private static final String SERVER_ADDRESS = "127.0.0.1";
-    private static final int SERVER_PORT = 5000;
+    private static final String serverAddress = "127.0.0.1";
+    private static final int serverPort = 5000;
 
     // Command prefixes for handling specific message types
     private static final String ONLINE_USERS_MESSAGE_PREFIX = "/onlineusers ";
@@ -149,7 +149,7 @@ public class ChatClientGUI extends JFrame {
     private void createClient(String name, Consumer<String> onMessageReceived) {
         try {
             // Initialize the ChatClient instance with server details and message handler
-            this.client = new ChatClient(ChatClientGUI.SERVER_ADDRESS, ChatClientGUI.SERVER_PORT, name, onMessageReceived);
+            this.client = new ChatClient(ChatClientGUI.serverAddress, ChatClientGUI.serverPort, name, onMessageReceived);
             client.startClient(); // Start the client connection
             onlineUsersTextArea.append(name + "\n"); // Add the user's name to the online users text area
         } catch (Exception e) {
