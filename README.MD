@@ -62,11 +62,23 @@ Welcome to my first Java Chat Application! This is a simple, real-time chat syst
 - Click the Exit button to leave the chat. A message will notify others that you have left.
 
 ---
+## Implementations done
+ v 0.0.1
+
+| Theme                        | Action                                                                                                      |
+|------------------------------|-------------------------------------------------------------------------------------------------------------|
+| Real-time Messaging          | Users can send and receive messages in real-time across all connected clients.                              |
+| User -Friendly GUI           | The application features a simple and intuitive graphical user interface built with Java Swing.             |
+| Message Timestamps           | Each message sent includes a timestamp for better tracking of conversations.                                |
+| User Departure Notifications | The application notifies all users when someone leaves the chat (e.g., "[User ] has left the chat.").       |
+| Basic User Input Handling    | Users can enter their names and messages, with basic validation to ensure non-empty input.                  |
+| Server-Client Architecture   | The application is structured using a server-client model, allowing multiple clients to connect.            |
+| Scrollable Message Area      | The chat messages are displayed in a scrollable text area for easy navigation through conversation history. |
+| User Confirmation on Exit    | Add a confirmation prompt for users when they attempt to leave the application.                             |
 
 ## Known issues / Improvements to be made
 | Theme                     | Action                                                                                                                                    |
 |---------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| User Confirmation on Exit | Add a confirmation prompt for users when they attempt to leave the application.                                                           |
 | Application Customization | Allow users to customize their application experience (e.g., themes, fonts).                                                              |
 | User Input Validation     | Validate user inputs to prevent special characters and enforce length constraints for usernames and messages.                             |
 | Multiple Chat Rooms       | Enable the creation and management of multiple chat rooms for users to join.                                                              |

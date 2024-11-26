@@ -2,6 +2,8 @@ package com.datamannen1013.javachattapp.client;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Consumer;
@@ -28,7 +30,6 @@ public class ChatClientGUI extends JFrame {
     public ChatClientGUI() {
         super("Chat Application"); // Set the title of the window
         setSize(400, 500); // Set the size of the window
-        setDefaultCloseOperation(EXIT_ON_CLOSE); // Close application on window close
 
 
         // Styling variables for the GUI components
@@ -88,16 +89,39 @@ public class ChatClientGUI extends JFrame {
         exitButton.setBackground(buttonColor); // Set background color
         exitButton.setForeground(Color.WHITE); // Set text color to white
         exitButton.addActionListener(e -> {
-            // Action to perform when the exit button is clicked
-            String departureMessage = name + " has left the chat."; // Departure message
-            client.sendMessage(departureMessage); // Send departure message to the server
-            // Delay to ensure the message is sent before exiting
-            try {
-                Thread.sleep(1000); // Wait for 1 second to ensure message is sent
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
+            // Confirmation dialog before exiting
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                String departureMessage = name + " has left the chat."; // Departure message
+                client.sendMessage(departureMessage); // Send departure message to the server
+                // Delay to ensure the message is sent before exiting
+                try {
+                    Thread.sleep(1000); // Wait for 1 second to ensure message is sent
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                }
+                dispose(); // Close the application window
             }
-            dispose(); // Close the application window
+        });
+
+        // Add a WindowListener to handle the window close event
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                // Confirmation dialog before exiting
+                int confirm = JOptionPane.showConfirmDialog(ChatClientGUI.this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    String departureMessage = name + " has left the chat."; // Departure message
+                    client.sendMessage(departureMessage); // Send departure message to the server
+                    // Delay to ensure the message is sent before exiting
+                    try {
+                        Thread.sleep(1000); // Wait for 1 second to ensure message is sent
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                    }
+                    dispose(); // Close the application window
+                }
+            }
         });
 
         // Create a panel at the bottom of the window to hold the text field and exit button
