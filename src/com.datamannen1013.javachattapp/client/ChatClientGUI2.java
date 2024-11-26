@@ -7,6 +7,9 @@ import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.text.*;
 
 // Main class for the chat client GUI
 public class ChatClientGUI2 extends JFrame {
@@ -19,12 +22,17 @@ public class ChatClientGUI2 extends JFrame {
     private static final String ONLINE_USERS_MESSAGE_PREFIX = "/onlineusers ";
 
     // GUI components
-    private final JTextArea messageArea;
+    private final JTextPane messageArea;
     private final JTextField textField; // Input field for user messages
     private final JTextArea onlineUsersTextArea;
     private final JButton exitButton;
     private String name;
     private ChatClient client; // Chat client instance for handling communication
+
+    // Styles for message components
+    private Style timestampStyle;
+    private Style usernameStyle;
+    private Style messageStyle;
 
     // Constructor to set up the GUI
     public ChatClientGUI2() {
@@ -40,7 +48,7 @@ public class ChatClientGUI2 extends JFrame {
         Font buttonFont = new Font("Arial", Font.BOLD, 12); // Font for buttons
 
         // Set up the message area for displaying chat messages
-        messageArea = new JTextArea();
+        messageArea = new JTextPane();
         messageArea.setEditable(false); // Make the message area non-editable
         messageArea.setBackground(backgroundColor); // Set background color
         messageArea.setForeground(textColor); // Set text color
@@ -104,6 +112,8 @@ public class ChatClientGUI2 extends JFrame {
             }
         });
 
+        initializeStyles();
+
         // Add a WindowListener to handle the window close event
         addWindowListener(new WindowAdapter() {
             @Override
@@ -140,6 +150,23 @@ public class ChatClientGUI2 extends JFrame {
         }
         // Set the window title to include the user's name
         this.setTitle(name + "'s chattin application");
+        textField.requestFocusInWindow(); // Request focus for the text field
+    }
+    // Method to initialize styles
+    private void initializeStyles() {
+        StyledDocument doc = messageArea.getStyledDocument();
+
+        // Create styles for timestamp, username, and message
+        timestampStyle = messageArea.addStyle("TimestampStyle", null);
+        StyleConstants.setBold(timestampStyle, true);
+        StyleConstants.setForeground(timestampStyle, new Color(169, 169, 169)); // Dark gray
+
+        usernameStyle = messageArea.addStyle("UsernameStyle", null);
+        StyleConstants.setBold(usernameStyle, true);
+        StyleConstants.setForeground(usernameStyle, new Color(178, 176, 176)); // Dim gray
+
+        messageStyle = messageArea.addStyle("MessageStyle", null);
+        StyleConstants.setForeground(messageStyle, Color.BLACK); // Black for regular messages
     }
 
     // Method to prompt the user for their username
@@ -188,7 +215,30 @@ public class ChatClientGUI2 extends JFrame {
         if (message.startsWith(ONLINE_USERS_MESSAGE_PREFIX)) { // Check if the message is about online users
             handleOnlineUsersMessage(message); // Handle the online users message
         } else {
-            messageArea.append(message + "\n"); // Append the message to the message area
+            // The expected format is: [HH:mm:ss] Username: Message
+            // Use regex to match the components
+            String regex = "\\[(.*?)\\] (.*?): (.*)";
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(message);
+
+            if (matcher.matches()) {
+                String timestamp = matcher.group(1); // Extract timestamp
+                String username = matcher.group(2);   // Extract username
+                String userMessage = matcher.group(3); // Extract user message
+
+                // Append styled timestamp
+                try {
+                    StyledDocument doc = messageArea.getStyledDocument();
+                    doc.insertString(doc.getLength(), "[" + timestamp + "] ", timestampStyle);
+                    doc.insertString(doc.getLength(), username + ": ", usernameStyle);
+                    doc.insertString(doc.getLength(), userMessage + "\n", messageStyle);
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                // Handle the case where the message does not match the expected format
+                System.err.println("Message format is incorrect: " + message);
+            }
         }
     }
 
