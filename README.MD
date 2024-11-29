@@ -138,9 +138,12 @@ v 0.0.2
 | Private Messaging         | Develop a feature for private messaging between users.                                                                                    |
 | Graceful Shutdown         | Implement a mechanism for graceful shutdown of the application to ensure all processes are completed properly.                            |
 | Code Optimization         | Review and optimize the code for better performance and maintainability.                                                                  |
+| Long-term memory          | Implement a database to store messages                                                                                                    |
+| Username mix-up           | Implement session id so that multiple users can have same or similar names                                                                |
 | Error Handling            | Improve error handling for server-client disconnections to ensure clients can recover gracefully.                                         |
 | Error Handling            | Enhance error handling on the client side to manage unexpected issues more effectively.                                                   |
 | Thread Safety             | Ensure thread safety in the application, particularly for background tasks like sending messages using SwingWorker or similar constructs. |
 | Optimisation              | Ensure the readability of the code                                                                                                        |
+| Users                     | Implement users in a database                                                                                                             |
 
 
