@@ -1,5 +1,7 @@
 package com.datamannen1013.javachattapp.client;
 
+import com.datamannen1013.javachattapp.client.constants.ClientConstants;
+
 import java.io.*;
 import java.net.*;
 import java.util.function.Consumer;
@@ -11,15 +13,9 @@ public class ChatClient {
     private BufferedReader in;
     private PrintWriter out;
     private Consumer<String> onMessageReceived;
-    private String userName;
-
-    // Default server address and port
-    private static final String serverAddress = "127.0.0.1";
-    private static final int serverPort = 5000;
 
     // Constructor for initializing the ChatClient
     public ChatClient(String serverAddress, int serverPort, String userName, Consumer<String> onMessageReceived) {
-        this.userName = userName; // Set the username
         this.onMessageReceived = onMessageReceived; // Set the message handler
         try {
             // Create a socket connection to the specified server address and port
@@ -28,7 +24,7 @@ public class ChatClient {
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.out = new PrintWriter(socket.getOutputStream(), true);
             // Send a join message to the server with the username
-            out.println("/join " + userName);
+            out.println(ClientConstants.JOIN_MESSAGE_PREFIX + userName);
         } catch (IOException e) {
             // Handle any IO exceptions during connection setup
             handleError(e);

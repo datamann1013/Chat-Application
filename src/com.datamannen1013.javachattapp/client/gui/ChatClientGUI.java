@@ -1,4 +1,7 @@
-package com.datamannen1013.javachattapp.client;
+package com.datamannen1013.javachattapp.client.gui;
+
+import com.datamannen1013.javachattapp.client.ChatClient;
+import com.datamannen1013.javachattapp.client.constants.ClientConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,18 +17,11 @@ import javax.swing.text.*;
 // Main class for the chat client GUI
 public class ChatClientGUI extends JFrame {
 
-    // Constants for server address and port
-    private static final String serverAddress = "127.0.0.1";
-    private static final int serverPort = 5000;
-
-    // Command prefixes for handling specific message types
-    private static final String ONLINE_USERS_MESSAGE_PREFIX = "/onlineusers ";
 
     // GUI components
     private final JTextPane messageArea;
     private final JTextField textField; // Input field for user messages
     private final JTextArea onlineUsersTextArea;
-    private final JButton exitButton;
     private String name;
     private ChatClient client; // Chat client instance for handling communication
 
@@ -36,36 +32,28 @@ public class ChatClientGUI extends JFrame {
 
     // Constructor to set up the GUI
     public ChatClientGUI() {
-        super("Chat Application"); // Set the title of the window
-        setSize(400, 500); // Set the size of the window
-
-
-        // Styling variables for the GUI components
-        Color backgroundColor = new Color(240, 240, 240); // Light gray background
-        Color buttonColor = new Color(75, 75, 75); // Darker gray for buttons
-        Color textColor = new Color(50, 50, 50); // Almost black for text
-        Font textFont = new Font("Arial", Font.PLAIN, 14); // Font for text areas
-        Font buttonFont = new Font("Arial", Font.BOLD, 12); // Font for buttons
+        super(ClientConstants.APPLICATION_NAME); // Set the title of the window
+        setSize(ClientConstants.WINDOW_WIDTH, ClientConstants.WINDOW_HEIGHT); // Set the size of the window
 
         // Set up the message area for displaying chat messages
         messageArea = new JTextPane();
         messageArea.setEditable(false); // Make the message area non-editable
-        messageArea.setBackground(backgroundColor); // Set background color
-        messageArea.setForeground(textColor); // Set text color
-        messageArea.setFont(textFont); // Set font
+        messageArea.setBackground(ClientConstants.BACKGROUND_COLOR); // Set background color
+        messageArea.setForeground(ClientConstants.TEXT_COLOR); // Set text color
+        messageArea.setFont(ClientConstants.TEXT_FONT); // Set font
         JScrollPane scrollPane = new JScrollPane(messageArea); // Add scroll functionality
         add(scrollPane, BorderLayout.CENTER); // Add message area to the center of the window
 
         // Set up the text field for user input
         textField = new JTextField();
-        textField.setFont(textFont); // Set font for the text field
-        textField.setForeground(textColor); // Set text color
-        textField.setBackground(backgroundColor); // Set background color
+        textField.setFont(ClientConstants.TEXT_FONT); // Set font for the text field
+        textField.setForeground(ClientConstants.TEXT_COLOR); // Set text color
+        textField.setBackground(ClientConstants.BACKGROUND_COLOR); // Set background color
         textField.addActionListener(e -> { // Add an action listener to the text field to handle user input
             String userMessage = textField.getText().trim(); // Get the trimmed user message
             if (!userMessage.isEmpty()) { // Check if the message is not empty
                 // Create a formatted message with timestamp and user name
-                String message = "[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] " + name + ": " + userMessage;
+                String message = "[" + new SimpleDateFormat(ClientConstants.TIMESTAMP_FORMAT).format(new Date()) + "] " + name + ": " + userMessage;
                 client.sendMessage(message); // Send the message to the server
                 textField.setText(""); // Clear the text field after sending the message
             } else {
@@ -77,30 +65,30 @@ public class ChatClientGUI extends JFrame {
         // Create a panel to display online users
         JPanel onlineUsersPanel = new JPanel();
         onlineUsersPanel.setLayout(new BorderLayout()); // Set layout for the panel
-        onlineUsersPanel.setBorder(BorderFactory.createTitledBorder("Online Users")); // Set border title
+        onlineUsersPanel.setBorder(BorderFactory.createTitledBorder(ClientConstants.ONLINE_USERS_TITLE)); // Set border title
 
 
         // Create a text area to display online users
-        onlineUsersTextArea = new JTextArea(10, 10); // Set size of the text area
+        onlineUsersTextArea = new JTextArea(ClientConstants.ONLINE_AREA_HEIGHT, ClientConstants.ONLINE_AREA_WIDTH); // Set size of the text area
         onlineUsersTextArea.setEditable(false); // Make it non-editable
-        onlineUsersTextArea.setBackground(backgroundColor); // Set background color
-        onlineUsersTextArea.setForeground(textColor); // Set text color
-        onlineUsersTextArea.setFont(textFont); // Set font
+        onlineUsersTextArea.setBackground(ClientConstants.BACKGROUND_COLOR); // Set background color
+        onlineUsersTextArea.setForeground(ClientConstants.TEXT_COLOR); // Set text color
+        onlineUsersTextArea.setFont(ClientConstants.TEXT_FONT); // Set font
         onlineUsersPanel.add(new JScrollPane(onlineUsersTextArea), BorderLayout.CENTER); // Add scroll functionality
 
         add(onlineUsersPanel, BorderLayout.EAST); // Add the online users panel to the right side of the window
         add(textField, BorderLayout.SOUTH); // Add the text field to the bottom of the window
 
         // Initialize the exit button
-        exitButton = new JButton("Exit"); // Create exit button
-        exitButton.setFont(buttonFont); // Set font for the button
-        exitButton.setBackground(buttonColor); // Set background color
+        JButton exitButton = new JButton("Exit"); // Create exit button
+        exitButton.setFont(ClientConstants.BUTTON_FONT); // Set font for the button
+        exitButton.setBackground(ClientConstants.BUTTON_COLOR); // Set background color
         exitButton.setForeground(Color.WHITE); // Set text color to white
         exitButton.addActionListener(e -> {
             // Confirmation dialog before exiting
             int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
-                String departureMessage = name + " has left the chat."; // Departure message
+                String departureMessage = name + ClientConstants.LEAVE_MESSAGE_SUFFIX; // Departure message
                 client.sendMessage(departureMessage); // Send departure message to the server
                 // Delay to ensure the message is sent before exiting
                 try {
@@ -121,7 +109,7 @@ public class ChatClientGUI extends JFrame {
                 // Confirmation dialog before exiting
                 int confirm = JOptionPane.showConfirmDialog(ChatClientGUI.this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
-                    String departureMessage = name + " has left the chat."; // Departure message
+                    String departureMessage = name + ClientConstants.LEAVE_MESSAGE_SUFFIX; // Departure message
                     client.sendMessage(departureMessage); // Send departure message to the server
                     // Delay to ensure the message is sent before exiting
                     try {
@@ -149,7 +137,7 @@ public class ChatClientGUI extends JFrame {
             dispose();
         }
         // Set the window title to include the user's name
-        this.setTitle(name + "'s chattin application");
+        this.setTitle(ClientConstants.APPLICATION_NAME);
         textField.requestFocusInWindow(); // Request focus for the text field
     }
     // Method to initialize styles
@@ -159,14 +147,14 @@ public class ChatClientGUI extends JFrame {
         // Create styles for timestamp, username, and message
         timestampStyle = messageArea.addStyle("TimestampStyle", null);
         StyleConstants.setBold(timestampStyle, true);
-        StyleConstants.setForeground(timestampStyle, new Color(169, 169, 169)); // Dark gray
+        StyleConstants.setForeground(timestampStyle, ClientConstants.TIMESTAMP_COLOR);
 
         usernameStyle = messageArea.addStyle("UsernameStyle", null);
         StyleConstants.setBold(usernameStyle, true);
-        StyleConstants.setForeground(usernameStyle, new Color(178, 176, 176)); // Dim gray
+        StyleConstants.setForeground(usernameStyle, ClientConstants.USERNAME_COLOR);
 
         messageStyle = messageArea.addStyle("MessageStyle", null);
-        StyleConstants.setForeground(messageStyle, Color.BLACK); // Black for regular messages
+        StyleConstants.setForeground(messageStyle, ClientConstants.MESSAGE_COLOR);
     }
 
     // Method to prompt the user for their username
@@ -191,7 +179,7 @@ public class ChatClientGUI extends JFrame {
     private void onMessageReceived(String message) {
         // Use SwingUtilities to ensure that UI updates are done on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            System.out.println("Received message: " + message); // Log the received message
+            System.out.println(ClientConstants.RECIEVED_MESSAGE + message); // Log the received message
             handleMessage(message); // Process the received message
         });
     }
@@ -200,7 +188,7 @@ public class ChatClientGUI extends JFrame {
     private void createClient(String name, Consumer<String> onMessageReceived) {
         try {
             // Initialize the ChatClient instance with server details and message handler
-            this.client = new ChatClient(ChatClientGUI.serverAddress, ChatClientGUI.serverPort, name, onMessageReceived);
+            this.client = new ChatClient(ClientConstants.SERVER_ADDRESS, ClientConstants.SERVER_PORT, name, onMessageReceived);
             client.startClient(); // Start the client connection
             onlineUsersTextArea.append(name + "\n"); // Add the user's name to the online users text area
         } catch (Exception e) {
@@ -212,13 +200,12 @@ public class ChatClientGUI extends JFrame {
 
     // Method to handle incoming messages
     private void handleMessage(String message) {
-        if (message.startsWith(ONLINE_USERS_MESSAGE_PREFIX)) { // Check if the message is about online users
+        if (message.startsWith(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX)) { // Check if the message is about online users
             handleOnlineUsersMessage(message); // Handle the online users message
         } else {
             // The expected format is: [HH:mm:ss] Username: Message
             // Use regex to match the components
-            String regex = "\\[(.*?)\\] (.*?): (.*)";
-            Pattern pattern = Pattern.compile(regex);
+            Pattern pattern = Pattern.compile(ClientConstants.REGEX);
             Matcher matcher = pattern.matcher(message);
 
             if (matcher.matches()) {
@@ -245,7 +232,7 @@ public class ChatClientGUI extends JFrame {
     // Method to handle messages that contain the list of online users
     private void handleOnlineUsersMessage(String message) {
         // Extract the online users from the message by removing the ONLINE_USERS_MESSAGE_PREFIX
-        String onlineUsers = message.substring(ONLINE_USERS_MESSAGE_PREFIX.length());
+        String onlineUsers = message.substring(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX.length());
 
         // Split the list of users into an array using comma as the delimiter
         String[] users = onlineUsers.split(",");

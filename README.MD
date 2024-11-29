@@ -16,6 +16,8 @@ Welcome to my first Java Chat Application! This is a simple, real-time chat syst
 - [Features](#features)
 - [Getting started](#getting-started)
 - [How to use](#how-to-use)
+- [File structure](#file-structure)
+- [Implementations done](#implementations-done) 
 - [Known issues / Improvements to be made](#known-issues--improvements-to-be-made)
 
 ---
@@ -62,6 +64,58 @@ Welcome to my first Java Chat Application! This is a simple, real-time chat syst
 - Click the Exit button to leave the chat. A message will notify others that you have left.
 
 ---
+
+## File structure
+
+### Actual structure
+
+``` Java
+
+Chat-Application/
+├── com.datamannen1013.javachattapp
+│   ├── client/
+│   │   ├── ChatClient.java
+│   │   ├── gui/
+│   │   │   ├── ChatClientGUI.java
+│   │   │   └── ChatClientGUI2.java
+│   │   └── constants/
+│   │       └── ClientConstants.java
+│   │
+│   ├── server/
+│   │   ├── ChatServer.java
+│   │   └── ClientHandler.java
+│
+└── README.md
+
+```
+
+### Roadmap future structure 
+``` Java
+
+Chat-Application/
+├── com.datamannen1013.javachattapp
+│   ├── client/
+│   │   ├── ChatClient.java
+│   │   └── gui/
+│   │   │   ├── ChatWindow.java
+│   │   │   └── LoginWindow.java
+│   │   └── constants/
+│   │       └── ClientConstants.java
+│   │
+│   ├── server/
+│   │   ├── ChatServer.java
+│   │   └── ClientHandler.java
+│   │
+│   │
+│   └── utils/
+│       └── MessageUtils.java
+│
+└── README.md
+
+```
+
+---
+
 ## Implementations done
 
 v 0.0.2
@@ -97,3 +151,6 @@ v 0.0.2
 | Error Handling            | Improve error handling for server-client disconnections to ensure clients can recover gracefully.                                         |
 | Error Handling            | Enhance error handling on the client side to manage unexpected issues more effectively.                                                   |
 | Thread Safety             | Ensure thread safety in the application, particularly for background tasks like sending messages using SwingWorker or similar constructs. |
+| Optimisation              | Ensure the readability of the code                                                                                                        |
+| UI unification            | Have a text box similar to the Online Users                                                                                               |
+
