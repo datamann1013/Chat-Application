@@ -82,8 +82,10 @@ Chat-Application/
 │   │       └── ClientConstants.java
 │   │
 │   ├── server/
-│   │   ├── ChatServer.java
-│   │   └── ClientHandler.java
+│       ├── ChatServer.java
+│       ├── ClientHandler.java
+│       └── constants/
+│           └── ClientConstants.java
 │
 └── README.md
 

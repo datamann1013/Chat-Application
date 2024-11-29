@@ -1,5 +1,7 @@
 package com.datamannen1013.javachattapp.server;
 
+import com.datamannen1013.javachattapp.server.constants.ServerConstants;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,22 +12,22 @@ import java.util.Set;
 import java.util.Collections;
 
 public class ClientHandler implements Runnable {
-    private String userName;
-    private Socket clientSocket;
-    private Set<ClientHandler> clients;
-    private PrintWriter out;
-    private BufferedReader in;
+    private final String userName;
+    private final Socket clientSocket;
+    private final Set<ClientHandler> clients;
+    private final PrintWriter out;
+    private final BufferedReader in;
 
     public ClientHandler(Socket socket, Set<ClientHandler> clients, String message) throws IOException {
         this.clientSocket = socket;
         this.clients = clients;
-        this.userName = message.replace("/join", "").trim();
+        this.userName = message.replace(ServerConstants.JOIN_MESSAGE_PREFIX, "").trim();
         this.out = new PrintWriter(clientSocket.getOutputStream(), true);
         this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         synchronized (clients) {
             clients.add(this);
             // Send current online users
-            String onlineUsersMessage = "/onlineusers " + getOnlineUsers();
+            String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
             System.out.println(onlineUsersMessage);
             broadcastMessage(onlineUsersMessage);
         }
@@ -53,7 +55,7 @@ public class ClientHandler implements Runnable {
         try {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                if (inputLine.endsWith(" has left the chat.")) {
+                if (inputLine.endsWith(ServerConstants.LEAVE_MESSAGE_SUFFIX)) {
                     // Handle client disconnection
                     disconnect();
                 }
@@ -86,7 +88,7 @@ public class ClientHandler implements Runnable {
         try {
             synchronized (clients) {
                 clients.remove(this);
-                String onlineUsersMessage = "/onlineusers " + getOnlineUsers();
+                String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
                 broadcastMessage(onlineUsersMessage);
             }
             in.close();

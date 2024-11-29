@@ -1,5 +1,7 @@
 package com.datamannen1013.javachattapp.server;
 
+import com.datamannen1013.javachattapp.server.constants.ServerConstants;
+
 import java.io.*;
 import java.net.*;
 import java.util.Collections;
@@ -11,7 +13,7 @@ public class ChatServer {
     private static final Set<ClientHandler> clients = Collections.synchronizedSet(new HashSet<>());
 
     public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(5000)) {
+        try (ServerSocket serverSocket = new ServerSocket(ServerConstants.SERVER_PORT)) {
             System.out.println("Server started. Waiting for clients...");
 
             // Continuously accept new client connections
