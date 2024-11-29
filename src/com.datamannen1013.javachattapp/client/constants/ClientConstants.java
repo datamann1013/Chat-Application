@@ -46,5 +46,11 @@ public class ClientConstants {
 
     // REGEX check
     public static final String REGEX = "\\[(.*?)\\] (.*?): (.*)";
+    public static final int USERNAME_MAX_LENGTH = 20;
+    public static final int MESSAGE_MAX_LENGTH = 500;
+    public static final String USERNAME_PATTERN = "^[a-zA-Z0-9_ -]{3,20}$";
+    public static final String USERNAME_PATTERN_MESSAGE = "Username must be 3-20 characters long and can only contain letters, numbers, spaces, underscores, and hyphens.";
+    public static final String MESSAGE_PATTERN = "^[\\p{Print}\\s]{1,500}$";
+    public static final String MESSAGE_PATTERN_MESSAGE = "Message must be 1-500 characters long and cannot contain control characters.";
 
 }

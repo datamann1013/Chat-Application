@@ -1,5 +1,6 @@
 package com.datamannen1013.javachattapp.server;
 
+import com.datamannen1013.javachattapp.client.constants.ClientConstants;
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 
 import java.io.BufferedReader;
@@ -19,17 +20,29 @@ public class ClientHandler implements Runnable {
     private final BufferedReader in;
 
     public ClientHandler(Socket socket, Set<ClientHandler> clients, String message) throws IOException {
-        this.clientSocket = socket;
-        this.clients = clients;
-        this.userName = message.replace(ServerConstants.JOIN_MESSAGE_PREFIX, "").trim();
-        this.out = new PrintWriter(clientSocket.getOutputStream(), true);
-        this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        synchronized (clients) {
-            clients.add(this);
-            // Send current online users
-            String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
-            System.out.println(onlineUsersMessage);
-            broadcastMessage(onlineUsersMessage);
+        try {
+            this.clientSocket = socket;
+            this.clients = clients;
+            String proposedUsername = message.replace(ServerConstants.JOIN_MESSAGE_PREFIX, "");
+            
+            // Validate username
+            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(ClientConstants.USERNAME_PATTERN);
+            if (!pattern.matcher(proposedUsername).matches()) {
+                throw new IllegalArgumentException("Invalid username format");
+            }
+            
+            this.userName = proposedUsername;
+            this.out = new PrintWriter(clientSocket.getOutputStream(), true);
+            this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            synchronized (clients) {
+                clients.add(this);
+                // Send current online users
+                String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
+                System.out.println(onlineUsersMessage);
+                broadcastMessage(onlineUsersMessage);
+            }
+        } catch (IllegalArgumentException e) {
+            throw new IOException("Invalid username format: " + e.getMessage());
         }
     }
 
