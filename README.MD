@@ -76,17 +76,17 @@ Welcome to my first Java Chat Application! This is a simple, real-time chat syst
 
 ## File structure
 
-### Actual structure
-
 ``` Java
 
 Chat-Application/
 ├── com.datamannen1013.javachattapp
 │   ├── client/
 │   │   ├── ChatClient.java
+│   │   ├── ChatClientGUI.java
+│   │   ├── ChatClientGUI2.java
 │   │   ├── gui/
-│   │   │   ├── ChatClientGUI.java
-│   │   │   ├── ChatClientGUI2.java
+│   │   │   ├── MessageHandler.java
+│   │   │   ├── ChatWindow.java
 │   │   │   └── LoginWindow.java
 │   │   └── constants/
 │   │       └── ClientConstants.java
@@ -101,40 +101,18 @@ Chat-Application/
 
 ```
 
-### Roadmap future structure 
-``` Java
-
-Chat-Application/
-├── com.datamannen1013.javachattapp
-│   ├── client/
-│   │   ├── ChatClient.java
-│   │   └── gui/
-│   │   │   ├── ChatWindow.java
-│   │   │   └── LoginWindow.java
-│   │   └── constants/
-│   │       └── ClientConstants.java
-│   │
-│   ├── server/
-│   │   ├── ChatServer.java
-│   │   └── ClientHandler.java
-│   │
-│   │
-│   └── utils/
-│       └── MessageUtils.java
-│
-└── README.md
-
-```
-
 ---
 
 ## Implementations done
 
 v 0.0.2
 
-| Theme                      | Action                                                                                                                |
-|----------------------------|-----------------------------------------------------------------------------------------------------------------------|
-| Message Formatting         | Improve message formatting to include styles such as colors for timestamps, bold or italic text for names, etc.       |
+| Theme              | Action                                                                                                          |
+|--------------------|-----------------------------------------------------------------------------------------------------------------|
+| Message Formatting | Improve message formatting to include styles such as colors for timestamps, bold or italic text for names, etc. |
+| UI unification     | Have a text box similar to the Online Users                                                                     |
+| UI alteration      | Added a box for just the users name, to make it obvious who's client it is                                      |
+| Optimisation       | Removed the /login tag from adding to the online list and let the server handle it alone through /onlineusers   |
 
  v 0.0.1
 
@@ -164,5 +142,5 @@ v 0.0.2
 | Error Handling            | Enhance error handling on the client side to manage unexpected issues more effectively.                                                   |
 | Thread Safety             | Ensure thread safety in the application, particularly for background tasks like sending messages using SwingWorker or similar constructs. |
 | Optimisation              | Ensure the readability of the code                                                                                                        |
-| UI unification            | Have a text box similar to the Online Users                                                                                               |
+
 

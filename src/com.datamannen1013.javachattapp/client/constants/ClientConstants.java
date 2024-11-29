@@ -15,7 +15,7 @@ public class ClientConstants {
     public static final String LEAVE_MESSAGE_SUFFIX = " has left the chat.";
 
     // Sizes for the GUI components
-    public static final int WINDOW_WIDTH = 400;
+    public static final int WINDOW_WIDTH = 600;
     public static final int WINDOW_HEIGHT = 500;
     public static final int ONLINE_AREA_WIDTH = 10;
     public static final int ONLINE_AREA_HEIGHT = 10;
@@ -39,6 +39,9 @@ public class ClientConstants {
     // Preset Application name values
     public static final String APPLICATION_NAME = "Chat Application";
     public static final String ONLINE_USERS_TITLE = "Online Users";
+    public static final String USERNAME_TITLE = "Username";
+    public static final String OTHER_USERS_TITLE = "Other Users";
+    public static final String CHAT_AREA_TITLE = "Chat Messages";
     public static final String RECIEVED_MESSAGE = "Received message:";
 
     // REGEX check

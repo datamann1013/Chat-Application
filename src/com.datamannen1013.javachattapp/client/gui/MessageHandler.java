@@ -12,14 +12,16 @@ import java.util.regex.Matcher;
  */
 public class MessageHandler {
     private final JTextPane messageArea;
+    private final String currentUserName;
     private final JTextArea onlineUsersTextArea;
     private Style timestampStyle;
     private Style usernameStyle;
     private Style messageStyle;
 
-    public MessageHandler(JTextPane messageArea, JTextArea onlineUsersTextArea) {
+    public MessageHandler(JTextPane messageArea, JTextArea onlineUsersTextArea, String currentUserName) {
         this.messageArea = messageArea;
         this.onlineUsersTextArea = onlineUsersTextArea;
+        this.currentUserName = currentUserName;
         initializeStyles();
     }
 
@@ -76,7 +78,7 @@ public class MessageHandler {
         // Add each user to the online users text area
         for (String user : users) {
             if (!user.isEmpty() && !user.equals("null")) {
-                onlineUsersTextArea.append(user + "\n");
+                if (!user.equals(currentUserName)) onlineUsersTextArea.append(user + "\n");
             }
         }
     }

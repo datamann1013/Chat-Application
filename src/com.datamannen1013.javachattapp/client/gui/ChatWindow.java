@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.text.*;
+import javax.swing.BoxLayout;
 
 // Main class for the chat client GUI
 public class ChatWindow extends JFrame {
@@ -21,6 +22,7 @@ public class ChatWindow extends JFrame {
     private final JTextPane messageArea;
     private final JTextField textField; // Input field for user messages
     private final JTextArea onlineUsersTextArea;
+    private final JTextField usernameTextArea;
     private String name;
     private ChatClient client; // Chat client instance for handling communication
 
@@ -30,15 +32,21 @@ public class ChatWindow extends JFrame {
     public ChatWindow() {
         super(ClientConstants.APPLICATION_NAME); // Set the title of the window
         setSize(ClientConstants.WINDOW_WIDTH, ClientConstants.WINDOW_HEIGHT); // Set the size of the window
-
+        
         // Set up the message area for displaying chat messages
+        // Create a panel for chat area with border
+        JPanel chatPanel = new JPanel();
+        chatPanel.setLayout(new BorderLayout()); // Set layout for the panel
+        chatPanel.setBorder(BorderFactory.createTitledBorder(ClientConstants.CHAT_AREA_TITLE)); // Set border title
+
         messageArea = new JTextPane();
         messageArea.setEditable(false); // Make the message area non-editable
         messageArea.setBackground(ClientConstants.BACKGROUND_COLOR); // Set background color
         messageArea.setForeground(ClientConstants.TEXT_COLOR); // Set text color
         messageArea.setFont(ClientConstants.TEXT_FONT); // Set font
         JScrollPane scrollPane = new JScrollPane(messageArea); // Add scroll functionality
-        add(scrollPane, BorderLayout.CENTER); // Add message area to the center of the window
+        chatPanel.add(scrollPane, BorderLayout.CENTER); // Add scroll pane to chat panel
+        add(chatPanel, BorderLayout.CENTER); // Add chat panel to the center of the window
 
         // Set up the text field for user input
         textField = new JTextField();
@@ -61,16 +69,44 @@ public class ChatWindow extends JFrame {
         // Create a panel to display online users
         JPanel onlineUsersPanel = new JPanel();
         onlineUsersPanel.setLayout(new BorderLayout()); // Set layout for the panel
-        onlineUsersPanel.setBorder(BorderFactory.createTitledBorder(ClientConstants.ONLINE_USERS_TITLE)); // Set border title
+        onlineUsersPanel.setBorder(BorderFactory.createTitledBorder(ClientConstants.ONLINE_USERS_TITLE));
 
+        // Create main panel for user lists with BoxLayout
+        JPanel userListsPanel = new JPanel();
+        userListsPanel.setLayout(new BoxLayout(userListsPanel, BoxLayout.Y_AXIS));
 
-        // Create a text area to display online users
-        onlineUsersTextArea = new JTextArea(ClientConstants.ONLINE_AREA_HEIGHT, ClientConstants.ONLINE_AREA_WIDTH); // Set size of the text area
-        onlineUsersTextArea.setEditable(false); // Make it non-editable
-        onlineUsersTextArea.setBackground(ClientConstants.BACKGROUND_COLOR); // Set background color
-        onlineUsersTextArea.setForeground(ClientConstants.TEXT_COLOR); // Set text color
-        onlineUsersTextArea.setFont(ClientConstants.TEXT_FONT); // Set font
-        onlineUsersPanel.add(new JScrollPane(onlineUsersTextArea), BorderLayout.CENTER); // Add scroll functionality
+        // Username section
+        JLabel usernameLabel = new JLabel(ClientConstants.USERNAME_TITLE);
+        usernameLabel.setFont(ClientConstants.TEXT_FONT);
+        usernameLabel.setForeground(ClientConstants.TEXT_COLOR);
+
+        usernameTextArea = new JTextField(ClientConstants.ONLINE_AREA_WIDTH);
+        usernameTextArea.setPreferredSize(new Dimension(usernameTextArea.getPreferredSize().width, 25));
+        usernameTextArea.setMinimumSize(new Dimension(usernameTextArea.getMinimumSize().width, 25));
+        usernameTextArea.setMaximumSize(new Dimension(Short.MAX_VALUE, 25));
+        usernameTextArea.setEditable(false);
+        usernameTextArea.setBackground(ClientConstants.BACKGROUND_COLOR);
+        usernameTextArea.setForeground(ClientConstants.TEXT_COLOR);
+        usernameTextArea.setFont(ClientConstants.TEXT_FONT);
+
+        // Other users section
+        JLabel otherUsersLabel = new JLabel(ClientConstants.OTHER_USERS_TITLE);
+        otherUsersLabel.setFont(ClientConstants.TEXT_FONT);
+        otherUsersLabel.setForeground(ClientConstants.TEXT_COLOR);
+
+        onlineUsersTextArea = new JTextArea(ClientConstants.ONLINE_AREA_HEIGHT, ClientConstants.ONLINE_AREA_WIDTH);
+        onlineUsersTextArea.setEditable(false);
+        onlineUsersTextArea.setBackground(ClientConstants.BACKGROUND_COLOR);
+        onlineUsersTextArea.setForeground(ClientConstants.TEXT_COLOR);
+        onlineUsersTextArea.setFont(ClientConstants.TEXT_FONT);
+        
+        // Add components to user lists panel
+        userListsPanel.add(usernameLabel);
+        userListsPanel.add(usernameTextArea);
+        userListsPanel.add(Box.createVerticalStrut(10));
+        userListsPanel.add(otherUsersLabel);
+        userListsPanel.add(new JScrollPane(onlineUsersTextArea));
+        onlineUsersPanel.add(userListsPanel, BorderLayout.CENTER);
 
         add(onlineUsersPanel, BorderLayout.EAST); // Add the online users panel to the right side of the window
         add(textField, BorderLayout.SOUTH); // Add the text field to the bottom of the window
@@ -125,6 +161,7 @@ public class ChatWindow extends JFrame {
         // Prompt the user for their name using the promptForUserName method
         name = promptForUserName();
         if (!name.isEmpty()) { // Check if the user entered a valid name
+            usernameTextArea.setText(name);
             createClient(name, this::onMessageReceived); // Create the client connection
         } else { // Is handled in promptForUserName(); Could be removed
             // If the user didn't enter a valid name, close the application
@@ -135,7 +172,7 @@ public class ChatWindow extends JFrame {
         textField.requestFocusInWindow(); // Request focus for the text field
         
         // Initialize message handler
-        messageHandler = new MessageHandler(messageArea, onlineUsersTextArea);
+        messageHandler = new MessageHandler(messageArea, onlineUsersTextArea, name);
     }
 
     // Method to prompt the user for their username
