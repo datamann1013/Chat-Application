@@ -77,7 +77,8 @@ Chat-Application/
 │   │   ├── ChatClient.java
 │   │   ├── gui/
 │   │   │   ├── ChatClientGUI.java
-│   │   │   └── ChatClientGUI2.java
+│   │   │   ├── ChatClientGUI2.java
+│   │   │   └── LoginWindow.java
 │   │   └── constants/
 │   │       └── ClientConstants.java
 │   │

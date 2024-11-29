@@ -159,19 +159,10 @@ public class ChatClientGUI extends JFrame {
 
     // Method to prompt the user for their username
     private String promptForUserName() {
-        String userName;
-        do {
-            // Prompt the user for their username using a dialog
-            userName = JOptionPane.showInputDialog(this, "Enter your name:", "Name Entry", JOptionPane.PLAIN_MESSAGE);
+        LoginWindow loginWindow = new LoginWindow(this);
+        this.name = loginWindow.getName();
 
-            // Check if the entered username is null or empty
-            if (userName == null || userName.trim().isEmpty()) {
-                // Show an error message if the username is invalid
-                JOptionPane.showMessageDialog(this, "Username cannot be empty.", "Invalid Username", JOptionPane.ERROR_MESSAGE);
-            }
-        } while (userName == null || userName.trim().isEmpty()); // Repeat until a valid username is entered
-
-        return userName.trim(); // Return the valid username without leading/trailing whitespace
+        return name.trim(); // Return the valid username without leading/trailing whitespace
     }
 
 
