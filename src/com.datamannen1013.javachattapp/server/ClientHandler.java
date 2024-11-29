@@ -97,18 +97,41 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private void disconnect() {
+    void disconnect() {
+        final int TIMEOUT_MS = 1000;
+        
         try {
             synchronized (clients) {
-                clients.remove(this);
-                String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
-                broadcastMessage(onlineUsersMessage);
+                if (isConnectionActive()) {
+                    // Send final messages
+                    String disconnectMsg = ServerConstants.CLIENT_DISCONNECT_PREFIX + userName;
+                    broadcastMessage(disconnectMsg);
+                    
+                    clients.remove(this);
+                    String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
+                    broadcastMessage(onlineUsersMessage);
+                    
+                    // Flush remaining messages
+                    out.flush();
+                    
+                    // Wait for messages to be sent
+                    Thread.sleep(Math.min(100, TIMEOUT_MS));
+                }
             }
+            
+            // Close resources
             in.close();
             out.close();
             clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
+    }
+    
+    private boolean isConnectionActive() {
+        return clientSocket != null && !clientSocket.isClosed() 
+            && in != null && out != null;
     }
 }

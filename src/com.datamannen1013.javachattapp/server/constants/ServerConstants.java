@@ -9,4 +9,5 @@ public class ServerConstants {
     public static final String ONLINE_USERS_MESSAGE_PREFIX = "/onlineusers ";
     public static final String JOIN_MESSAGE_PREFIX = "/join ";
     public static final String LEAVE_MESSAGE_SUFFIX = " has left the chat.";
+    public static final String CLIENT_DISCONNECT_PREFIX = "/leave";
 }

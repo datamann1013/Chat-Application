@@ -126,17 +126,7 @@ public class ChatWindow extends JFrame {
         exitButton.addActionListener(e -> {
             // Confirmation dialog before exiting
             int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                String departureMessage = name + ClientConstants.LEAVE_MESSAGE_SUFFIX; // Departure message
-                client.sendMessage(departureMessage); // Send departure message to the server
-                // Delay to ensure the message is sent before exiting
-                try {
-                    Thread.sleep(1000); // Wait for 1 second to ensure message is sent
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                }
-                dispose(); // Close the application window
-            }
+            if (confirm == JOptionPane.YES_OPTION) performGracefulShutdown();
         });
 
         // Add a WindowListener to handle the window close event
@@ -145,17 +135,7 @@ public class ChatWindow extends JFrame {
             public void windowClosing(WindowEvent e) {
                 // Confirmation dialog before exiting
                 int confirm = JOptionPane.showConfirmDialog(ChatWindow.this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    String departureMessage = name + ClientConstants.LEAVE_MESSAGE_SUFFIX; // Departure message
-                    client.sendMessage(departureMessage); // Send departure message to the server
-                    // Delay to ensure the message is sent before exiting
-                    try {
-                        Thread.sleep(1000); // Wait for 1 second to ensure message is sent
-                    } catch (InterruptedException ie) {
-                        Thread.currentThread().interrupt();
-                    }
-                    dispose(); // Close the application window
-                }
+                if (confirm == JOptionPane.YES_OPTION) performGracefulShutdown();
             }
         });
 
@@ -180,6 +160,34 @@ public class ChatWindow extends JFrame {
         
         // Initialize message handler
         messageHandler = new MessageHandler(messageArea, onlineUsersTextArea, name);
+    }
+    
+    private boolean performGracefulShutdown() {
+        final Object shutdownLock = new Object();
+        final boolean[] shutdownComplete = {false};
+        
+        Thread shutdownThread = new Thread(() -> {
+            try {
+                String departureMessage = name + ClientConstants.LEAVE_MESSAGE_SUFFIX;
+                client.sendMessage(departureMessage);
+                Thread.sleep(500); // Short delay for message to be sent
+                
+                synchronized (shutdownLock) {
+                    shutdownComplete[0] = true;
+                    shutdownLock.notify();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }, "ShutdownThread");
+        
+        shutdownThread.start();
+        
+        // Wait for shutdown with timeout
+        synchronized (shutdownLock) {
+            if (!shutdownComplete[0]) dispose();
+        }
+        return shutdownComplete[0];
     }
 
     // Method to prompt the user for their username

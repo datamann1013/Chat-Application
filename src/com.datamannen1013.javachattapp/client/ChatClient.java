@@ -13,6 +13,8 @@ public class ChatClient {
     private BufferedReader in;
     private PrintWriter out;
     private Consumer<String> onMessageReceived;
+    private volatile boolean isRunning = false;
+    private final Object lock = new Object();
 
     // Constructor for initializing the ChatClient
     public ChatClient(String serverAddress, int serverPort, String userName, Consumer<String> onMessageReceived) {
@@ -38,11 +40,12 @@ public class ChatClient {
 
     // Method to start listening for incoming messages from the server
     public void startClient() {
-        new Thread(() -> {
+        isRunning = true;
+        Thread listenerThread = new Thread(() -> {
             try {
                 String line;
                 // Continuously read lines from the server
-                while ((line = in.readLine()) != null) {
+                while (isRunning && (line = in.readLine()) != null) {
                     // Pass the received message to the callback function
                     onMessageReceived.accept(line);
                 }
@@ -53,7 +56,9 @@ public class ChatClient {
                 // Ensure resources are closed when done
                 closeResources();
             }
-        }).start(); // Start the thread to listen for messages
+        }, "ChatClientListener");
+        listenerThread.setDaemon(true);
+        listenerThread.start();
     }
 
     // Method to handle errors during communication
@@ -64,16 +69,25 @@ public class ChatClient {
 
     // Method to close resources used for communication
     private void closeResources() {
-        try {
-            // Close the input stream if it's not null
-            if (in != null) in.close();
-            // Close the output stream if it's not null
-            if (out != null) out.close();
-            // Close the socket if it's not null
-            if (socket != null) socket.close();
-        } catch (IOException e) {
-            // Log any exceptions that occur while closing resources
-            e.printStackTrace();
+        synchronized (lock) {
+            if (!isRunning) return; // Already closed
+            isRunning = false;
+            
+            try {
+                // Send disconnect message if possible
+                if (out != null && !socket.isClosed()) {
+                    out.println("DISCONNECT");
+                    out.flush();
+                }
+                
+                // Close resources
+                if (in != null) in.close();
+                if (out != null) out.close();
+                if (socket != null) socket.close();
+            } catch (IOException e) {
+                System.err.println("Error during resource cleanup: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 }
