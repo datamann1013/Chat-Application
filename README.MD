@@ -14,7 +14,9 @@ Welcome to my first Java Chat Application! This is a simple, real-time chat syst
 
 ## Other relevant documents
 
-- [Refactoring of ChatClientGUI.java](docs/refactoring.md)
+- [Refactoring GUI](docs/refactoringGUI.md)
+- [Architecture of the project](docs/architecture.md)
+- [Refactoring of ChatClientGUI.java](docs/refactoringGUI.md)
 
 ---
 

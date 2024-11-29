@@ -1,4 +1,5 @@
-# Chat Application Refactoring Documentation
+# Chat Application GUI Refactoring Documentation
+_Last updated: 2024-01-18T10:15:00Z_
 
 [Back to README](../README.MD)
 
