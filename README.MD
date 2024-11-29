@@ -11,6 +11,13 @@
 Welcome to my first Java Chat Application! This is a simple, real-time chat system built with Java, allowing multiple users to connect, send messages, and interact with one another through a server-client architecture.
 
 ---
+
+## Other relevant documents
+
+- [Refactoring of ChatClientGUI.java](docs/refactoring.md)
+
+---
+
 ## Table of content
 
 - [Features](#features)

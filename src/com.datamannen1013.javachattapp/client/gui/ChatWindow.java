@@ -15,8 +15,7 @@ import java.util.regex.Pattern;
 import javax.swing.text.*;
 
 // Main class for the chat client GUI
-public class ChatClientGUI extends JFrame {
-
+public class ChatWindow extends JFrame {
 
     // GUI components
     private final JTextPane messageArea;
@@ -25,13 +24,10 @@ public class ChatClientGUI extends JFrame {
     private String name;
     private ChatClient client; // Chat client instance for handling communication
 
-    // Styles for message components
-    private Style timestampStyle;
-    private Style usernameStyle;
-    private Style messageStyle;
+    private MessageHandler messageHandler;
 
     // Constructor to set up the GUI
-    public ChatClientGUI() {
+    public ChatWindow() {
         super(ClientConstants.APPLICATION_NAME); // Set the title of the window
         setSize(ClientConstants.WINDOW_WIDTH, ClientConstants.WINDOW_HEIGHT); // Set the size of the window
 
@@ -100,14 +96,12 @@ public class ChatClientGUI extends JFrame {
             }
         });
 
-        initializeStyles();
-
         // Add a WindowListener to handle the window close event
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 // Confirmation dialog before exiting
-                int confirm = JOptionPane.showConfirmDialog(ChatClientGUI.this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
+                int confirm = JOptionPane.showConfirmDialog(ChatWindow.this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
                     String departureMessage = name + ClientConstants.LEAVE_MESSAGE_SUFFIX; // Departure message
                     client.sendMessage(departureMessage); // Send departure message to the server
@@ -139,22 +133,9 @@ public class ChatClientGUI extends JFrame {
         // Set the window title to include the user's name
         this.setTitle(ClientConstants.APPLICATION_NAME);
         textField.requestFocusInWindow(); // Request focus for the text field
-    }
-    // Method to initialize styles
-    private void initializeStyles() {
-        StyledDocument doc = messageArea.getStyledDocument();
-
-        // Create styles for timestamp, username, and message
-        timestampStyle = messageArea.addStyle("TimestampStyle", null);
-        StyleConstants.setBold(timestampStyle, true);
-        StyleConstants.setForeground(timestampStyle, ClientConstants.TIMESTAMP_COLOR);
-
-        usernameStyle = messageArea.addStyle("UsernameStyle", null);
-        StyleConstants.setBold(usernameStyle, true);
-        StyleConstants.setForeground(usernameStyle, ClientConstants.USERNAME_COLOR);
-
-        messageStyle = messageArea.addStyle("MessageStyle", null);
-        StyleConstants.setForeground(messageStyle, ClientConstants.MESSAGE_COLOR);
+        
+        // Initialize message handler
+        messageHandler = new MessageHandler(messageArea, onlineUsersTextArea);
     }
 
     // Method to prompt the user for their username
@@ -171,7 +152,7 @@ public class ChatClientGUI extends JFrame {
         // Use SwingUtilities to ensure that UI updates are done on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
             System.out.println(ClientConstants.RECIEVED_MESSAGE + message); // Log the received message
-            handleMessage(message); // Process the received message
+            messageHandler.handleMessage(message); // Process the received message using MessageHandler
         });
     }
 
@@ -189,64 +170,5 @@ public class ChatClientGUI extends JFrame {
         }
     }
 
-    // Method to handle incoming messages
-    private void handleMessage(String message) {
-        if (message.startsWith(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX)) { // Check if the message is about online users
-            handleOnlineUsersMessage(message); // Handle the online users message
-        } else {
-            // The expected format is: [HH:mm:ss] Username: Message
-            // Use regex to match the components
-            Pattern pattern = Pattern.compile(ClientConstants.REGEX);
-            Matcher matcher = pattern.matcher(message);
 
-            if (matcher.matches()) {
-                String timestamp = matcher.group(1); // Extract timestamp
-                String username = matcher.group(2);   // Extract username
-                String userMessage = matcher.group(3); // Extract user message
-
-                // Append styled timestamp
-                try {
-                    StyledDocument doc = messageArea.getStyledDocument();
-                    doc.insertString(doc.getLength(), "[" + timestamp + "] ", timestampStyle);
-                    doc.insertString(doc.getLength(), username + ": ", usernameStyle);
-                    doc.insertString(doc.getLength(), userMessage + "\n", messageStyle);
-                } catch (BadLocationException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                // Handle the case where the message does not match the expected format
-                System.err.println("Message format is incorrect: " + message);
-            }
-        }
-    }
-
-    // Method to handle messages that contain the list of online users
-    private void handleOnlineUsersMessage(String message) {
-        // Extract the online users from the message by removing the ONLINE_USERS_MESSAGE_PREFIX
-        String onlineUsers = message.substring(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX.length());
-
-        // Split the list of users into an array using comma as the delimiter
-        String[] users = onlineUsers.split(",");
-
-        // Clear the current list of online users displayed in the text area
-        onlineUsersTextArea.setText(""); // Clear the text area
-
-        // Iterate through the array of users and add each one to the online users text area
-        for (String user : users) {
-            // Check if the user string is not empty and is not "null"
-            if (!user.isEmpty() && !user.equals("null")) {
-                // Append the user's name to the online users text area
-                onlineUsersTextArea.append(user + "\n");
-            }
-        }
-    }
-
-    // Main method to launch the application
-    public static void main(String[] args) {
-        // Use SwingUtilities to ensure that the GUI is created on the Event Dispatch Thread (EDT)
-        SwingUtilities.invokeLater(() -> {
-            // Create an instance of ChatClientGUI and make it visible
-            new ChatClientGUI().setVisible(true);
-        });
-    }
 }
