@@ -115,6 +115,12 @@ Chat-Application/
 
 v 0.0.2
 
+| Theme | Action |
+|-------|--------|
+|       |        |
+
+v 0.0.2
+
 | Theme                 | Action                                                                                                          |
 |-----------------------|-----------------------------------------------------------------------------------------------------------------|
 | User Input Validation | Validate user inputs to prevent special characters and enforce length constraints for usernames and messages.   |
