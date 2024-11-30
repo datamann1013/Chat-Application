@@ -115,14 +115,16 @@ Chat-Application/
 
 v 0.0.2
 
-| Theme                   | Action                                                                                                          |
-|-------------------------|-----------------------------------------------------------------------------------------------------------------|
-| User Input Validation   | Validate user inputs to prevent special characters and enforce length constraints for usernames and messages.   |
-| Message Formatting      | Improve message formatting to include styles such as colors for timestamps, bold or italic text for names, etc. |
-| Graceful Shutdown       | Implement a mechanism for graceful shutdown of the application to ensure all processes are completed properly.  |
-| UI unification          | Have a text box similar to the Online Users                                                                     |
-| UI alteration           | Added a box for just the users name, to make it obvious who's client it is                                      |
-| Optimisation            | Removed the /login tag from adding to the online list and let the server handle it alone through /onlineusers   |
+| Theme                 | Action                                                                                                          |
+|-----------------------|-----------------------------------------------------------------------------------------------------------------|
+| User Input Validation | Validate user inputs to prevent special characters and enforce length constraints for usernames and messages.   |
+| Message Formatting    | Improve message formatting to include styles such as colors for timestamps, bold or italic text for names, etc. |
+| Graceful Shutdown     | Implement a mechanism for graceful shutdown of the application to ensure all processes are completed properly.  |
+| UI unification        | Have a text box similar to the Online Users                                                                     |
+| Error Handling        | Improve error handling for server-client disconnections to ensure clients can recover gracefully.               |
+| Error Handling        | Enhance error handling on the client side to manage unexpected issues more effectively.                         |
+| UI alteration         | Added a box for just the users name, to make it obvious who's client it is                                      |
+| Optimisation          | Removed the /login tag from adding to the online list and let the server handle it alone through /onlineusers   |
 
  v 0.0.1
 
@@ -148,10 +150,7 @@ v 0.0.2
 | Code Optimization         | Review and optimize the code for better performance and maintainability.                                                                  |
 | Long-term memory          | Implement a database to store messages                                                                                                    |
 | Username mix-up           | Implement session id so that multiple users can have same or similar names                                                                |
-| Error Handling            | Improve error handling for server-client disconnections to ensure clients can recover gracefully.                                         |
-| Error Handling            | Enhance error handling on the client side to manage unexpected issues more effectively.                                                   |
 | Thread Safety             | Ensure thread safety in the application, particularly for background tasks like sending messages using SwingWorker or similar constructs. |
-| Optimisation              | Ensure the readability of the code                                                                                                        |
 | Users                     | Implement users in a database                                                                                                             |
 
 

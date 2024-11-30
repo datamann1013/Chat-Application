@@ -17,18 +17,29 @@ public class ChatClient {
     private final Object lock = new Object();
 
     // Constructor for initializing the ChatClient
-    public ChatClient(String serverAddress, int serverPort, String userName, Consumer<String> onMessageReceived) {
+    private static final int CONNECTION_TIMEOUT = 5000; // 5 seconds timeout
+    private Consumer<String> errorHandler;
+
+    public ChatClient(String serverAddress, int serverPort, String userName, 
+                     Consumer<String> onMessageReceived, Consumer<String> errorHandler) {
         this.onMessageReceived = onMessageReceived; // Set the message handler
+        this.errorHandler = errorHandler; // Set the error handler
         try {
-            // Create a socket connection to the specified server address and port
-            this.socket = new Socket(serverAddress, serverPort);
-            // Initialize input and output streams for communication
+            // Create a socket with timeout
+            this.socket = new Socket();
+            socket.connect(new InetSocketAddress(serverAddress, serverPort), CONNECTION_TIMEOUT);
+
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.out = new PrintWriter(socket.getOutputStream(), true);
             // Send a join message to the server with the username
+
             out.println(ClientConstants.JOIN_MESSAGE_PREFIX + userName);
+        } catch (SocketTimeoutException e) {
+            handleError(new IOException(ClientConstants.SERVER_TIMEOUT_MESSAGE, e));
+            // Handle connection failures
+            handleError(e);
         } catch (IOException e) {
-            // Handle any IO exceptions during connection setup
+            // Handle connection failures
             handleError(e);
         }
     }
@@ -63,8 +74,21 @@ public class ChatClient {
 
     // Method to handle errors during communication
     private void handleError(IOException e) {
-        // Log the error (could be improved by notifying the user or attempting reconnection)
+        String errorMessage;
+        if (e instanceof SocketTimeoutException) {
+            errorMessage = ClientConstants.SERVER_TIMEOUT_MESSAGE;
+        } else if (e instanceof ConnectException) {
+            errorMessage = ClientConstants.CONNECTION_ERROR_MESSAGE;
+        } else if (e instanceof SocketException) {
+            errorMessage = ClientConstants.NETWORK_ERROR_MESSAGE;
+        } else {
+            errorMessage = "Error: " + e.getMessage();
+        }
+
+        // Log the error
         e.printStackTrace();
+        // Notify through error handler
+        if (errorHandler != null) errorHandler.accept(errorMessage);
     }
 
     // Method to close resources used for communication

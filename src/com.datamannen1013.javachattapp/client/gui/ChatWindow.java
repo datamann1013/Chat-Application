@@ -165,28 +165,46 @@ public class ChatWindow extends JFrame {
     private boolean performGracefulShutdown() {
         final Object shutdownLock = new Object();
         final boolean[] shutdownComplete = {false};
+        final int MAX_RETRIES = 3;
+        final int SHUTDOWN_TIMEOUT = 5000; // 5 seconds
         
         Thread shutdownThread = new Thread(() -> {
+            int retries = 0;
             try {
-                String departureMessage = name + ClientConstants.LEAVE_MESSAGE_SUFFIX;
-                client.sendMessage(departureMessage);
-                Thread.sleep(500); // Short delay for message to be sent
-                
-                synchronized (shutdownLock) {
-                    shutdownComplete[0] = true;
-                    shutdownLock.notify();
+                while (retries < MAX_RETRIES) {
+                    try {
+                        String departureMessage = name + ClientConstants.LEAVE_MESSAGE_SUFFIX;
+                        client.sendMessage(departureMessage);
+                        Thread.sleep(500); // Short delay for message to be sent
+                        
+                        synchronized (shutdownLock) {
+                            shutdownComplete[0] = true;
+                            shutdownLock.notify();
+                        }
+                        break;
+                    } catch (Exception e) {
+                        retries++;
+                        System.err.println("Shutdown attempt " + retries + " failed: " + e.getMessage());
+                        if (retries < MAX_RETRIES) Thread.sleep(1000);
+                    }
                 }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                System.err.println("Shutdown interrupted: " + e.getMessage());
             }
         }, "ShutdownThread");
         
         shutdownThread.start();
         
         // Wait for shutdown with timeout
-        synchronized (shutdownLock) {
-            if (!shutdownComplete[0]) dispose();
+        try {
+            synchronized (shutdownLock) {
+                shutdownLock.wait(SHUTDOWN_TIMEOUT);
+            }
+        } catch (InterruptedException e) {
+            System.err.println("Shutdown wait interrupted: " + e.getMessage());
         }
+        if (!shutdownComplete[0]) dispose();
         return shutdownComplete[0];
     }
 
@@ -210,15 +228,50 @@ public class ChatWindow extends JFrame {
 
     // Method to create the chat client and connect to the server
     private void createClient(String name, Consumer<String> onMessageReceived) {
+        JLabel statusLabel = new JLabel("Connecting...");
+        statusLabel.setForeground(Color.ORANGE);
+        add(statusLabel, BorderLayout.NORTH);
+
+        Consumer<String> errorHandler = error -> {
+            SwingUtilities.invokeLater(() -> handleClientError(error, name, statusLabel));
+        };
+
         try {
             // Initialize the ChatClient instance with server details and message handler
-            this.client = new ChatClient(ClientConstants.SERVER_ADDRESS, ClientConstants.SERVER_PORT, name, onMessageReceived);
+            this.client = new ChatClient(ClientConstants.SERVER_ADDRESS, 
+                                       ClientConstants.SERVER_PORT, 
+                                       name, 
+                                       onMessageReceived,
+                                       errorHandler);
             client.startClient(); // Start the client connection
-            onlineUsersTextArea.append(name + "\n"); // Add the user's name to the online users text area
+            statusLabel.setText("Connected");
+            statusLabel.setForeground(Color.GREEN);
+            onlineUsersTextArea.append(name + "\n");
         } catch (Exception e) {
-            // Show an error message if the connection fails
-            JOptionPane.showMessageDialog(this, "Failed to connect to the server.", "Connection Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(1); // Exit the application if the connection fails
+            handleClientError(e.getMessage(), name, statusLabel);
+        }
+    }
+
+    private void handleClientError(String error, String name, JLabel statusLabel) {
+        statusLabel.setText("Connection Error");
+        statusLabel.setForeground(Color.RED);
+
+        String errorMessage = error;
+        String[] options = {"Retry", "Exit"};
+        
+        int choice = JOptionPane.showOptionDialog(this,
+            errorMessage + "\nWould you like to retry the connection?",
+            "Connection Error",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.ERROR_MESSAGE,
+            null,
+            options,
+            options[0]);
+
+        if (choice == 0) {
+            createClient(name, messageHandler::handleMessage);
+        } else {
+            System.exit(1);
         }
     }
 

@@ -52,5 +52,10 @@ public class ClientConstants {
     public static final String USERNAME_PATTERN_MESSAGE = "Username must be 3-20 characters long and can only contain letters, numbers, spaces, underscores, and hyphens.";
     public static final String MESSAGE_PATTERN = "^[\\p{Print}\\s]{1,500}$";
     public static final String MESSAGE_PATTERN_MESSAGE = "Message must be 1-500 characters long and cannot contain control characters.";
+    public static final String CONNECTION_ERROR_MESSAGE = "Unable to connect to the server. Please check your network connection.";
+    public static final String SERVER_TIMEOUT_MESSAGE = "Server is not responding. Connection attempt timed out.";
+    public static final String NETWORK_ERROR_MESSAGE = "Network connection was lost. Please check your internet connection.";
+    public static final String RECONNECTION_MESSAGE = "Attempting to reconnect to the server...";
+
 
 }
