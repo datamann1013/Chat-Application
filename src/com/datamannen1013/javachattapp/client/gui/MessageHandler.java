@@ -104,7 +104,7 @@ public class MessageHandler extends Component {
         String onlineUsers = message.substring(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX.length());
 
         // Split the list of users into an array
-        String[] users = onlineUsers.split(", ");
+        String[] users = onlineUsers.split(",");
 
         // Clear the current list of online users
         onlineUsersTextArea.setText("");
@@ -112,6 +112,7 @@ public class MessageHandler extends Component {
         // Add each user to the online users text area
         for (String user : users) {
             if (!user.isEmpty() && !user.equals("null")) {
+                //if (users.length == 1) onlineUsersTextArea.append(user);
                 if (!user.equals(currentUserName)) onlineUsersTextArea.append(user + "\n");
             }
         }

@@ -12,7 +12,8 @@ public class ServerConstants {
     public static final String CLIENT_DISCONNECT_PREFIX = "/leave";
 
     // Database constants
-    public static final String DATABASE_URL = "jdbc:sqlite:chat_messages.db";
+    public static final int MESSAGE_HISTORY_LIMIT = 50; // Number of recent messages to load
+    public static final String DATABASE_URL = "jdbc:sqlite:chat.db";
     public static final String CREATE_MESSAGES_TABLE =
             "CREATE TABLE IF NOT EXISTS messages (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -23,5 +24,5 @@ public class ServerConstants {
             "INSERT INTO messages (username, message) VALUES (?, ?)";
     public static final String GET_RECENT_MESSAGES =
             "SELECT username, message, timestamp FROM messages " +
-                    "ORDER BY timestamp DESC LIMIT 50";
+                    "ORDER BY timestamp DESC LIMIT ?";
 }
