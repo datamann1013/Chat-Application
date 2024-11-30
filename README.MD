@@ -121,6 +121,7 @@ v 0.0.2
 | Message Formatting    | Improve message formatting to include styles such as colors for timestamps, bold or italic text for names, etc. |
 | Graceful Shutdown     | Implement a mechanism for graceful shutdown of the application to ensure all processes are completed properly.  |
 | UI unification        | Have a text box similar to the Online Users                                                                     |
+| Error Handling UI     | Enhance error handling on the client By showing error messages to the user                                      |
 | Error Handling        | Improve error handling for server-client disconnections to ensure clients can recover gracefully.               |
 | Error Handling        | Enhance error handling on the client side to manage unexpected issues more effectively.                         |
 | UI alteration         | Added a box for just the users name, to make it obvious who's client it is                                      |

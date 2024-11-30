@@ -20,9 +20,7 @@ public class ChatServer {
             System.out.println("Server started. Waiting for clients...");
             
             // Add shutdown hook
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                shutdownServer();
-            }, "ShutdownHook"));
+            Runtime.getRuntime().addShutdownHook(new Thread(ChatServer::shutdownServer, "ShutdownHook"));
 
             // Continuously accept new client connections
             while (isRunning) {
@@ -61,14 +59,5 @@ public class ChatServer {
         // Close server socket
         try { if (serverSocket != null) serverSocket.close(); }
         catch (IOException e) { System.err.println("Error closing server socket: " + e.getMessage()); }
-    }
-
-    // Broadcast a message to all connected clients
-    public static void broadcastMessage(String message) {
-        synchronized (clients) { // Synchronize to prevent concurrent modification
-            for (ClientHandler client : clients) {
-                client.sendMessage(message);
-            }
-        }
     }
 }

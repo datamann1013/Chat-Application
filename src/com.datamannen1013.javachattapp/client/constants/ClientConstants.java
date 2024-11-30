@@ -24,7 +24,6 @@ public class ClientConstants {
     public static final Color BACKGROUND_COLOR = new Color(240, 240, 240); // Light gray background
     public static final Color TEXT_COLOR = Color.BLACK;
     public static final Color BUTTON_COLOR = new Color(75, 75, 75); // Darker gray for buttons
-
     public static final Color TIMESTAMP_COLOR = new Color(169, 169, 169) ; // Dark gray
     public static final Color USERNAME_COLOR = new Color(178, 176, 176); // Dim gray
     public static final Color MESSAGE_COLOR = Color.black; // Black for regular messages
@@ -42,20 +41,32 @@ public class ClientConstants {
     public static final String USERNAME_TITLE = "Username";
     public static final String OTHER_USERS_TITLE = "Other Users";
     public static final String CHAT_AREA_TITLE = "Chat Messages";
-    public static final String RECIEVED_MESSAGE = "Received message:";
 
     // REGEX check
     public static final String REGEX = "\\[(.*?)\\] (.*?): (.*)";
+
+    //Username rules
+    //Length not implemented
     public static final int USERNAME_MAX_LENGTH = 20;
-    public static final int MESSAGE_MAX_LENGTH = 500;
+
     public static final String USERNAME_PATTERN = "^[a-zA-Z0-9_ -]{3,20}$";
     public static final String USERNAME_PATTERN_MESSAGE = "Username must be 3-20 characters long and can only contain letters, numbers, spaces, underscores, and hyphens.";
+
+    //Message rules
+    //Length not implemented
+
+    public static final int MESSAGE_MAX_LENGTH = 500;
     public static final String MESSAGE_PATTERN = "^[\\p{Print}\\s]{1,500}$";
     public static final String MESSAGE_PATTERN_MESSAGE = "Message must be 1-500 characters long and cannot contain control characters.";
+
+    //Error messagess
     public static final String CONNECTION_ERROR_MESSAGE = "Unable to connect to the server. Please check your network connection.";
     public static final String SERVER_TIMEOUT_MESSAGE = "Server is not responding. Connection attempt timed out.";
     public static final String NETWORK_ERROR_MESSAGE = "Network connection was lost. Please check your internet connection.";
     public static final String RECONNECTION_MESSAGE = "Attempting to reconnect to the server...";
+    public static final String MESSAGE_SEND_ERROR_MESSAGE = "Failed to send message. Please try again.";
+    public static final String INVALID_SERVER_RESPONSE_MESSAGE = "Received invalid response from server.";
+    public static final String DISCONNECT_ERROR_MESSAGE = "Connection terminated unexpectedly.";
 
 
 }

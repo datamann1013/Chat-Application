@@ -10,36 +10,31 @@ import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.swing.text.*;
 import javax.swing.BoxLayout;
 
 // Main class for the chat client GUI
 public class ChatWindow extends JFrame {
 
-    // GUI components
-    private final JTextPane messageArea;
     private final JTextField textField; // Input field for user messages
     private final JTextArea onlineUsersTextArea;
-    private final JTextField usernameTextArea;
     private String name;
     private ChatClient client; // Chat client instance for handling communication
 
-    private MessageHandler messageHandler;
+    private final MessageHandler messageHandler;
 
     // Constructor to set up the GUI
     public ChatWindow() {
         super(ClientConstants.APPLICATION_NAME); // Set the title of the window
         setSize(ClientConstants.WINDOW_WIDTH, ClientConstants.WINDOW_HEIGHT); // Set the size of the window
-        
+
         // Set up the message area for displaying chat messages
         // Create a panel for chat area with border
         JPanel chatPanel = new JPanel();
         chatPanel.setLayout(new BorderLayout()); // Set layout for the panel
         chatPanel.setBorder(BorderFactory.createTitledBorder(ClientConstants.CHAT_AREA_TITLE)); // Set border title
 
-        messageArea = new JTextPane();
+        // GUI components
+        JTextPane messageArea = new JTextPane();
         messageArea.setEditable(false); // Make the message area non-editable
         messageArea.setBackground(ClientConstants.BACKGROUND_COLOR); // Set background color
         messageArea.setForeground(ClientConstants.TEXT_COLOR); // Set text color
@@ -87,7 +82,7 @@ public class ChatWindow extends JFrame {
         usernameLabel.setFont(ClientConstants.TEXT_FONT);
         usernameLabel.setForeground(ClientConstants.TEXT_COLOR);
 
-        usernameTextArea = new JTextField(ClientConstants.ONLINE_AREA_WIDTH);
+        JTextField usernameTextArea = new JTextField(ClientConstants.ONLINE_AREA_WIDTH);
         usernameTextArea.setPreferredSize(new Dimension(usernameTextArea.getPreferredSize().width, 25));
         usernameTextArea.setMinimumSize(new Dimension(usernameTextArea.getMinimumSize().width, 25));
         usernameTextArea.setMaximumSize(new Dimension(Short.MAX_VALUE, 25));
@@ -106,7 +101,7 @@ public class ChatWindow extends JFrame {
         onlineUsersTextArea.setBackground(ClientConstants.BACKGROUND_COLOR);
         onlineUsersTextArea.setForeground(ClientConstants.TEXT_COLOR);
         onlineUsersTextArea.setFont(ClientConstants.TEXT_FONT);
-        
+
         // Add components to user lists panel
         userListsPanel.add(usernameLabel);
         userListsPanel.add(usernameTextArea);
@@ -157,17 +152,17 @@ public class ChatWindow extends JFrame {
         // Set the window title to include the user's name
         this.setTitle(ClientConstants.APPLICATION_NAME);
         textField.requestFocusInWindow(); // Request focus for the text field
-        
+
         // Initialize message handler
         messageHandler = new MessageHandler(messageArea, onlineUsersTextArea, name);
     }
-    
+
     private boolean performGracefulShutdown() {
         final Object shutdownLock = new Object();
         final boolean[] shutdownComplete = {false};
         final int MAX_RETRIES = 3;
         final int SHUTDOWN_TIMEOUT = 5000; // 5 seconds
-        
+
         Thread shutdownThread = new Thread(() -> {
             int retries = 0;
             try {
@@ -176,7 +171,7 @@ public class ChatWindow extends JFrame {
                         String departureMessage = name + ClientConstants.LEAVE_MESSAGE_SUFFIX;
                         client.sendMessage(departureMessage);
                         Thread.sleep(500); // Short delay for message to be sent
-                        
+
                         synchronized (shutdownLock) {
                             shutdownComplete[0] = true;
                             shutdownLock.notify();
@@ -193,9 +188,9 @@ public class ChatWindow extends JFrame {
                 System.err.println("Shutdown interrupted: " + e.getMessage());
             }
         }, "ShutdownThread");
-        
+
         shutdownThread.start();
-        
+
         // Wait for shutdown with timeout
         try {
             synchronized (shutdownLock) {
@@ -221,8 +216,15 @@ public class ChatWindow extends JFrame {
     private void onMessageReceived(String message) {
         // Use SwingUtilities to ensure that UI updates are done on the Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
-            System.out.println(ClientConstants.RECIEVED_MESSAGE + message); // Log the received message
-            messageHandler.handleMessage(message); // Process the received message using MessageHandler
+            try {
+                if (message == null || message.trim().isEmpty()) {
+                    ErrorHandler.showError(this, "Received empty or invalid message from server");
+                    return;
+                }
+                messageHandler.handleMessage(message); // Process the received message using MessageHandler
+            } catch (Exception e) {
+                ErrorHandler.showError(this, "Error processing message: " + e.getMessage());
+            }
         });
     }
 
@@ -238,11 +240,11 @@ public class ChatWindow extends JFrame {
 
         try {
             // Initialize the ChatClient instance with server details and message handler
-            this.client = new ChatClient(ClientConstants.SERVER_ADDRESS, 
-                                       ClientConstants.SERVER_PORT, 
-                                       name, 
-                                       onMessageReceived,
-                                       errorHandler);
+            this.client = new ChatClient(ClientConstants.SERVER_ADDRESS,
+                    ClientConstants.SERVER_PORT,
+                    name,
+                    onMessageReceived,
+                    errorHandler);
             client.startClient(); // Start the client connection
             statusLabel.setText("Connected");
             statusLabel.setForeground(Color.GREEN);
@@ -253,27 +255,17 @@ public class ChatWindow extends JFrame {
     }
 
     private void handleClientError(String error, String name, JLabel statusLabel) {
-        statusLabel.setText("Connection Error");
+        statusLabel.setText("Connection Status: Error");
         statusLabel.setForeground(Color.RED);
 
-        String errorMessage = error;
-        String[] options = {"Retry", "Exit"};
-        
-        int choice = JOptionPane.showOptionDialog(this,
-            errorMessage + "\nWould you like to retry the connection?",
-            "Connection Error",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.ERROR_MESSAGE,
-            null,
-            options,
-            options[0]);
-
-        if (choice == 0) {
+        boolean retry = ErrorHandler.showConnectionError(this, error, () -> {
+            statusLabel.setText("Connection Status: Reconnecting...");
+            statusLabel.setForeground(Color.ORANGE);
             createClient(name, messageHandler::handleMessage);
-        } else {
-            System.exit(1);
+        });
+        if (retry) {
+            statusLabel.setText("Connection Status: Reconnecting...");
+            createClient(name, messageHandler::handleMessage);
         }
     }
-
-
 }

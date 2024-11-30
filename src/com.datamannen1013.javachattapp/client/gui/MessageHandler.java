@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 /**
  * Handles message formatting and display in the chat window
  */
-public class MessageHandler {
+public class MessageHandler extends Component {
     private final JTextPane messageArea;
     private final String currentUserName;
     private final JTextArea onlineUsersTextArea;
@@ -40,37 +40,71 @@ public class MessageHandler {
     }
 
     public void handleMessage(String message) {
-        if (message.startsWith(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX)) {
-            handleOnlineUsersMessage(message);
-        } else {
-            Pattern pattern = Pattern.compile(ClientConstants.REGEX);
-            Matcher matcher = pattern.matcher(message);
-
-            if (matcher.matches()) {
-                String timestamp = matcher.group(1);
-                String username = matcher.group(2);
-                String userMessage = matcher.group(3);
-
-                try {
-                    StyledDocument doc = messageArea.getStyledDocument();
-                    doc.insertString(doc.getLength(), "[" + timestamp + "] ", timestampStyle);
-                    doc.insertString(doc.getLength(), username + ": ", usernameStyle);
-                    doc.insertString(doc.getLength(), userMessage + "\n", messageStyle);
-                } catch (BadLocationException e) {
-                    e.printStackTrace();
-                }
+        try {
+            if (message.startsWith(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX)) {
+                handleOnlineUsersMessage(message);
             } else {
-                System.err.println("Message format is incorrect: " + message);
+                Pattern pattern = Pattern.compile(ClientConstants.REGEX);
+                Matcher matcher = pattern.matcher(message);
+                if (matcher.matches()) {
+                    if (matcher.matches()) {
+                        String timestamp = matcher.group(1);
+                        String username = matcher.group(2);
+                        String userMessage = matcher.group(3);
+                        try {
+                            try {
+                                StyledDocument doc = messageArea.getStyledDocument();
+                                doc.insertString(doc.getLength(), "[" + timestamp + "] ", timestampStyle);
+                                doc.insertString(doc.getLength(), username + ": ", usernameStyle);
+                                doc.insertString(doc.getLength(), userMessage + "\n", messageStyle);
+                            } catch (BadLocationException e) {
+                                handleMessageError("Error displaying message", e);
+                            }
+                        } catch (Exception e) {
+                            handleMessageError("Error processing message", e);
+                        }
+                    } else {
+                        handleMessageError("Invalid message format", null);
+
+                        ErrorHandler.showErrorMessage(this, message);
+                        System.err.println("Message format is incorrect: " + message);
+                    }
+                }
             }
+        } catch (Exception e) {
+            handleMessageError("Error processing message", e);
         }
     }
 
+    private void handleMessageError(String errorMessage, Exception e) {
+        System.err.println(errorMessage + (e != null ? ": " + e.getMessage() : ""));
+        SwingUtilities.invokeLater(() -> {
+            ErrorHandler.showError((JFrame) SwingUtilities.getWindowAncestor(messageArea), 
+                errorMessage + (e != null ? ": " + e.getMessage() : ""));
+        });
+
+        // Extract the online users from the message
+        String onlineUsers = errorMessage.substring(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX.length());
+
+        // Split the list of users into an array
+        String[] users = onlineUsers.split(",");
+
+        // Clear the current list of online users
+        onlineUsersTextArea.setText("");
+
+        // Add each user to the online users text area
+        for (String user : users) {
+            if (!user.isEmpty() && !user.equals("null")) {
+                if (!user.equals(currentUserName)) onlineUsersTextArea.append(user + "\n");
+            }
+        }
+    }
     private void handleOnlineUsersMessage(String message) {
         // Extract the online users from the message
         String onlineUsers = message.substring(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX.length());
 
         // Split the list of users into an array
-        String[] users = onlineUsers.split(",");
+        String[] users = onlineUsers.split(", ");
 
         // Clear the current list of online users
         onlineUsersTextArea.setText("");
