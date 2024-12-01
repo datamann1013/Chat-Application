@@ -4,12 +4,14 @@ import com.datamannen1013.javachattapp.client.constants.ClientConstants;
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 import com.datamannen1013.javachattapp.server.databases.DatabaseManager;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 
@@ -99,18 +101,57 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    private final java.util.concurrent.LinkedBlockingQueue<String> messageQueue = new java.util.concurrent.LinkedBlockingQueue<>();
+    private static final int BATCH_SIZE = 10;
+    private static final Object DB_LOCK = new Object();
+
     private void broadcastMessage(String message) {
-        // Save message to database
-        try {
-            dbManager.saveMessage(userName, message);
-        } catch (Exception e) {
-            System.err.println("Error saving message to database: " + e.getMessage());
+        messageQueue.offer(message);
+        new BroadcastWorker().execute();
+    }
+
+    private class BroadcastWorker extends SwingWorker<Void, String> {
+        @Override
+        protected Void doInBackground() throws Exception {
+            processPendingMessages();
+            return null;
         }
 
-        // Broadcast to all clients
-        synchronized (clients) {
-            for (ClientHandler aClient : clients) {
-                aClient.sendMessage(message);
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception e) {
+                System.err.println("Error processing messages: " + e.getMessage());
+            }
+        }
+
+        @Override
+        protected void process(List<String> chunks) {
+            // Handle intermediate results here
+            // This method runs on EDT (Event Dispatch Thread)
+            for (String message : chunks) {
+                // Update UI or handle intermediate messages
+            }
+        }
+    }
+
+
+    private void processPendingMessages() {
+        java.util.List<String> messageBatch = new java.util.ArrayList<>();
+        int count = 0;
+
+        while (count < BATCH_SIZE && messageQueue.peek() != null) {
+            String msg = messageQueue.poll();
+            if (msg != null) {
+                messageBatch.add(msg);
+                count++;
+            }
+        }
+
+        synchronized (DB_LOCK) {
+            for (String msg : messageBatch) {
+                broadcastMessage(msg);
             }
         }
     }

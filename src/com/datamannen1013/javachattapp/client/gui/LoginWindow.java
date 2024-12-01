@@ -3,18 +3,19 @@ package com.datamannen1013.javachattapp.client.gui;
 import com.datamannen1013.javachattapp.client.constants.ClientConstants;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class LoginWindow extends JDialog {
+public class LoginWindow<SendMessageWorker> extends JDialog {
     private String name;
 
-    public LoginWindow(JFrame parent) {
-        super(parent, ClientConstants.APPLICATION_NAME, true);
+    public LoginWindow(SendMessageWorker parent) {
+        super((Frame) parent, ClientConstants.APPLICATION_NAME, true);
 
         java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(ClientConstants.USERNAME_PATTERN);
         boolean isValidInput = false;
         while (!isValidInput) {
             name = JOptionPane.showInputDialog(
-                    parent,
+                    (Component) parent,
                     "Enter your name:",
                     ClientConstants.APPLICATION_NAME,
                     JOptionPane.PLAIN_MESSAGE
@@ -28,7 +29,7 @@ public class LoginWindow extends JDialog {
                 isValidInput = true;
             } else {
                 JOptionPane.showMessageDialog(
-                    parent,
+                        (Component) parent,
                     ClientConstants.USERNAME_PATTERN_MESSAGE,
                     "Invalid Username",
                     JOptionPane.ERROR_MESSAGE);

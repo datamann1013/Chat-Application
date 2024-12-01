@@ -9,6 +9,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import javax.swing.BoxLayout;
 
@@ -49,23 +50,7 @@ public class ChatWindow extends JFrame {
         textField.setForeground(ClientConstants.TEXT_COLOR); // Set text color
         textField.setBackground(ClientConstants.BACKGROUND_COLOR); // Set background color
         textField.addActionListener(e -> { // Add an action listener to the text field to handle user input
-            String userMessage = textField.getText().trim(); // Get the trimmed user message
-            if (!userMessage.isEmpty()) { // Check if the message is not empty
-                // Validate message against pattern
-                java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(ClientConstants.MESSAGE_PATTERN);
-                if (pattern.matcher(userMessage).matches()) {
-                    // Create a formatted message with timestamp and user name
-                    String message = "[" + new SimpleDateFormat(ClientConstants.TIMESTAMP_FORMAT).format(new Date()) + "] " + name + ": " + userMessage;
-                    client.sendMessage(message); // Send the message to the server
-                    textField.setText(""); // Clear the text field after sending the message
-                } else {
-                    // Show error dialog for invalid message format
-                    JOptionPane.showMessageDialog(this, ClientConstants.MESSAGE_PATTERN_MESSAGE, "Invalid Message", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                // Show a warning dialog if the message is empty
-                JOptionPane.showMessageDialog(this, "Message cannot be empty.", "Invalid Input", JOptionPane.WARNING_MESSAGE);
-            }
+            new SendMessageWorker(textField.getText().trim()).execute();
         });
 
         // Create a panel to display online users
@@ -155,6 +140,62 @@ public class ChatWindow extends JFrame {
 
         // Initialize message handler
         messageHandler = new MessageHandler(messageArea, onlineUsersTextArea, name);
+    }
+
+    class SendMessageWorker extends SwingWorker<Void, Void> {
+        private final String userMessage;
+
+        SendMessageWorker(String message) {
+            this.userMessage = message;
+        }
+
+        @Override
+        protected Void doInBackground() throws Exception {
+            if (userMessage.isEmpty()) {
+                SwingUtilities.invokeLater(() ->
+                        JOptionPane.showMessageDialog(ChatWindow.this,
+                                "Message cannot be empty.",
+                                "Invalid Input",
+                                JOptionPane.WARNING_MESSAGE));
+                return null;
+            }
+
+            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(ClientConstants.MESSAGE_PATTERN);
+
+            if (!pattern.matcher(userMessage).matches()) {
+                SwingUtilities.invokeLater(() ->
+                        JOptionPane.showMessageDialog(ChatWindow.this,
+                                ClientConstants.MESSAGE_PATTERN_MESSAGE,
+                                "Invalid Message",
+                                JOptionPane.ERROR_MESSAGE));
+                return null;
+            }
+
+            String formattedMessage = String.format("[%s] %s: %s",
+                    new SimpleDateFormat(ClientConstants.TIMESTAMP_FORMAT).format(new Date()),
+                    name,
+                    userMessage);
+
+            synchronized (client) {
+                if (client.sendMessage(formattedMessage)) {
+                    SwingUtilities.invokeLater(() -> textField.setText(""));
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (InterruptedException | ExecutionException e) {
+                SwingUtilities.invokeLater(() ->
+                        JOptionPane.showMessageDialog(ChatWindow.this,
+                                "Error sending message: " + e.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE));
+            }
+        }
     }
 
     private boolean performGracefulShutdown() {

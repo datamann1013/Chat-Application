@@ -44,7 +44,7 @@ public class DatabaseManager {
     private void initializeDatabase() {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
-            stmt.execute(ServerConstants.CREATE_MESSAGES_TABLE);
+                stmt.execute(ServerConstants.CREATE_MESSAGES_TABLE);
         } catch (SQLException e) {
             e.printStackTrace();
         }

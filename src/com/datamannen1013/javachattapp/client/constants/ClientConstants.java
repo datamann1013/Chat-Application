@@ -43,7 +43,7 @@ public class ClientConstants {
     public static final String CHAT_AREA_TITLE = "Chat Messages";
 
     // REGEX check
-    public static final String REGEX = "\\[(.*?)\\] (.*?): (.*)";
+    public static final String REGEX = "\"\\\\[(\\\\d{2}:\\\\d{2}:\\\\d{2})\\\\] \\\\[(.*?)\\\\] (.*)\"";
 
     //Username rules
     //Length not implemented
@@ -67,6 +67,11 @@ public class ClientConstants {
     public static final String MESSAGE_SEND_ERROR_MESSAGE = "Failed to send message. Please try again.";
     public static final String INVALID_SERVER_RESPONSE_MESSAGE = "Received invalid response from server.";
     public static final String DISCONNECT_ERROR_MESSAGE = "Connection terminated unexpectedly.";
+
+    // Messages to catch
+    public static final String CHAT_HISTORY_START = "--- Chat History ---";
+    public static final String CHAT_HISTORY_END = "--- End of History ---";
+    public static final String WELCOME_PREFIX = "Welcome ";
 
 
 }

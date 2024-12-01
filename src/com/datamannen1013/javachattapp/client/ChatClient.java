@@ -2,6 +2,7 @@ package com.datamannen1013.javachattapp.client;
 
 import com.datamannen1013.javachattapp.client.constants.ClientConstants;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.*;
 import java.util.function.Consumer;
@@ -46,38 +47,68 @@ public class ChatClient {
 
     // Method to send a message to the server
     public boolean sendMessage(String msg) {
+        MessageSenderWorker worker = new MessageSenderWorker(msg);
+        worker.execute();
         try {
-            if (socket != null && !socket.isClosed() && out != null) {
-                out.println(msg);
-                if (out.checkError()) {
-                    handleError(new IOException(ClientConstants.MESSAGE_SEND_ERROR_MESSAGE));
-                    return false;
-                }
-                return true;
-            }
+            return worker.get();
         } catch (Exception e) {
             handleError(new IOException(ClientConstants.MESSAGE_SEND_ERROR_MESSAGE, e));
+            return false;
         }
-        return false;
     }
 
-    // Method to start listening for incoming messages from the server
+    private class MessageSenderWorker extends SwingWorker<Boolean, Void> {
+        private final String message;
+
+        public MessageSenderWorker(String message) {
+            this.message = message;
+        }
+
+        @Override
+        protected Boolean doInBackground() throws Exception {
+            synchronized (socket) {
+                if (socket != null && !socket.isClosed() && out != null) {
+                    out.println(message);
+                    if (out.checkError()) {
+                        throw new IOException(ClientConstants.MESSAGE_SEND_ERROR_MESSAGE);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception e) {
+                handleError(new IOException(ClientConstants.MESSAGE_SEND_ERROR_MESSAGE, e));
+            }
+        }
+    }
     public void startClient() {
         isRunning = true;
         Thread listenerThread = new Thread(() -> {
+            String line;
             try {
-                String line;
-                // Continuously read lines from the server
                 while (isRunning && (line = in.readLine()) != null) {
-                    if (!isValidMessage(line)) {
-                        errorHandler.accept(ClientConstants.INVALID_SERVER_RESPONSE_MESSAGE);
-                        continue;
+                    synchronized (this) {
+                        if (!isValidMessage(line)) {
+                            SwingUtilities.invokeLater(() -> 
+                                errorHandler.accept(ClientConstants.INVALID_SERVER_RESPONSE_MESSAGE));
+                            continue;
+                        }
+                        final String message = line;
+                        SwingUtilities.invokeLater(() -> onMessageReceived.accept(message));
                     }
                     // Pass the received message to the callback function
                     onMessageReceived.accept(line);
                 }
             } catch (IOException e) {
-                // Handle any IO exceptions while reading messages
+                synchronized (this) {
+                    closeResources();
+                }
                 handleError(e);
             } finally {
                 // Ensure resources are closed when done

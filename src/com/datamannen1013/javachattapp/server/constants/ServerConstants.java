@@ -10,6 +10,9 @@ public class ServerConstants {
     public static final String JOIN_MESSAGE_PREFIX = "/join ";
     public static final String LEAVE_MESSAGE_SUFFIX = " has left the chat.";
     public static final String CLIENT_DISCONNECT_PREFIX = "/leave";
+    public static final String CHAT_HISTORY_START = "--- Chat History ---";
+    public static final String CHAT_HISTORY_END = "--- End of History ---";
+    public static final String WELCOME_PREFIX = "Welcome ";
 
     // Database constants
     public static final int MESSAGE_HISTORY_LIMIT = 50; // Number of recent messages to load
