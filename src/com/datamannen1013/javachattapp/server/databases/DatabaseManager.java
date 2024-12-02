@@ -45,6 +45,7 @@ public class DatabaseManager {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
                 stmt.execute(ServerConstants.CREATE_MESSAGES_TABLE);
+                stmt.execute(ServerConstants.CREATE_USERS_TABLE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -116,6 +117,46 @@ public class DatabaseManager {
 
         public Timestamp getTimestamp() {
             return timestamp;
+        }
+    }
+
+    public boolean tableExists(String tableName) {
+        try (Connection conn = getConnection();
+             ResultSet rs = conn.getMetaData().getTables(null, null, tableName, null)) {
+            return rs.next();
+        } catch (SQLException e) {
+            System.err.println("Error checking table existence: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public void verifyDatabaseStructure() {
+        if (!tableExists("messages")) {
+            try (Connection conn = getConnection();
+                 Statement stmt = conn.createStatement()) {
+                stmt.execute(ServerConstants.CREATE_MESSAGES_TABLE);
+            } catch (SQLException e) {
+                System.err.println("Error creating messages table: " + e.getMessage());
+            }
+        }
+    }
+
+    public void resetTable(String tableName) {
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(ServerConstants.DROP_TABLE + tableName);
+
+            // Recreate the table based on its name
+            switch (tableName.toLowerCase()) {
+                case "messages":
+                    stmt.execute(ServerConstants.CREATE_MESSAGES_TABLE);
+                    break;
+                case "users":
+                    stmt.execute(ServerConstants.CREATE_USERS_TABLE);
+                    break;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error resetting table " + tableName + ": " + e.getMessage());
         }
     }
 }

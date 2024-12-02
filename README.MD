@@ -147,16 +147,17 @@ v 0.0.2
 | User-Friendly GUI            | The application features a simple and intuitive graphical user interface built with Java Swing.                  |
 
 ## Known issues / Improvements to be made
-| Theme                     | Action                                                                                         |
-|---------------------------|------------------------------------------------------------------------------------------------|
-| Application Customization | Allow users to customize their application experience (e.g., themes, fonts).                   |
-| Multiple Chat Rooms       | Enable the creation and management of multiple chat rooms for users to join.                   |
-| User Authentication       | Implement a secure system for user authentication, including username and password management. |
-| Constant UI Updates       | Implement a system for constant updates to the UI to reflect real-time changes and messages.   |
-| Private Messaging         | Develop a feature for private messaging between users.                                         |
-| Code Optimization         | Review and optimize the code for better performance and maintainability.                       |
-| Long-term memory          | Implement a database to store messages                                                         |
-| Username mix-up           | Implement session id so that multiple users can have same or similar names                     |
-| Users                     | Implement users in a database                                                                  |
+| Theme                     | Action                                                                                                                                    |
+|---------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| Application Customization | Allow users to customize their application experience (e.g., themes, fonts).                                                              |
+| Multiple Chat Rooms       | Enable the creation and management of multiple chat rooms for users to join.                                                              |
+| User Authentication       | Implement a secure system for user authentication, including username and password management.                                            |
+| Constant UI Updates       | Implement a system for constant updates to the UI to reflect real-time changes and messages.                                              |
+| Private Messaging         | Develop a feature for private messaging between users.                                                                                    |
+| Code Optimization         | Review and optimize the code for better performance and maintainability.                                                                  |
+| Long-term memory          | Implement a database to store messages                                                                                                    |
+| Username mix-up           | Implement session id so that multiple users can have same or similar names                                                                |
+| Users                     | Implement users in a database                                                                                                             |
+| Encryption                | Implement encryption of passwords for login                                                                                               |
 
 

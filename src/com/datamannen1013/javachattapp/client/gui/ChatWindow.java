@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import javax.swing.BoxLayout;
+import javax.swing.text.BadLocationException;
 
 // Main class for the chat client GUI
 public class ChatWindow extends JFrame {
@@ -256,6 +257,7 @@ public class ChatWindow extends JFrame {
     // Method to handle messages received from the server
     private void onMessageReceived(String message) {
         // Use SwingUtilities to ensure that UI updates are done on the Event Dispatch Thread
+        System.out.println("recieved message: " + message);
         SwingUtilities.invokeLater(() -> {
             try {
                 if (message == null || message.trim().isEmpty()) {
@@ -299,14 +301,46 @@ public class ChatWindow extends JFrame {
         statusLabel.setText("Connection Status: Error");
         statusLabel.setForeground(Color.RED);
 
-        boolean retry = ErrorHandler.showConnectionError(this, error, () -> {
-            statusLabel.setText("Connection Status: Reconnecting...");
-            statusLabel.setForeground(Color.ORANGE);
-            createClient(name, messageHandler::handleMessage);
-        });
-        if (retry) {
-            statusLabel.setText("Connection Status: Reconnecting...");
-            createClient(name, messageHandler::handleMessage);
+        try {
+            boolean retry = ErrorHandler.showConnectionError(this, error, () -> {
+                try {
+                    statusLabel.setText("Connection Status: Reconnecting...");
+                    statusLabel.setForeground(Color.ORANGE);
+                    createClient(name, message -> {
+                        try {
+                            messageHandler.handleMessage(message);
+                        } catch (BadLocationException e) {
+                            SwingUtilities.invokeLater(() ->
+                                    ErrorHandler.showError(this, "Error displaying message: " + e.getMessage())
+                            );
+                        }
+                    });
+                } catch (Exception e) {
+                    SwingUtilities.invokeLater(() ->
+                            ErrorHandler.showError(this, "Error during reconnection: " + e.getMessage())
+                    );
+                }
+            });
+
+            if (retry) {
+                statusLabel.setText("Connection Status: Reconnecting...");
+                createClient(name, message -> {
+                    try {
+                        messageHandler.handleMessage(message);
+                    } catch (BadLocationException e) {
+                        SwingUtilities.invokeLater(() ->
+                                ErrorHandler.showError(this, "Error displaying message: " + e.getMessage())
+                        );
+                    }
+                });
+            }
+        } catch (Exception e) {
+            // Handle any exceptions that might occur during the error handling process
+            SwingUtilities.invokeLater(() -> {
+                statusLabel.setText("Connection Status: Fatal Error");
+                statusLabel.setForeground(Color.RED);
+                ErrorHandler.showError(this, "Critical error occurred: " + e.getMessage());
+            });
         }
     }
 }

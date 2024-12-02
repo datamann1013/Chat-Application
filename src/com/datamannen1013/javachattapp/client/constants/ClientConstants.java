@@ -74,4 +74,5 @@ public class ClientConstants {
     public static final String WELCOME_PREFIX = "Welcome ";
 
 
+    public static final Color SYSTEM_MESSAGE_COLOR = Color.red;
 }
