@@ -21,8 +21,8 @@ public class ChatWindow extends JFrame {
     private final JTextArea onlineUsersTextArea;
     private String name;
     private ChatClient client; // Chat client instance for handling communication
-
     private final MessageHandler messageHandler;
+
 
     // Constructor to set up the GUI
     public ChatWindow() {
@@ -100,15 +100,7 @@ public class ChatWindow extends JFrame {
         add(textField, BorderLayout.SOUTH); // Add the text field to the bottom of the window
 
         // Initialize the exit button
-        JButton exitButton = new JButton("Exit"); // Create exit button
-        exitButton.setFont(ClientConstants.BUTTON_FONT); // Set font for the button
-        exitButton.setBackground(ClientConstants.BUTTON_COLOR); // Set background color
-        exitButton.setForeground(Color.WHITE); // Set text color to white
-        exitButton.addActionListener(e -> {
-            // Confirmation dialog before exiting
-            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) performGracefulShutdown();
-        });
+        JButton exitButton = getExitButton();
 
         // Add a WindowListener to handle the window close event
         addWindowListener(new WindowAdapter() {
@@ -117,6 +109,10 @@ public class ChatWindow extends JFrame {
                 // Confirmation dialog before exiting
                 int confirm = JOptionPane.showConfirmDialog(ChatWindow.this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) performGracefulShutdown();
+                else if  (confirm == JOptionPane.NO_OPTION) {
+                    // If the user cancels the exit, set the default close operation to do nothing
+                    setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                }
             }
         });
 
@@ -135,12 +131,43 @@ public class ChatWindow extends JFrame {
             // If the user didn't enter a valid name, close the application
             dispose();
         }
-        // Set the window title to include the user's name
-        this.setTitle(ClientConstants.APPLICATION_NAME);
-        textField.requestFocusInWindow(); // Request focus for the text field
 
         // Initialize message handler
         messageHandler = new MessageHandler(messageArea, onlineUsersTextArea, name);
+
+        // Replace the current focus request with:
+        SwingUtilities.invokeLater(() -> {
+            // Make sure the window is properly validated first
+            this.validate();
+            this.pack();
+
+            // Now try to set focus
+            if (textField != null) {
+                // Add some debug info
+                System.out.println("Window size: " + this.getSize());
+                System.out.println("TextField size: " + textField.getSize());
+                System.out.println("TextField visible: " + textField.isVisible());
+
+                // Request focus after ensuring visibility
+                textField.setVisible(true);
+                textField.validate();
+                boolean focusResult = textField.requestFocusInWindow();
+                System.out.println("Focus request result after validation: " + focusResult);
+            }
+        });
+    }
+
+    private JButton getExitButton() {
+        JButton exitButton = new JButton("Exit"); // Create exit button
+        exitButton.setFont(ClientConstants.BUTTON_FONT); // Set font for the button
+        exitButton.setBackground(ClientConstants.BUTTON_COLOR); // Set background color
+        exitButton.setForeground(Color.WHITE); // Set text color to white
+        exitButton.addActionListener(e -> {
+            // Confirmation dialog before exiting
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) performGracefulShutdown();
+        });
+        return exitButton;
     }
 
     class SendMessageWorker extends SwingWorker<Void, Void> {
@@ -151,7 +178,7 @@ public class ChatWindow extends JFrame {
         }
 
         @Override
-        protected Void doInBackground() throws Exception {
+        protected Void doInBackground(){
             if (userMessage.isEmpty()) {
                 SwingUtilities.invokeLater(() ->
                         JOptionPane.showMessageDialog(ChatWindow.this,
@@ -199,7 +226,7 @@ public class ChatWindow extends JFrame {
         }
     }
 
-    private boolean performGracefulShutdown() {
+    private void performGracefulShutdown() {
         final Object shutdownLock = new Object();
         final boolean[] shutdownComplete = {false};
         final int MAX_RETRIES = 3;
@@ -242,7 +269,6 @@ public class ChatWindow extends JFrame {
             System.err.println("Shutdown wait interrupted: " + e.getMessage());
         }
         if (!shutdownComplete[0]) dispose();
-        return shutdownComplete[0];
     }
 
     // Method to prompt the user for their username
@@ -277,9 +303,7 @@ public class ChatWindow extends JFrame {
         statusLabel.setForeground(Color.ORANGE);
         add(statusLabel, BorderLayout.NORTH);
 
-        Consumer<String> errorHandler = error -> {
-            SwingUtilities.invokeLater(() -> handleClientError(error, name, statusLabel));
-        };
+        Consumer<String> errorHandler = error -> SwingUtilities.invokeLater(() -> handleClientError(error, name, statusLabel));
 
         try {
             // Initialize the ChatClient instance with server details and message handler

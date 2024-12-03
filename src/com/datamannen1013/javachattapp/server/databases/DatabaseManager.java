@@ -1,5 +1,6 @@
 package com.datamannen1013.javachattapp.server.databases;
 
+import com.datamannen1013.javachattapp.client.constants.ClientConstants;
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 
 import java.sql.*;
@@ -31,7 +32,7 @@ public class DatabaseManager {
     }
 
     // Get database connection
-    public Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         try {
             return DriverManager.getConnection(DB_URL);
         } catch (SQLException e) {
@@ -52,17 +53,16 @@ public class DatabaseManager {
     }
 
     // Save message to database
-    public void saveMessage(String sender, String content) {
+    public static void saveMessage(String sender, String content) {
         try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(ServerConstants.INSERT_MESSAGE)) {
+            PreparedStatement pstmt = conn.prepareStatement(ServerConstants.INSERT_MESSAGE)){
 
-            pstmt.setString(1, sender);
-            pstmt.setString(2, content);
-            pstmt.executeUpdate();
-
+                pstmt.setString(1, sender);
+                pstmt.setString(2, content);
+                pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+    }
     }
 
     // Get recent messages

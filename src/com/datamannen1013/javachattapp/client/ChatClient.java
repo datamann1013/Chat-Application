@@ -102,8 +102,6 @@ public class ChatClient {
                         final String message = line;
                         SwingUtilities.invokeLater(() -> onMessageReceived.accept(message));
                     }
-                    // Pass the received message to the callback function
-                    onMessageReceived.accept(line);
                 }
             } catch (IOException e) {
                 synchronized (this) {

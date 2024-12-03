@@ -1,6 +1,7 @@
 package com.datamannen1013.javachattapp.server;
 
 import com.datamannen1013.javachattapp.client.constants.ClientConstants;
+import com.datamannen1013.javachattapp.client.gui.MessageHandler;
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 import com.datamannen1013.javachattapp.server.databases.DatabaseManager;
 
@@ -10,9 +11,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 
 public class ClientHandler implements Runnable {
@@ -21,7 +24,6 @@ public class ClientHandler implements Runnable {
     private final Set<ClientHandler> clients;
     private final PrintWriter out;
     private final BufferedReader in;
-    private final DatabaseManager dbManager;
 
     public ClientHandler(Socket socket, Set<ClientHandler> clients, String message) throws IOException {
         try {
@@ -29,10 +31,9 @@ public class ClientHandler implements Runnable {
             this.clients = clients;
             String proposedUsername = message.replace(ServerConstants.JOIN_MESSAGE_PREFIX, "");
             this.userName = proposedUsername;
-            this.dbManager = DatabaseManager.getInstance();
             
             // Validate username
-            java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(ClientConstants.USERNAME_PATTERN);
+            Pattern pattern = Pattern.compile(ClientConstants.USERNAME_PATTERN);
             if (!pattern.matcher(proposedUsername).matches()) {
                 throw new IllegalArgumentException("Invalid username format");
             }
@@ -43,22 +44,24 @@ public class ClientHandler implements Runnable {
 
                 synchronized (clients) {
                     clients.add(this);
+
                     // Send current online users
                     String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
-                    System.out.println(onlineUsersMessage);
+                    System.out.println("Sending online users to new client: " + onlineUsersMessage);
                     broadcastMessage(onlineUsersMessage);
                 }
                 // Send recent messages to new client
                 ChatServer.sendRecentMessagesToClient(this);
+
                 // Send welcome message
                 sendMessage("Welcome " + userName + "!");
 
                 // Notify others about new user
                 broadcastMessage(userName + " is now online.");
 
-                // Update online users list
+                /* Update online users list
                 String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
-                broadcastMessage(onlineUsersMessage);
+                broadcastMessage(onlineUsersMessage);*/
 
 
         } catch (IllegalArgumentException e) {
@@ -74,13 +77,11 @@ public class ClientHandler implements Runnable {
             }
         }
         // Remove trailing comma if exists
-        if (!onlineUsers.isEmpty()) {
-            onlineUsers.setLength(onlineUsers.length() - 1);
-        }
-        return onlineUsers.toString();
+        return !onlineUsers.isEmpty() ?
+                onlineUsers.substring(0, onlineUsers.length() - 1) : "";
     }
 
-    private String getUserName() {
+    String getUserName() {
         return this.userName;
     }
 
@@ -104,26 +105,24 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private boolean isSystemMessage(String message) {
-        return message.startsWith(ServerConstants.ONLINE_USERS_MESSAGE_PREFIX) ||
-                message.equals(ServerConstants.CHAT_HISTORY_START) ||
-                message.equals(ServerConstants.CHAT_HISTORY_END) ||
-                message.startsWith(ServerConstants.WELCOME_PREFIX) ||
-                message.startsWith(ServerConstants.CLIENT_DISCONNECT_PREFIX);
-    }
-
 
     private final java.util.concurrent.LinkedBlockingQueue<String> messageQueue = new java.util.concurrent.LinkedBlockingQueue<>();
     private static final int BATCH_SIZE = 10;
     private static final Object DB_LOCK = new Object();
+    private final AtomicBoolean isProcessingBroadcast = new AtomicBoolean(false);
 
     private void broadcastMessage(String message) {
+        // Make sure the message is not a duplicate
+        if (message.endsWith("is now online.") && isProcessingBroadcast.get()) {
+            System.out.println("Skipping duplicate online broadcast: " + message);
+            return;
+        }
         // Only queue non-system messages
-        if (!isSystemMessage(message)) {
-            messageQueue.offer(message);
+        if (!MessageHandler.isSystemMessage(message)) {
             System.out.println("Message queued: " + message);
+            messageQueue.offer(message);
             System.out.println("Queue size: " + messageQueue.size());
-            new BroadcastWorker().execute();
+            DatabaseManager.saveMessage(userName, message);
         } else {
             // For system messages, just broadcast without queueing
             synchronized (clients) {
@@ -131,16 +130,27 @@ public class ClientHandler implements Runnable {
                     client.sendMessage(message);
                 }
             }
-            dbManager.saveMessage(userName, message);
+
+        }
+        // Only start a new BroadcastWorker if one isn't already running
+        if (isProcessingBroadcast.compareAndSet(false, true)) {
+            new BroadcastWorker().execute();
         }
     }
 
     private class BroadcastWorker extends SwingWorker<Void, String> {
         @Override
         protected Void doInBackground() throws Exception {
-            System.out.println("BroadcastWorker started");
-            processPendingMessages();
-            System.out.println("BroadcastWorker finished");
+            try {
+                System.out.println("BroadcastWorker started");
+                processPendingMessages();
+            } finally {
+                isProcessingBroadcast.set(false);
+                // Check if new messages arrived while processing
+                if (!messageQueue.isEmpty()) {
+                    broadcastMessage(messageQueue.peek()); // Trigger new worker if needed
+                }
+            }
             return null;
         }
 
@@ -166,19 +176,14 @@ public class ClientHandler implements Runnable {
 
 
     private void processPendingMessages() {
-        java.util.List<String> messageBatch = new java.util.ArrayList<>();
-        int count = 0;
-
         System.out.println("Starting processPendingMessages");
-        System.out.println("Current queue size: " + messageQueue.size());
+        java.util.List<String> messageBatch = new ArrayList<>();
 
-        while (count < BATCH_SIZE && messageQueue.peek() != null) {
-            String msg = messageQueue.poll();
-            if (msg != null) {
-                System.out.println("Added to batch: " + msg);
-                messageBatch.add(msg);
-                count++;
-            }
+        // Collect messages from queue
+        String message;
+        while ((message = messageQueue.poll()) != null) {
+            System.out.println("Added to batch: " + message);
+            messageBatch.add(message);
         }
 
         System.out.println("Batch size: " + messageBatch.size());
@@ -186,7 +191,13 @@ public class ClientHandler implements Runnable {
         synchronized (DB_LOCK) {
             for (String msg : messageBatch) {
                 System.out.println("Broadcasting message: " + msg);
-                broadcastMessage(msg);
+                for (ClientHandler client : clients) {
+                    try {
+                        client.sendMessage(msg);
+                    } catch (Exception e) {
+                        System.err.println("Error sending to client: " + e.getMessage());
+                    }
+                }
             }
         }
     }

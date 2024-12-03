@@ -104,8 +104,10 @@ public class ChatServer {
     }
     // Method to send recent messages to a new client
     static void sendRecentMessagesToClient(ClientHandler client) {
+        System.out.println("Starting to send history to client: " + client.getUserName());
         try {
             List<DatabaseManager.Message> recentMessages = dbManager.getRecentMessages(ServerConstants.MESSAGE_HISTORY_LIMIT);
+            System.out.println("Retrieved " + recentMessages.size() + " messages from database");
 
             // Send a header to indicate history messages
             client.sendMessage("--- Chat History ---");
@@ -113,12 +115,12 @@ public class ChatServer {
             // Send messages in chronological order (oldest first)
             Collections.reverse(recentMessages); // Reverse since we got them in DESC order
             for (DatabaseManager.Message msg : recentMessages) {
-                // Format the timestamp
                 String formattedTime = new SimpleDateFormat("HH:mm:ss").format(msg.getTimestamp());
                 client.sendMessage(msg.getSender() + " [" + formattedTime + "] " + msg.getContent());
             }
 
             client.sendMessage("--- End of History ---");
+            System.out.println("Finished sending history to client: " + client.getUserName());
 
         } catch (Exception e) {
             System.err.println("Error sending message history to client: " + e.getMessage());

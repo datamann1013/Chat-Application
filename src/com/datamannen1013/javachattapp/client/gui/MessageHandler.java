@@ -1,5 +1,6 @@
 package com.datamannen1013.javachattapp.client.gui;
 import com.datamannen1013.javachattapp.client.constants.ClientConstants;
+import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -21,14 +22,16 @@ public class MessageHandler extends Component {
     private final JTextArea onlineUsersTextArea;
     private Style timestampStyle;
     private Style messageStyle;
-    private boolean isProcessingHistory = false;
     private final Set<String> processedMessages = new HashSet<>(); // To prevent duplicates
 
     public MessageHandler(JTextPane messageArea, JTextArea onlineUsersTextArea, String currentUserName) {
+        System.out.println("MessageHandler constructor start");
         this.messageArea = messageArea;
         this.onlineUsersTextArea = onlineUsersTextArea;
         this.currentUserName = currentUserName;
+        System.out.println("About to initialize styles");
         initializeStyles();
+        System.out.println("MessageHandler constructor end");
     }
 
     private void initializeStyles() {
@@ -46,30 +49,36 @@ public class MessageHandler extends Component {
     }
 
     public void handleMessage(String message) throws BadLocationException {
-            // Prevent duplicate processing
-            if (processedMessages.contains(message)) {
-                return;
-            }
-            processedMessages.add(message);
+        // Prevent duplicate processing
+        if (processedMessages.contains(message)) {
+            return;
+        }
+        processedMessages.add(message);
 
-            // Handle system messages
-            if (isSystemMessage(message)) {
-                handleSystemMessage(message);
-                return;
-            }
+        // Handle system messages
+        if (isSystemMessage(message)) {
+            handleSystemMessage(message);
+            return;
+        }
 
-            // Start/End history markers
-            if (message.equals(ClientConstants.CHAT_HISTORY_START)) {
-                isProcessingHistory = true;
-                displaySystemMessage(message);
-                return;
-            } else if (message.equals(ClientConstants.CHAT_HISTORY_END)) {
-                isProcessingHistory = false;
-                displaySystemMessage(message);
-                return;
-            }
+        // Start/End history markers
+        boolean isProcessingHistory = false;
+        if (message.equals(ClientConstants.CHAT_HISTORY_START)) {
+            isProcessingHistory = true;
+            displaySystemMessage(message);
+            return;
+        } else if (message.equals(ClientConstants.CHAT_HISTORY_END)) {
+            isProcessingHistory = false;
+            displaySystemMessage(message);
+            return;
+        }
+        // Handle welcome messages
+        if (message.startsWith("Welcome ") && !message.contains(currentUserName)) {
+            displaySystemMessage(message);
+            return;
+        }
 
-            // Regular messages
+        // Regular messages
             new MessageProcessingWorker(message).execute();
         }
 
@@ -88,16 +97,21 @@ public class MessageHandler extends Component {
             });
         }
 
-        private boolean isSystemMessage(String message) {
-            return message.startsWith(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX) ||
-                    message.startsWith(ClientConstants.WELCOME_PREFIX) ||
-                    message.startsWith("/onlineusers");  // Add this specific check
-        }
+    public static boolean isSystemMessage(String message) {
+        return message.startsWith(ServerConstants.ONLINE_USERS_MESSAGE_PREFIX) ||
+                message.equals(ServerConstants.CHAT_HISTORY_START) ||
+                message.equals(ServerConstants.CHAT_HISTORY_END) ||
+                message.startsWith(ServerConstants.WELCOME_PREFIX) ||
+                message.startsWith(ServerConstants.CLIENT_DISCONNECT_PREFIX);
+    }
 
     private void displaySystemMessage(String message) throws BadLocationException {
-        // Display system messages in a different style
-        // For example, in italic or different color
-        updateMessageArea("[System] " + message + "\n");
+        StyledDocument doc = messageArea.getStyledDocument();
+        Style systemStyle = messageArea.addStyle("System Style", null);
+        StyleConstants.setForeground(systemStyle, ClientConstants.SYSTEM_MESSAGE_COLOR);
+        StyleConstants.setItalic(systemStyle, true);
+        doc.insertString(doc.getLength(), message + "\n", systemStyle);
+        messageArea.setCaretPosition(doc.getLength());
     }
 
     private void updateMessageArea(String formattedMessage) throws BadLocationException {
@@ -269,11 +283,20 @@ public class MessageHandler extends Component {
     }
     private void handleOnlineUsersMessage(String message) throws BadLocationException {
         // Extract and display online users
-        String users = message.replace(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX, "")
-                .replace("/onlineusers ", "");
+        String users = message;
+
+        // Remove prefixes in the correct order - only remove the first matching prefix
+        if (users.startsWith(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX)) {
+            users = users.substring(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX.length());
+        }
+
+        // Trim any extra whitespace
+        users = users.trim();
+
         StyledDocument doc = messageArea.getStyledDocument();
         Style systemStyle = messageArea.addStyle("System Style", null);
         StyleConstants.setForeground(systemStyle, ClientConstants.SYSTEM_MESSAGE_COLOR);
+        StyleConstants.setItalic(systemStyle, true);
         doc.insertString(doc.getLength(), "Online users: " + users + "\n", systemStyle);
         messageArea.setCaretPosition(doc.getLength());
     }

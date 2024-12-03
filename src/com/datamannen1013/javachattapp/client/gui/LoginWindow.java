@@ -21,10 +21,6 @@ public class LoginWindow<SendMessageWorker> extends JDialog {
                     JOptionPane.PLAIN_MESSAGE
             );
 
-            if (name == null) {
-                System.exit(0);
-            }
-
             if (pattern.matcher(name).matches()) {
                 isValidInput = true;
             } else {
@@ -35,6 +31,7 @@ public class LoginWindow<SendMessageWorker> extends JDialog {
                     JOptionPane.ERROR_MESSAGE);
             }
         }
+        System.out.println("Client: " + name);
 
     }
     // Add this getter method
