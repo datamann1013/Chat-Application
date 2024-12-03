@@ -1,6 +1,7 @@
 package com.datamannen1013.javachattapp.client.gui;
 
 import com.datamannen1013.javachattapp.client.ChatClient;
+import com.datamannen1013.javachattapp.client.MessageHandler;
 import com.datamannen1013.javachattapp.client.constants.ClientConstants;
 
 import javax.swing.*;
@@ -141,19 +142,16 @@ public class ChatWindow extends JFrame {
             this.validate();
             this.pack();
 
-            // Now try to set focus
-            if (textField != null) {
-                // Add some debug info
-                System.out.println("Window size: " + this.getSize());
-                System.out.println("TextField size: " + textField.getSize());
-                System.out.println("TextField visible: " + textField.isVisible());
+            // Add some debug info
+            System.out.println("Window size: " + this.getSize());
+            System.out.println("TextField size: " + textField.getSize());
+            System.out.println("TextField visible: " + textField.isVisible());
 
-                // Request focus after ensuring visibility
-                textField.setVisible(true);
-                textField.validate();
-                boolean focusResult = textField.requestFocusInWindow();
-                System.out.println("Focus request result after validation: " + focusResult);
-            }
+            // Request focus after ensuring visibility
+            textField.setVisible(true);
+            textField.validate();
+            boolean focusResult = textField.requestFocusInWindow();
+            System.out.println("Focus request result after validation: " + focusResult);
         });
     }
 
@@ -178,6 +176,7 @@ public class ChatWindow extends JFrame {
         }
 
         @Override
+        @SuppressWarnings({"SynchronizeOnNonFinalField"}) // Suppressing warning as client synchronization is intended behavior
         protected Void doInBackground(){
             if (userMessage.isEmpty()) {
                 SwingUtilities.invokeLater(() ->
@@ -273,7 +272,7 @@ public class ChatWindow extends JFrame {
 
     // Method to prompt the user for their username
     private String promptForUserName() {
-        LoginWindow loginWindow = new LoginWindow(this);
+        LoginWindow<ChatWindow> loginWindow = new LoginWindow<>(this);
         this.name = loginWindow.getName();
 
         return name.trim(); // Return the valid username without leading/trailing whitespace
@@ -283,7 +282,7 @@ public class ChatWindow extends JFrame {
     // Method to handle messages received from the server
     private void onMessageReceived(String message) {
         // Use SwingUtilities to ensure that UI updates are done on the Event Dispatch Thread
-        System.out.println("recieved message: " + message);
+        System.out.println("received message: " + message);
         SwingUtilities.invokeLater(() -> {
             try {
                 if (message == null || message.trim().isEmpty()) {

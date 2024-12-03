@@ -10,6 +10,7 @@ public class ClientConstants {
     public static final int SERVER_PORT = 5000;
 
     // Command prefixes for handling specific message types
+    @SuppressWarnings("SpellCheckingInspection") //Correct spelling in this spesific case
     public static final String ONLINE_USERS_MESSAGE_PREFIX = "/onlineusers ";
     public static final String JOIN_MESSAGE_PREFIX = "/join ";
     public static final String LEAVE_MESSAGE_SUFFIX = " has left the chat.";
@@ -46,20 +47,14 @@ public class ClientConstants {
     public static final String REGEX = "\"\\\\[(\\\\d{2}:\\\\d{2}:\\\\d{2})\\\\] \\\\[(.*?)\\\\] (.*)\"";
 
     //Username rules
-    //Length not implemented
-    public static final int USERNAME_MAX_LENGTH = 20;
-
     public static final String USERNAME_PATTERN = "^[a-zA-Z0-9_ -]{3,20}$";
     public static final String USERNAME_PATTERN_MESSAGE = "Username must be 3-20 characters long and can only contain letters, numbers, spaces, underscores, and hyphens.";
 
     //Message rules
-    //Length not implemented
-
-    public static final int MESSAGE_MAX_LENGTH = 500;
     public static final String MESSAGE_PATTERN = "^[\\p{Print}\\s]{1,500}$";
     public static final String MESSAGE_PATTERN_MESSAGE = "Message must be 1-500 characters long and cannot contain control characters.";
 
-    //Error messagess
+    //Error messages
     public static final String CONNECTION_ERROR_MESSAGE = "Unable to connect to the server. Please check your network connection.";
     public static final String SERVER_TIMEOUT_MESSAGE = "Server is not responding. Connection attempt timed out.";
     public static final String NETWORK_ERROR_MESSAGE = "Network connection was lost. Please check your internet connection.";
@@ -71,7 +66,6 @@ public class ClientConstants {
     // Messages to catch
     public static final String CHAT_HISTORY_START = "--- Chat History ---";
     public static final String CHAT_HISTORY_END = "--- End of History ---";
-    public static final String WELCOME_PREFIX = "Welcome ";
 
 
     public static final Color SYSTEM_MESSAGE_COLOR = Color.DARK_GRAY;

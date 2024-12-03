@@ -1,7 +1,7 @@
 package com.datamannen1013.javachattapp.server;
 
 import com.datamannen1013.javachattapp.client.constants.ClientConstants;
-import com.datamannen1013.javachattapp.client.gui.MessageHandler;
+import com.datamannen1013.javachattapp.client.MessageHandler;
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 import com.datamannen1013.javachattapp.server.databases.DatabaseManager;
 
@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
@@ -25,13 +24,14 @@ public class ClientHandler implements Runnable {
     private final PrintWriter out;
     private final BufferedReader in;
 
+    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter") // Suppressing warning as clients synchronization is intended behavior
     public ClientHandler(Socket socket, Set<ClientHandler> clients, String message) throws IOException {
         try {
             this.clientSocket = socket;
             this.clients = clients;
             String proposedUsername = message.replace(ServerConstants.JOIN_MESSAGE_PREFIX, "");
             this.userName = proposedUsername;
-            
+
             // Validate username
             Pattern pattern = Pattern.compile(ClientConstants.USERNAME_PATTERN);
             if (!pattern.matcher(proposedUsername).matches()) {
@@ -107,7 +107,6 @@ public class ClientHandler implements Runnable {
 
 
     private final java.util.concurrent.LinkedBlockingQueue<String> messageQueue = new java.util.concurrent.LinkedBlockingQueue<>();
-    private static final int BATCH_SIZE = 10;
     private static final Object DB_LOCK = new Object();
     private final AtomicBoolean isProcessingBroadcast = new AtomicBoolean(false);
 
@@ -140,7 +139,7 @@ public class ClientHandler implements Runnable {
 
     private class BroadcastWorker extends SwingWorker<Void, String> {
         @Override
-        protected Void doInBackground() throws Exception {
+        protected Void doInBackground(){
             try {
                 System.out.println("BroadcastWorker started");
                 processPendingMessages();
@@ -164,14 +163,7 @@ public class ClientHandler implements Runnable {
             }
         }
 
-        @Override
-        protected void process(List<String> chunks) {
-            // Handle intermediate results here
-            // This method runs on EDT (Event Dispatch Thread)
-            for (String message : chunks) {
-                // Update UI or handle intermediate messages
-            }
-        }
+
     }
 
 

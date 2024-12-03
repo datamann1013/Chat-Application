@@ -1,5 +1,7 @@
 package com.datamannen1013.javachattapp.client.gui;
 
+import com.datamannen1013.javachattapp.client.MessageHandler;
+
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
 
@@ -24,7 +26,7 @@ public class ErrorHandler {
         );
     }
 
-    public static boolean showConnectionError(JFrame parent, String message, Runnable retryAction) {
+    public static boolean showConnectionError(JFrame parent, String message, Runnable ignoredRetryAction) {
         int choice = JOptionPane.showConfirmDialog(parent, message + "\nWould you like to retry?",
             "Connection Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
         return choice == JOptionPane.YES_OPTION;

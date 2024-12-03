@@ -4,7 +4,6 @@ package com.datamannen1013.javachattapp.client;
 import com.datamannen1013.javachattapp.client.gui.ChatWindow;
 
 import javax.swing.*;
-import java.awt.*;
 
 // Main class for the chat client GUI
 public class ChatClientGUI {

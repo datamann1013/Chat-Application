@@ -1,5 +1,6 @@
-package com.datamannen1013.javachattapp.client.gui;
+package com.datamannen1013.javachattapp.client;
 import com.datamannen1013.javachattapp.client.constants.ClientConstants;
+import com.datamannen1013.javachattapp.client.gui.ErrorHandler;
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 
 import javax.swing.*;
@@ -62,13 +63,10 @@ public class MessageHandler extends Component {
         }
 
         // Start/End history markers
-        boolean isProcessingHistory = false;
         if (message.equals(ClientConstants.CHAT_HISTORY_START)) {
-            isProcessingHistory = true;
             displaySystemMessage(message);
             return;
         } else if (message.equals(ClientConstants.CHAT_HISTORY_END)) {
-            isProcessingHistory = false;
             displaySystemMessage(message);
             return;
         }
@@ -85,8 +83,7 @@ public class MessageHandler extends Component {
         private void handleSystemMessage(String message) {
             SwingUtilities.invokeLater(() -> {
                 try {
-                    if (message.startsWith(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX) ||
-                            message.startsWith("/onlineusers")) {
+                    if (message.startsWith(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX)) {
                         handleOnlineUsersMessage(message);
                     } else {
                         displaySystemMessage(message);
@@ -114,29 +111,6 @@ public class MessageHandler extends Component {
         messageArea.setCaretPosition(doc.getLength());
     }
 
-    private void updateMessageArea(String formattedMessage) throws BadLocationException {
-        // Don't try to split the message if it's a system message
-        if (formattedMessage.startsWith("[System]")) {
-            StyledDocument doc = messageArea.getStyledDocument();
-            Style systemStyle = messageArea.addStyle("System Style", null);
-            StyleConstants.setForeground(systemStyle, ClientConstants.SYSTEM_MESSAGE_COLOR);
-            StyleConstants.setItalic(systemStyle, true);
-            doc.insertString(doc.getLength(), formattedMessage + "\n", systemStyle);
-            return;
-        }
-
-        // Handle regular messages
-        StyledDocument doc = messageArea.getStyledDocument();
-        String[] parts = formattedMessage.split(":", 2); // Split only on first colon
-        if (parts.length == 2) {
-            doc.insertString(doc.getLength(), parts[0] + ": ", timestampStyle);
-            doc.insertString(doc.getLength(), parts[1] + "\n", messageStyle);
-        } else {
-            // If no colon found, just display the whole message
-            doc.insertString(doc.getLength(), formattedMessage + "\n", messageStyle);
-        }
-    }
-
     private class MessageProcessingWorker extends SwingWorker<Void, String> {
         private final String message;
 
@@ -145,7 +119,7 @@ public class MessageHandler extends Component {
         }
 
         @Override
-        protected Void doInBackground() throws Exception {
+        protected Void doInBackground(){
             try {
                 processMessage(message);
             } catch (Exception e) {
@@ -177,7 +151,7 @@ public class MessageHandler extends Component {
             }
         }
 
-        private void processMessage(String message) throws BadLocationException {
+        private void processMessage(String message){
             // Skip if it's a system message (double-check)
             if (isSystemMessage(message)) {
                 return;
@@ -231,20 +205,6 @@ public class MessageHandler extends Component {
             }
         }
 
-        private void displaySystemMessage(String message) {
-            SwingUtilities.invokeLater(() -> {
-                try {
-                    StyledDocument doc = messageArea.getStyledDocument();
-                    Style systemStyle = messageArea.addStyle("System Style", null);
-                    StyleConstants.setForeground(systemStyle, ClientConstants.SYSTEM_MESSAGE_COLOR);
-                    StyleConstants.setItalic(systemStyle, true);
-                    doc.insertString(doc.getLength(), message + "\n", systemStyle);
-                    messageArea.setCaretPosition(doc.getLength());
-                } catch (BadLocationException e) {
-                    System.err.println("Error displaying system message: " + e.getMessage());
-                }
-            });
-        }
 
         private String formatMessage(String timestamp, String username, String userMessage) {
             return String.format("[%s] %s: %s\n", timestamp, username, userMessage);
@@ -260,10 +220,8 @@ public class MessageHandler extends Component {
 
     private void handleMessageError(String errorMessage, Exception e) {
         System.err.println(errorMessage + (e != null ? ": " + e.getMessage() : ""));
-        SwingUtilities.invokeLater(() -> {
-            ErrorHandler.showError((JFrame) SwingUtilities.getWindowAncestor(messageArea), 
-                errorMessage + (e != null ? ": " + e.getMessage() : ""));
-        });
+        SwingUtilities.invokeLater(() -> ErrorHandler.showError((JFrame) SwingUtilities.getWindowAncestor(messageArea),
+            errorMessage + (e != null ? ": " + e.getMessage() : "")));
 
         // Extract the online users from the message
         String onlineUsers = errorMessage.substring(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX.length());

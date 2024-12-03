@@ -6,6 +6,7 @@ public class ServerConstants {
     public static final int SERVER_PORT = 5000;
 
     // Command prefixes for handling specific message types
+    @SuppressWarnings("SpellCheckingInspection") //Correct spelling in this spesific case
     public static final String ONLINE_USERS_MESSAGE_PREFIX = "/onlineusers ";
     public static final String JOIN_MESSAGE_PREFIX = "/join ";
     public static final String LEAVE_MESSAGE_SUFFIX = " has left the chat.";
@@ -18,8 +19,6 @@ public class ServerConstants {
     public static final int MESSAGE_HISTORY_LIMIT = 50; // Number of recent messages to load
     public static final String DATABASE_URL = "jdbc:sqlite:chat.db";
 
-    public static final String DROP_TABLE = "DROP TABLE IF EXISTS ";
-
     //Message database
     public static final String CREATE_MESSAGES_TABLE =
             "CREATE TABLE IF NOT EXISTS messages (" +
@@ -27,7 +26,6 @@ public class ServerConstants {
                     "username TEXT NOT NULL, " +
                     "message TEXT NOT NULL, " +
                     "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)";
-                    ;
     public static final String INSERT_MESSAGE =
             "INSERT INTO messages (username, message) VALUES (?, ?)";
     public static final String GET_RECENT_MESSAGES =
@@ -41,8 +39,10 @@ public class ServerConstants {
                     "username TEXT NOT NULL UNIQUE, " +
                     "password_hash VARCHAR(255) NOT NULL, " +
                     "created_at DATETIME DEFAULT CURRENT_TIMESTAMP)";
+    @SuppressWarnings("unused") // Will be implemented
     public static final String INSERT_USER =
             "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+    @SuppressWarnings("unused") // Will be implemented
     public static final String GET_USER_BY_USERNAME =
             "SELECT * FROM users WHERE username = ?";
 

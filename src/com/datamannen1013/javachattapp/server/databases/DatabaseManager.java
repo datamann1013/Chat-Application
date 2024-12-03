@@ -1,6 +1,5 @@
 package com.datamannen1013.javachattapp.server.databases;
 
-import com.datamannen1013.javachattapp.client.constants.ClientConstants;
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 
 import java.sql.*;
@@ -53,6 +52,7 @@ public class DatabaseManager {
     }
 
     // Save message to database
+    @SuppressWarnings("SpellCheckingInspection") //Intdended spelling mistake
     public static void saveMessage(String sender, String content) {
         try (Connection conn = getConnection();
             PreparedStatement pstmt = conn.prepareStatement(ServerConstants.INSERT_MESSAGE)){
@@ -95,68 +95,6 @@ public class DatabaseManager {
     }
 
     // Message data class
-    public static class Message {
-        private final String sender;
-        private final String content;
-        private final Timestamp timestamp;
-
-        public Message(String sender, String content, Timestamp timestamp) {
-            this.sender = sender;
-            this.content = content;
-            this.timestamp = timestamp;
-        }
-
-        // Getters
-        public String getSender() {
-            return sender;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public Timestamp getTimestamp() {
-            return timestamp;
-        }
-    }
-
-    public boolean tableExists(String tableName) {
-        try (Connection conn = getConnection();
-             ResultSet rs = conn.getMetaData().getTables(null, null, tableName, null)) {
-            return rs.next();
-        } catch (SQLException e) {
-            System.err.println("Error checking table existence: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public void verifyDatabaseStructure() {
-        if (!tableExists("messages")) {
-            try (Connection conn = getConnection();
-                 Statement stmt = conn.createStatement()) {
-                stmt.execute(ServerConstants.CREATE_MESSAGES_TABLE);
-            } catch (SQLException e) {
-                System.err.println("Error creating messages table: " + e.getMessage());
-            }
-        }
-    }
-
-    public void resetTable(String tableName) {
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement()) {
-            stmt.execute(ServerConstants.DROP_TABLE + tableName);
-
-            // Recreate the table based on its name
-            switch (tableName.toLowerCase()) {
-                case "messages":
-                    stmt.execute(ServerConstants.CREATE_MESSAGES_TABLE);
-                    break;
-                case "users":
-                    stmt.execute(ServerConstants.CREATE_USERS_TABLE);
-                    break;
-            }
-        } catch (SQLException e) {
-            System.err.println("Error resetting table " + tableName + ": " + e.getMessage());
-        }
+        public record Message(String sender, String content, Timestamp timestamp) {
     }
 }

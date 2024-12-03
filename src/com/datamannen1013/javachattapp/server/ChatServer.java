@@ -115,8 +115,8 @@ public class ChatServer {
             // Send messages in chronological order (oldest first)
             Collections.reverse(recentMessages); // Reverse since we got them in DESC order
             for (DatabaseManager.Message msg : recentMessages) {
-                String formattedTime = new SimpleDateFormat("HH:mm:ss").format(msg.getTimestamp());
-                client.sendMessage(msg.getSender() + " [" + formattedTime + "] " + msg.getContent());
+                String formattedTime = new SimpleDateFormat("HH:mm:ss").format(msg.timestamp());
+                client.sendMessage(msg.sender() + " [" + formattedTime + "] " + msg.content());
             }
 
             client.sendMessage("--- End of History ---");

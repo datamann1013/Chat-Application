@@ -65,6 +65,7 @@ public class ChatClient {
         }
 
         @Override
+        @SuppressWarnings({"SynchronizeOnNonFinalField"}) // Suppressing warning as socket synchronization is intended behavior
         protected Boolean doInBackground() throws Exception {
             synchronized (socket) {
                 if (socket != null && !socket.isClosed() && out != null) {
@@ -118,11 +119,8 @@ public class ChatClient {
     }
 
     private boolean isValidMessage(String message) {
-        if (message == null || message.trim().isEmpty()) {
-            return false;
-        }
+        return message != null && !message.trim().isEmpty();
         // Add more message validation logic here
-        return true;
     }
 
     private static final int MAX_RECONNECTION_ATTEMPTS = 5;
@@ -133,7 +131,7 @@ public class ChatClient {
         while (attempts < MAX_RECONNECTION_ATTEMPTS && isRunning) {
             try {
                 errorHandler.accept(ClientConstants.RECONNECTION_MESSAGE);
-                Thread.sleep(INITIAL_BACKOFF_MS * (1 << attempts));
+                Thread.sleep((long) INITIAL_BACKOFF_MS * (1L << attempts));
                 
                 socket = new Socket();
                 socket.connect(new InetSocketAddress(ClientConstants.SERVER_ADDRESS, ClientConstants.SERVER_PORT), CONNECTION_TIMEOUT);
