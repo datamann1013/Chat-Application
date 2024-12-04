@@ -44,7 +44,7 @@ public class ClientConstants {
     public static final String CHAT_AREA_TITLE = "Chat Messages";
 
     // REGEX check
-    public static final String REGEX = "\"\\\\[(\\\\d{2}:\\\\d{2}:\\\\d{2})\\\\] \\\\[(.*?)\\\\] (.*)\"";
+    public static final String REGEX = "\\[(\\d{2}:\\d{2}:\\d{2})\\] ([^:]+): (.+)";
 
     //Username rules
     public static final String USERNAME_PATTERN = "^[a-zA-Z0-9_ -]{3,20}$";

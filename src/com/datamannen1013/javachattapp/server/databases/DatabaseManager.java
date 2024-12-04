@@ -56,13 +56,26 @@ public class DatabaseManager {
     public static void saveMessage(String sender, String content) {
         try (Connection conn = getConnection();
             PreparedStatement pstmt = conn.prepareStatement(ServerConstants.INSERT_MESSAGE)){
+            System.out.println("Saving message: " + sender + ": " + content);
+
 
                 pstmt.setString(1, sender);
                 pstmt.setString(2, content);
                 pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
     }
+
+    //Extracts message from transmission
+    public static String extractMessageContent(String fullContent) {
+        // Find the position after the colon and space
+        int colonPosition = fullContent.indexOf(": ");
+        if (colonPosition != -1) {
+            // Return everything after the ": "
+            return fullContent.substring(colonPosition + 2);
+        }
+        return fullContent; // Return original if format doesn't match
     }
 
     // Get recent messages
@@ -80,8 +93,31 @@ public class DatabaseManager {
                             rs.getString("message"),
                             rs.getTimestamp("timestamp")
                     );
-                    messages.add(message);
+                    messages.add(message);/*static void sendRecentMessagesToClient(ClientHandler client) {
+        System.out.println("Starting to send history to client: " + client.getUserName());
+        try {
+            List<DatabaseManager.Message> recentMessages = dbManager.getRecentMessages(ServerConstants.MESSAGE_HISTORY_LIMIT);
+            System.out.println("Retrieved " + recentMessages.size() + " messages from database");
+
+            // Send a header to indicate history messages
+            client.sendMessage("--- Chat History ---");
+
+            // Send messages in chronological order (oldest first)
+            Collections.reverse(recentMessages); // Reverse since we got them in DESC order
+            for (DatabaseManager.Message msg : recentMessages) {
+                String formattedTime = new SimpleDateFormat("HH:mm:ss").format(msg.timestamp());
+                client.sendMessage(msg.sender() + " [" + formattedTime + "] " + msg.content());
+            }
+
+            client.sendMessage("--- End of History ---");
+            System.out.println("Finished sending history to client: " + client.getUserName());
+
+        } catch (Exception e) {
+            System.err.println("Error sending message history to client: " + e.getMessage());
+        }
+    }*/
                 }
+                System.out.println("Array" + messages);
             } catch (SQLException e) {
                 System.err.println("Error retrieving messages: " + e.getMessage());
                 e.printStackTrace();

@@ -39,7 +39,7 @@ public class ClientHandler implements Runnable {
             }
 
             // Initialize streams
-            this.out = new PrintWriter(clientSocket.getOutputStream(), true);
+            this.out = new PrintWriter(socket.getOutputStream(), true);  // true enables auto-flush
             this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
                 synchronized (clients) {
@@ -121,7 +121,8 @@ public class ClientHandler implements Runnable {
             System.out.println("Message queued: " + message);
             messageQueue.offer(message);
             System.out.println("Queue size: " + messageQueue.size());
-            DatabaseManager.saveMessage(userName, message);
+            String out = DatabaseManager.extractMessageContent(message);
+            DatabaseManager.saveMessage(userName, out);
         } else {
             // For system messages, just broadcast without queueing
             synchronized (clients) {
@@ -196,6 +197,14 @@ public class ClientHandler implements Runnable {
 
     void sendMessage(String message) {
         try {
+            if (clientSocket.isClosed()) {
+                System.out.println("Socket is closed, cannot send message");
+                return;
+            }
+            if (out.checkError()) {
+                System.out.println("PrintWriter is in error state");
+                return;
+            }
             out.println(message);
         } catch (Exception e) {
             System.out.println("Error sending message: " + e.getMessage());

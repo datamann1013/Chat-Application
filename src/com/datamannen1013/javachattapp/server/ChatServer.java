@@ -6,10 +6,7 @@ import com.datamannen1013.javachattapp.server.databases.DatabaseManager;
 import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ChatServer {
     // Thread-safe set to keep track of all connected clients
@@ -17,15 +14,17 @@ public class ChatServer {
     private static volatile boolean isRunning = true;
     private static ServerSocket serverSocket;
     static DatabaseManager dbManager;
+    private static List<DatabaseManager.Message> messageCache;
 
     public static void main(String[] args) {
         try{
             dbManager = DatabaseManager.getInstance();
-            System.out.println("Database initialized successfully");
 
-            // Load and log recent messages
-            List<DatabaseManager.Message> recentMessages = dbManager.getRecentMessages(ServerConstants.MESSAGE_HISTORY_LIMIT);
-            System.out.println("Loaded " + recentMessages.size() + " recent messages from database");
+            // Only load messages if we're using in-memory caching (disabled until further implementation)
+            if (ServerConstants.USE_MESSAGE_CACHE) {
+                messageCache = dbManager.getRecentMessages(ServerConstants.MESSAGE_HISTORY_LIMIT);
+                System.out.println("Loaded {} messages into cache" + messageCache.size());
+            }
         } catch (Exception e) {
             System.err.println("Failed to initialize database: " + e.getMessage());
             e.printStackTrace();
@@ -116,7 +115,7 @@ public class ChatServer {
             Collections.reverse(recentMessages); // Reverse since we got them in DESC order
             for (DatabaseManager.Message msg : recentMessages) {
                 String formattedTime = new SimpleDateFormat("HH:mm:ss").format(msg.timestamp());
-                client.sendMessage(msg.sender() + " [" + formattedTime + "] " + msg.content());
+                client.sendMessage("[" + formattedTime + "] " + msg.sender() + ": " +msg.content());
             }
 
             client.sendMessage("--- End of History ---");
