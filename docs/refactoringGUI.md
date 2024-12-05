@@ -84,7 +84,7 @@ This document describes the refactoring of the chat application, focusing on sep
 ```java
 public class ChatWindow extends JFrame {
     private ChatClient chatClient;
-    private MessageHandler messageHandler;
+    private final MessageHandler messageHandler;
 
     public ChatWindow(String username) {
         // ... initialization code ...
@@ -107,7 +107,7 @@ public class ChatWindow extends JFrame {
 ### MessageHandler
 ```java
 public class MessageHandler {
-    private JTextPane chatArea;
+    private final JTextPane chatArea;
 
     public MessageHandler(JTextPane chatArea) {
         this.chatArea = chatArea;

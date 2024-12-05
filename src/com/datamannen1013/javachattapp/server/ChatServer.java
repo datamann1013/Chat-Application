@@ -14,7 +14,6 @@ public class ChatServer {
     private static volatile boolean isRunning = true;
     private static ServerSocket serverSocket;
     static DatabaseManager dbManager;
-    private static List<DatabaseManager.Message> messageCache;
 
     public static void main(String[] args) {
         try{
@@ -22,7 +21,7 @@ public class ChatServer {
 
             // Only load messages if we're using in-memory caching (disabled until further implementation)
             if (ServerConstants.USE_MESSAGE_CACHE) {
-                messageCache = dbManager.getRecentMessages(ServerConstants.MESSAGE_HISTORY_LIMIT);
+                List<DatabaseManager.Message> messageCache = dbManager.getRecentMessages(ServerConstants.MESSAGE_HISTORY_LIMIT);
                 System.out.println("Loaded {} messages into cache" + messageCache.size());
             }
         } catch (Exception e) {

@@ -61,6 +61,11 @@ public class MessageHandler extends Component {
             handleSystemMessage(message);
             return;
         }
+        // Handle welcome messages
+        if (message.startsWith("Welcome ") && !message.contains(currentUserName)) {
+            displaySystemMessage(message);
+            return;
+        }
 
         // Start/End history markers
         if (message.equals(ClientConstants.CHAT_HISTORY_START)) {
@@ -70,11 +75,7 @@ public class MessageHandler extends Component {
             displaySystemMessage(message);
             return;
         }
-        // Handle welcome messages
-        if (message.startsWith("Welcome ") && !message.contains(currentUserName)) {
-            displaySystemMessage(message);
-            return;
-        }
+
 
         // Regular messages
             new MessageProcessingWorker(message).execute();

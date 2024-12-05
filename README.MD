@@ -160,6 +160,7 @@ v 0.0.2
 | MessageCache              | Implement a rapid access directory instead of asking server every time                         |
 | Errorlogger               | Implement a logger instead of system out println                                               |
 | Encryption                | Implement encryption of passwords for login                                                    |
+| Timezone                  | Implement timezones to make sure time works around the world                                   |
 | Users                     | Implement users in a database                                                                  |
 
 

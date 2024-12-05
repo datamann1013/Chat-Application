@@ -65,7 +65,7 @@ public class ClientHandler implements Runnable {
 
 
         } catch (IllegalArgumentException e) {
-            throw new IOException("Invalid username format: " + e.getMessage());
+            throw new IOException("Invalid username format: " + e.getMessage(), e);
         }
     }
 
