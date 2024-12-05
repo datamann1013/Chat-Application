@@ -31,3 +31,4 @@ bin/
 
 ### Extra files ###
 chat.db
+logs/
