@@ -68,10 +68,7 @@ public class MessageHandler extends Component {
         }
 
         // Start/End history markers
-        if (message.equals(ClientConstants.CHAT_HISTORY_START)) {
-            displaySystemMessage(message);
-            return;
-        } else if (message.equals(ClientConstants.CHAT_HISTORY_END)) {
+        if (message.equals(ClientConstants.CHAT_HISTORY_START) || message.equals(ClientConstants.CHAT_HISTORY_END)) {
             displaySystemMessage(message);
             return;
         }
@@ -147,8 +144,11 @@ public class MessageHandler extends Component {
             try {
                 get(); // Check for exceptions
                 System.out.println("Message processing completed successfully");
-            } catch (InterruptedException | ExecutionException e) {
-                handleMessageError("Error processing message", e);
+            } catch (InterruptedException e) {
+                handleMessageError("Error interrupting processing message", e);
+            }
+            catch (ExecutionException e) {
+                handleMessageError("Unexpected execution error during message processing", e);
             }
         }
 
@@ -217,29 +217,29 @@ public class MessageHandler extends Component {
             doc.insertString(doc.getLength(), parts[0] + ":", timestampStyle);
             doc.insertString(doc.getLength(), parts[1], messageStyle);
         }
-    }
 
-    private void handleMessageError(String errorMessage, Exception e) {
-        System.err.println(errorMessage + (e != null ? ": " + e.getMessage() : ""));
-        SwingUtilities.invokeLater(() -> ErrorHandler.showError((JFrame) SwingUtilities.getWindowAncestor(messageArea),
-            errorMessage + (e != null ? ": " + e.getMessage() : "")));
+        private void handleMessageError(String errorMessage, Exception e) {
+            System.err.println(errorMessage + (e != null ? ": " + e.getMessage() : ""));
+            SwingUtilities.invokeLater(() -> ErrorHandler.showError((JFrame) SwingUtilities.getWindowAncestor(messageArea),
+                    errorMessage + (e != null ? ": " + e.getMessage() : "")));
 
-        // Extract the online users from the message
-        String onlineUsers = errorMessage.substring(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX.length());
+            // Extract the online users from the message
+            String onlineUsers = errorMessage.substring(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX.length());
 
-        // Split the list of users into an array
-        String[] users = onlineUsers.split(",");
+            // Split the list of users into an array
+            String[] users = onlineUsers.split(",");
 
-        // Clear the current list of online users
-        onlineUsersTextArea.setText("");
+            // Clear the current list of online users
+            onlineUsersTextArea.setText("");
 
-        // Add each user to the online users text area
-        for (String user : users) {
-            if (!user.isEmpty() && !user.equals("null")) {
-                if (!user.equals(currentUserName)) onlineUsersTextArea.append(user + "\n");
+            // Add each user to the online users text area
+            for (String user : users) {
+                if (!user.isEmpty() && !user.equals("null") && !user.equals(currentUserName)) onlineUsersTextArea.append(user + "\n");
+
             }
         }
     }
+
     private void handleOnlineUsersMessage(String message) throws BadLocationException {
         // Extract and display online users
         String users = message;

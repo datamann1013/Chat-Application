@@ -47,7 +47,7 @@ public class ClientHandler implements Runnable {
 
                     // Send current online users
                     String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
-                    System.out.println("Sending online users to new client: " + onlineUsersMessage);
+                    ServerLogger.logInfo("Sending online users to new client: " + onlineUsersMessage);
                     broadcastMessage(onlineUsersMessage);
                 }
                 // Send recent messages to new client
@@ -58,11 +58,6 @@ public class ClientHandler implements Runnable {
 
                 // Notify others about new user
                 broadcastMessage(userName + " is now online.");
-
-                /* Update online users list
-                String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
-                broadcastMessage(onlineUsersMessage);*/
-
 
         } catch (IllegalArgumentException e) {
             throw new IOException("Invalid username format: " + e.getMessage(), e);
@@ -99,7 +94,7 @@ public class ClientHandler implements Runnable {
 
             }
         } catch (IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
+            ServerLogger.logError("An error occurred: " + e.getMessage(), e);
         } finally {
             disconnect();
         }
@@ -113,16 +108,19 @@ public class ClientHandler implements Runnable {
     private void broadcastMessage(String message) {
         // Make sure the message is not a duplicate
         if (message.endsWith("is now online.") && isProcessingBroadcast.get()) {
-            System.out.println("Skipping duplicate online broadcast: " + message);
+            ServerLogger.logWarning("Skipping duplicate online broadcast: " + message);
             return;
         }
         // Only queue non-system messages
         if (!MessageHandler.isSystemMessage(message)) {
-            System.out.println("Message queued: " + message);
-            messageQueue.offer(message);
-            System.out.println("Queue size: " + messageQueue.size());
-            String out = DatabaseManager.extractMessageContent(message);
-            DatabaseManager.saveMessage(userName, out);
+            if (messageQueue.offer(message)) {
+                ServerLogger.logInfo("Message added to queue: " + message);
+            } else {
+                ServerLogger.logWarning("Failed to add message to queue: " + message);
+            }
+            ServerLogger.logInfo("Queue size: " + messageQueue.size());
+            String output = DatabaseManager.extractMessageContent(message);
+            DatabaseManager.saveMessage(userName, output);
         } else {
             // For system messages, just broadcast without queueing
             synchronized (clients) {
@@ -142,7 +140,7 @@ public class ClientHandler implements Runnable {
         @Override
         protected Void doInBackground(){
             try {
-                System.out.println("BroadcastWorker started");
+                ServerLogger.logInfo("BroadcastWorker started");
                 processPendingMessages();
             } finally {
                 isProcessingBroadcast.set(false);
@@ -158,37 +156,38 @@ public class ClientHandler implements Runnable {
         protected void done() {
             try {
                 get();
-                System.out.println("BroadcastWorker done successfully");
+                ServerLogger.logInfo("BroadcastWorker done successfully");
+            } catch (InterruptedException e) {
+                ServerLogger.logError("Interruption error!", e);
+                // Cleanup?
+                Thread.currentThread().interrupt();
             } catch (Exception e) {
-                System.err.println("Error processing messages: " + e.getMessage());
+                ServerLogger.logError("Error processing messages: " + e.getMessage(), e);
             }
         }
 
+        private void processPendingMessages() {
+            ServerLogger.logInfo("Starting processPendingMessages");
+            java.util.List<String> messageBatch = new ArrayList<>();
 
-    }
+            // Collect messages from queue
+            String message;
+            while ((message = messageQueue.poll()) != null) {
+                ServerLogger.logInfo("Added to batch: " + message);
+                messageBatch.add(message);
+            }
 
+            ServerLogger.logInfo("Batch size: " + messageBatch.size());
 
-    private void processPendingMessages() {
-        System.out.println("Starting processPendingMessages");
-        java.util.List<String> messageBatch = new ArrayList<>();
-
-        // Collect messages from queue
-        String message;
-        while ((message = messageQueue.poll()) != null) {
-            System.out.println("Added to batch: " + message);
-            messageBatch.add(message);
-        }
-
-        System.out.println("Batch size: " + messageBatch.size());
-
-        synchronized (DB_LOCK) {
-            for (String msg : messageBatch) {
-                System.out.println("Broadcasting message: " + msg);
-                for (ClientHandler client : clients) {
-                    try {
-                        client.sendMessage(msg);
-                    } catch (Exception e) {
-                        System.err.println("Error sending to client: " + e.getMessage());
+            synchronized (DB_LOCK) {
+                for (String msg : messageBatch) {
+                    ServerLogger.logInfo("Broadcasting message: " + msg);
+                    for (ClientHandler client : clients) {
+                        try {
+                            client.sendMessage(msg);
+                        } catch (Exception e) {
+                            ServerLogger.logError("Error sending to client: " + e.getMessage(), e);
+                        }
                     }
                 }
             }
@@ -198,22 +197,20 @@ public class ClientHandler implements Runnable {
     void sendMessage(String message) {
         try {
             if (clientSocket.isClosed()) {
-                System.out.println("Socket is closed, cannot send message");
+                ServerLogger.logWarning("Socket is closed, cannot send message");
                 return;
             }
             if (out.checkError()) {
-                System.out.println("PrintWriter is in error state");
+                ServerLogger.logWarning("PrintWriter is in error state");
                 return;
             }
             out.println(message);
         } catch (Exception e) {
-            System.out.println("Error sending message: " + e.getMessage());
+            ServerLogger.logError("Error sending message: " + e.getMessage(), e);
         }
     }
 
     void disconnect() {
-        final int TIMEOUT_MS = 1000;
-        
         try {
             synchronized (clients) {
                 if (isConnectionActive()) {
@@ -227,20 +224,15 @@ public class ClientHandler implements Runnable {
                     
                     // Flush remaining messages
                     out.flush();
-                    
-                    // Wait for messages to be sent
-                    Thread.sleep(Math.min(100, TIMEOUT_MS));
                 }
             }
-            
+
             // Close resources
             in.close();
             out.close();
             clientSocket.close();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            ServerLogger.logError("Error during disconnect: " + e.getMessage(), e);
         }
     }
     private void broadcastSystemMessage(String message) {

@@ -10,9 +10,8 @@ public class ChatClientGUI2 {
     // Main method to launch the application
     public static void main(String[] args) {
         // Use SwingUtilities to ensure that the GUI is created on the Event Dispatch Thread (EDT)
-        SwingUtilities.invokeLater(() -> {
+        SwingUtilities.invokeLater(() ->
             // Create an instance of ChatClientGUI and make it visible
-            new ChatWindow().setVisible(true);
-        });
+            new ChatWindow().setVisible(true));
     }
 }

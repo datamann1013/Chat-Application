@@ -18,29 +18,29 @@ public class ChatServer {
     public static void main(String[] args) {
         try{
             dbManager = DatabaseManager.getInstance();
+            ServerLogger.setupLogger();
 
             // Only load messages if we're using in-memory caching (disabled until further implementation)
             if (ServerConstants.USE_MESSAGE_CACHE) {
                 List<DatabaseManager.Message> messageCache = dbManager.getRecentMessages(ServerConstants.MESSAGE_HISTORY_LIMIT);
-                System.out.println("Loaded {} messages into cache" + messageCache.size());
+                ServerLogger.logInfo("Loaded {} messages into cache" + messageCache.size());
             }
         } catch (Exception e) {
-            System.err.println("Failed to initialize database: " + e.getMessage());
-            e.printStackTrace();
+            ServerLogger.logError("Failed to initialize database: " + e.getMessage(), e);
             System.exit(1);
         }
 
         // Server initialization
         try {
             serverSocket = new ServerSocket(ServerConstants.SERVER_PORT);
-            System.out.println("Chat server started on port " + ServerConstants.SERVER_PORT);
+            ServerLogger.logInfo("Chat server started on port " + ServerConstants.SERVER_PORT);
 
             while (isRunning) {
                 Socket clientSocket = serverSocket.accept();
 
                 // Create a BufferedReader to read text input from the client socket's input stream
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                System.out.println("Client connected: " + clientSocket);
+                ServerLogger.logInfo("Client connected: " + clientSocket);
 
                 // Spawn a new thread for each client
                 ClientHandler clientThread = new ClientHandler(clientSocket, clients, in.readLine());
@@ -52,12 +52,12 @@ public class ChatServer {
                 new Thread(clientThread).start();
             }
         } catch (IOException e) {
-            System.err.println("Error in server: " + e.getMessage());
+            ServerLogger.logError("Error in server: " + e.getMessage(), e);
         }
 
         try {
             serverSocket = new ServerSocket(ServerConstants.SERVER_PORT);
-            System.out.println("Server started. Waiting for clients...");
+            ServerLogger.logInfo("Server started. Waiting for clients...");
             
             // Add shutdown hook
             Runtime.getRuntime().addShutdownHook(new Thread(ChatServer::shutdownServer, "ShutdownHook"));
@@ -68,7 +68,7 @@ public class ChatServer {
 
                 // Create a BufferedReader to read text input from the client socket's input stream
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                System.out.println("Client connected: " + clientSocket);
+                ServerLogger.logInfo("Client connected: " + clientSocket);
 
                 // Spawn a new thread for each client
                 ClientHandler clientThread = new ClientHandler(clientSocket, clients, in.readLine());
@@ -76,13 +76,13 @@ public class ChatServer {
                 new Thread(clientThread).start();
             }
         } catch (IOException e) {
-            System.err.println("Error in server: " + e.getMessage());
+            ServerLogger.logError("Error in server: " + e.getMessage(), e);
         }
     }
     
     private static void shutdownServer() {
         isRunning = false;
-        System.out.println("Initiating server shutdown...");
+        ServerLogger.logInfo("Initiating server shutdown...");
         
         // Close all client connections
         synchronized (clients) {
@@ -90,22 +90,25 @@ public class ChatServer {
                 try {
                     client.disconnect();
                 } catch (Exception e) {
-                    System.err.println("Error disconnecting client: " + e.getMessage());
+                    ServerLogger.logError("Error disconnecting client: " + e.getMessage(), e);
                 }
             }
             clients.clear();
         }
+
+        ServerLogger.logInfo("All clients disconnected. Server shutdown complete.");
+        ServerLogger.close();
         
         // Close server socket
         try { if (serverSocket != null) serverSocket.close(); }
-        catch (IOException e) { System.err.println("Error closing server socket: " + e.getMessage()); }
+        catch (IOException e) { ServerLogger.logError("Error closing server socket: " + e.getMessage(), e); }
     }
     // Method to send recent messages to a new client
     static void sendRecentMessagesToClient(ClientHandler client) {
-        System.out.println("Starting to send history to client: " + client.getUserName());
+        ServerLogger.logInfo("Starting to send history to client: " + client.getUserName());
         try {
             List<DatabaseManager.Message> recentMessages = dbManager.getRecentMessages(ServerConstants.MESSAGE_HISTORY_LIMIT);
-            System.out.println("Retrieved " + recentMessages.size() + " messages from database");
+            ServerLogger.logInfo("Retrieved " + recentMessages.size() + " messages from database");
 
             // Send a header to indicate history messages
             client.sendMessage("--- Chat History ---");
@@ -118,10 +121,10 @@ public class ChatServer {
             }
 
             client.sendMessage("--- End of History ---");
-            System.out.println("Finished sending history to client: " + client.getUserName());
+            ServerLogger.logInfo("Finished sending history to client: " + client.getUserName());
 
         } catch (Exception e) {
-            System.err.println("Error sending message history to client: " + e.getMessage());
+            ServerLogger.logError("Error sending message history to client: " + e.getMessage(), e);
         }
     }
 }

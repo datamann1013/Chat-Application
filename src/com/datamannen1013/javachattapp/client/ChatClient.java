@@ -131,7 +131,7 @@ public class ChatClient {
         while (attempts < MAX_RECONNECTION_ATTEMPTS && isRunning) {
             try {
                 errorHandler.accept(ClientConstants.RECONNECTION_MESSAGE);
-                Thread.sleep((long) INITIAL_BACKOFF_MS * (1L << attempts));
+                Thread.sleep( INITIAL_BACKOFF_MS * (1L << attempts));
                 
                 socket = new Socket();
                 socket.connect(new InetSocketAddress(ClientConstants.SERVER_ADDRESS, ClientConstants.SERVER_PORT), CONNECTION_TIMEOUT);

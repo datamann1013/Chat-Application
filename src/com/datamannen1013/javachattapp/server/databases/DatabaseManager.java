@@ -1,5 +1,6 @@
 package com.datamannen1013.javachattapp.server.databases;
 
+import com.datamannen1013.javachattapp.server.ServerLogger;
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 
 import java.sql.*;
@@ -11,19 +12,19 @@ public class DatabaseManager {
     private static final String DB_URL = ServerConstants.DATABASE_URL;
 
     // Private constructor for singleton pattern
-    private DatabaseManager() {
+    private DatabaseManager() throws ClassNotFoundException {
         // Load the SQLite driver
         try {
             Class.forName("org.sqlite.JDBC");
             initializeDatabase();
         } catch (ClassNotFoundException e) {
-            System.err.println("SQLite JDBC driver not found: " + e.getMessage());
-            throw new RuntimeException("SQLite JDBC driver not found", e);
+            ServerLogger.logError("SQLite JDBC driver not found: " + e.getMessage(), e);
+            throw new ClassNotFoundException("SQLite JDBC driver not found", e);
         }
     }
 
     // Singleton instance getter
-    public static synchronized DatabaseManager getInstance() {
+    public static synchronized DatabaseManager getInstance() throws ClassNotFoundException {
         if (instance == null) {
             instance = new DatabaseManager();
         }
@@ -35,7 +36,7 @@ public class DatabaseManager {
         try {
             return DriverManager.getConnection(DB_URL);
         } catch (SQLException e) {
-            System.err.println("Failed to connect to database: " + e.getMessage());
+            ServerLogger.logError("Failed to connect to database: " + e.getMessage(), e);
             throw e;
         }
     }
@@ -47,7 +48,7 @@ public class DatabaseManager {
                 stmt.execute(ServerConstants.CREATE_MESSAGES_TABLE);
                 stmt.execute(ServerConstants.CREATE_USERS_TABLE);
         } catch (SQLException e) {
-            e.printStackTrace();
+            ServerLogger.logError("Error initializing database: " + e.getMessage(), e);
         }
     }
 
@@ -56,14 +57,14 @@ public class DatabaseManager {
     public static void saveMessage(String sender, String content) {
         try (Connection conn = getConnection();
             PreparedStatement pstmt = conn.prepareStatement(ServerConstants.INSERT_MESSAGE)){
-            System.out.println("Saving message: " + sender + ": " + content);
+            ServerLogger.logInfo("Saving message: " + sender + ": " + content);
 
 
                 pstmt.setString(1, sender);
                 pstmt.setString(2, content);
                 pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            ServerLogger.logError("Error saving message: " + e.getMessage(), e);
         }
     }
 
@@ -79,6 +80,7 @@ public class DatabaseManager {
     }
 
     // Get recent messages
+    @SuppressWarnings("SpellCheckingInspection") //Intended spellingmistake
     public List<Message> getRecentMessages(int limit) {
         List<Message> messages = new ArrayList<>();
 
@@ -86,50 +88,31 @@ public class DatabaseManager {
              PreparedStatement pstmt = conn.prepareStatement(ServerConstants.GET_RECENT_MESSAGES)) {
 
             pstmt.setInt(1, limit);
-            try (ResultSet rs = pstmt.executeQuery()){
-                while (rs.next()) {
-                    Message message = new Message(
-                            rs.getString("username"),
-                            rs.getString("message"),
-                            rs.getTimestamp("timestamp")
-                    );
-                    messages.add(message);/*static void sendRecentMessagesToClient(ClientHandler client) {
-        System.out.println("Starting to send history to client: " + client.getUserName());
-        try {
-            List<DatabaseManager.Message> recentMessages = dbManager.getRecentMessages(ServerConstants.MESSAGE_HISTORY_LIMIT);
-            System.out.println("Retrieved " + recentMessages.size() + " messages from database");
-
-            // Send a header to indicate history messages
-            client.sendMessage("--- Chat History ---");
-
-            // Send messages in chronological order (oldest first)
-            Collections.reverse(recentMessages); // Reverse since we got them in DESC order
-            for (DatabaseManager.Message msg : recentMessages) {
-                String formattedTime = new SimpleDateFormat("HH:mm:ss").format(msg.timestamp());
-                client.sendMessage(msg.sender() + " [" + formattedTime + "] " + msg.content());
-            }
-
-            client.sendMessage("--- End of History ---");
-            System.out.println("Finished sending history to client: " + client.getUserName());
-
-        } catch (Exception e) {
-            System.err.println("Error sending message history to client: " + e.getMessage());
-        }
-    }*/
-                }
-                System.out.println("Array" + messages);
-            } catch (SQLException e) {
-                System.err.println("Error retrieving messages: " + e.getMessage());
-                e.printStackTrace();
-            }
+            stringBuilder(pstmt, messages);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            ServerLogger.logError("Error retrieving messages: " + e.getMessage(), e);
         }
 
         return messages;
     }
 
+    @SuppressWarnings("SpellCheckingInspection") //Intended spellingmistake
+    public void stringBuilder(PreparedStatement pstmt, List<Message> messages){
+        try (ResultSet rs = pstmt.executeQuery()){
+            while (rs.next()) {
+                Message message = new Message(
+                        rs.getString("username"),
+                        rs.getString("message"),
+                        rs.getTimestamp("timestamp")
+                );
+                messages.add(message);
+            }
+            ServerLogger.logInfo("Array" + messages);
+        } catch (SQLException e) {
+            ServerLogger.logError("Error retrieving messages: " + e.getMessage(), e);
+        }
+    }
     // Message data class
         public record Message(String sender, String content, Timestamp timestamp) {
     }

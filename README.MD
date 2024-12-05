@@ -155,6 +155,7 @@ v 0.0.2
 | Constant UI Updates       | Implement a system for constant updates to the UI to reflect real-time changes and messages.   |
 | Private Messaging         | Develop a feature for private messaging between users.                                         |
 | Code Optimization         | Review and optimize the code for better performance and maintainability.                       |
+| Message security?         | Implement handshake to make sure client gets message                                           |
 | Long-term memory          | Implement a database to store messages                                                         |
 | Username mix-up           | Implement session id so that multiple users can have same or similar names                     |
 | MessageCache              | Implement a rapid access directory instead of asking server every time                         |
@@ -162,5 +163,6 @@ v 0.0.2
 | Encryption                | Implement encryption of passwords for login                                                    |
 | Timezone                  | Implement timezones to make sure time works around the world                                   |
 | Users                     | Implement users in a database                                                                  |
+| Database                  | Improve Singleton pattern                                                                      |
 
 
