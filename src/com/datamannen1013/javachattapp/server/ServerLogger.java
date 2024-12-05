@@ -21,7 +21,7 @@ public class ServerLogger {
             }
 
             // Create log file with timestamp
-            String logFileName = String.format("logs/chat_log_%s.txt",
+            String logFileName = String.format("logs/server_log_%s.txt",
                     LocalDateTime.now().format(dateFormat));
 
             // Configure FileHandler
