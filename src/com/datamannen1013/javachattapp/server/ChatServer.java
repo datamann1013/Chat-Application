@@ -2,6 +2,7 @@ package com.datamannen1013.javachattapp.server;
 
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 import com.datamannen1013.javachattapp.server.databases.DatabaseManager;
+import com.datamannen1013.javachattapp.server.logger.ServerLogger;
 
 import java.io.*;
 import java.net.*;

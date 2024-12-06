@@ -4,6 +4,7 @@ import com.datamannen1013.javachattapp.client.constants.ClientConstants;
 import com.datamannen1013.javachattapp.client.MessageHandler;
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 import com.datamannen1013.javachattapp.server.databases.DatabaseManager;
+import com.datamannen1013.javachattapp.server.logger.ServerLogger;
 
 import javax.swing.*;
 import java.io.BufferedReader;

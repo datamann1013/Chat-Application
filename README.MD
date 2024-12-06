@@ -27,15 +27,15 @@ Welcome to my first Java Chat Application! This is a simple, real-time chat syst
 
 ## Documentation
 
-- [Architecture of the project](docs/architecture.md)
-- [API](docs/api.md)
+- [Architecture of the project](documentation/architecture.md)
+- [API](documentation/api.md)
 
 ---
 
 ## Other relevant documents
 
-- [Refactoring of GUI](docs/refactoringGUI.md)
-- [Setup](docs/setup.md)
+- [Refactoring of GUI](documentation/refactoringGUI.md)
+- [Setup](documentation/setup.md)
 
 ---
 
@@ -158,6 +158,13 @@ v 0.0.2
 | Message security?         | Implement handshake to make sure client gets message                                           |
 | Long-term memory          | Implement a database to store messages                                                         |
 | Username mix-up           | Implement session id so that multiple users can have same or similar names                     |
+| Log Management            | Implement archiving of logs (database?)                                                        |
+| Log Management            | Implement regular log cleanup                                                                  |
+| Log Management            | Implement a performance logging tracker                                                        |
+| Log Management            | Implement Async logging                                                                        |
+| Log management            | Implement Log compression                                                                      |
+| Log security              | Make sure logs dont save sensitive data                                                        |
+| Log security              | Implement log encryption?                                                                      |
 | MessageCache              | Implement a rapid access directory instead of asking server every time                         |
 | Errorlogger               | Implement a logger instead of system out println                                               |
 | Encryption                | Implement encryption of passwords for login                                                    |

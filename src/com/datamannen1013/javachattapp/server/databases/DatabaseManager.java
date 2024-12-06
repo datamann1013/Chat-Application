@@ -1,6 +1,6 @@
 package com.datamannen1013.javachattapp.server.databases;
 
-import com.datamannen1013.javachattapp.server.ServerLogger;
+import com.datamannen1013.javachattapp.server.logger.ServerLogger;
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 
 import java.sql.*;
