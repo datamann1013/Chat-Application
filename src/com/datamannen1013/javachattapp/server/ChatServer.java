@@ -1,7 +1,9 @@
 package com.datamannen1013.javachattapp.server;
 
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
-import com.datamannen1013.javachattapp.server.databases.DatabaseManager;
+import com.datamannen1013.javachattapp.server.database.DatabaseManager;
+import com.datamannen1013.javachattapp.server.database.models.Message;
+import com.datamannen1013.javachattapp.server.database.repository.MessageRepository;
 import com.datamannen1013.javachattapp.server.logger.ServerLogger;
 
 import java.io.*;
@@ -21,11 +23,6 @@ public class ChatServer {
             dbManager = DatabaseManager.getInstance();
             ServerLogger.setupLogger();
 
-            // Only load messages if we're using in-memory caching (disabled until further implementation)
-            if (ServerConstants.USE_MESSAGE_CACHE) {
-                List<DatabaseManager.Message> messageCache = dbManager.getRecentMessages(ServerConstants.MESSAGE_HISTORY_LIMIT);
-                ServerLogger.logInfo("Loaded {} messages into cache" + messageCache.size());
-            }
         } catch (Exception e) {
             ServerLogger.logError("Failed to initialize database: " + e.getMessage(), e);
             System.exit(1);
@@ -108,7 +105,7 @@ public class ChatServer {
     static void sendRecentMessagesToClient(ClientHandler client) {
         ServerLogger.logInfo("Starting to send history to client: " + client.getUserName());
         try {
-            List<DatabaseManager.Message> recentMessages = dbManager.getRecentMessages(ServerConstants.MESSAGE_HISTORY_LIMIT);
+            List<Message> recentMessages = MessageRepository.getRecentMessages(ServerConstants.MESSAGE_HISTORY_LIMIT);
             ServerLogger.logInfo("Retrieved " + recentMessages.size() + " messages from database");
 
             // Send a header to indicate history messages
@@ -116,7 +113,7 @@ public class ChatServer {
 
             // Send messages in chronological order (oldest first)
             Collections.reverse(recentMessages); // Reverse since we got them in DESC order
-            for (DatabaseManager.Message msg : recentMessages) {
+            for (Message msg : recentMessages) {
                 String formattedTime = new SimpleDateFormat("HH:mm:ss").format(msg.timestamp());
                 client.sendMessage("[" + formattedTime + "] " + msg.sender() + ": " +msg.content());
             }

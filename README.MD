@@ -27,15 +27,15 @@ Welcome to my first Java Chat Application! This is a simple, real-time chat syst
 
 ## Documentation
 
-- [Architecture of the project](documentation/architecture.md)
-- [API](documentation/api.md)
+- [Architecture of the project](docs/architecture.md)
+- [API](docs/api.md)
 
 ---
 
 ## Other relevant documents
 
-- [Refactoring of GUI](documentation/refactoringGUI.md)
-- [Setup](documentation/setup.md)
+- [Refactoring of GUI](docs/refactoringGUI.md)
+- [Setup](docs/setup.md)
 
 ---
 

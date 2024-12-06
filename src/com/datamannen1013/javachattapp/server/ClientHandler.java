@@ -3,7 +3,8 @@ package com.datamannen1013.javachattapp.server;
 import com.datamannen1013.javachattapp.client.constants.ClientConstants;
 import com.datamannen1013.javachattapp.client.MessageHandler;
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
-import com.datamannen1013.javachattapp.server.databases.DatabaseManager;
+import com.datamannen1013.javachattapp.server.database.DatabaseManager;
+import com.datamannen1013.javachattapp.server.database.repository.MessageRepository;
 import com.datamannen1013.javachattapp.server.logger.ServerLogger;
 
 import javax.swing.*;
@@ -121,7 +122,7 @@ public class ClientHandler implements Runnable {
             }
             ServerLogger.logInfo("Queue size: " + messageQueue.size());
             String output = DatabaseManager.extractMessageContent(message);
-            DatabaseManager.saveMessage(userName, output);
+            MessageRepository.saveMessage(userName, output);
         } else {
             // For system messages, just broadcast without queueing
             synchronized (clients) {
