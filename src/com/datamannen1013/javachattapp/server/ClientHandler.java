@@ -14,56 +14,222 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 
 public class ClientHandler implements Runnable {
-    private final String userName;
-    private final Socket clientSocket;
-    private final Set<ClientHandler> clients;
-    private final PrintWriter out;
-    private final BufferedReader in;
+    // Constants
+    private static final Object DB_LOCK = new Object();
 
-    @SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter") // Suppressing warning as clients synchronization is intended behavior
+    // Instance fields - core components
+    private final Socket clientSocket;
+    private final String userName;
+    private final Set<ClientHandler> clients;
+    private final BufferedReader in;
+    private final PrintWriter out;
+
+    // Message handling components
+    private final LinkedBlockingQueue<String> messageQueue;
+    private final AtomicBoolean isProcessingBroadcast;
+
     public ClientHandler(Socket socket, Set<ClientHandler> clients, String message) throws IOException {
+        this.messageQueue = new LinkedBlockingQueue<>();
+        this.isProcessingBroadcast = new AtomicBoolean(false);
+
         try {
             this.clientSocket = socket;
             this.clients = clients;
-            String proposedUsername = message.replace(ServerConstants.JOIN_MESSAGE_PREFIX, "");
-            this.userName = proposedUsername;
-
-            // Validate username
-            Pattern pattern = Pattern.compile(ClientConstants.USERNAME_PATTERN);
-            if (!pattern.matcher(proposedUsername).matches()) {
-                throw new IllegalArgumentException("Invalid username format");
-            }
+            this.userName = validateUsername(message);
 
             // Initialize streams
-            this.out = new PrintWriter(socket.getOutputStream(), true);  // true enables auto-flush
-            this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            this.out = new PrintWriter(socket.getOutputStream(), true);
+            this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-                synchronized (clients) {
-                    clients.add(this);
-
-                    // Send current online users
-                    String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
-                    ServerLogger.logInfo("Sending online users to new client: " + onlineUsersMessage);
-                    broadcastMessage(onlineUsersMessage);
-                }
-                // Send recent messages to new client
-                ChatServer.sendRecentMessagesToClient(this);
-
-                // Send welcome message
-                sendMessage("Welcome " + userName + "!");
-
-                // Notify others about new user
-                broadcastMessage(userName + " is now online.");
-
+            initializeClientConnection();
         } catch (IllegalArgumentException e) {
             throw new IOException("Invalid username format: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void run() {
+        try {
+            processClientMessages();
+        } catch (IOException e) {
+            ServerLogger.logError("An error occurred: " + e.getMessage(), e);
+        } finally {
+            disconnect();
+        }
+    }
+
+    // Public methods
+    public String getUserName() {
+        return this.userName;
+    }
+
+    public void sendMessage(String message) {
+        try {
+            if (!isValidConnection()) {
+                return;
+            }
+            out.println(message);
+        } catch (Exception e) {
+            ServerLogger.logError("Error sending message: " + e.getMessage(), e);
+        }
+    }
+
+    public void disconnect() {
+        try {
+            synchronized (clients) {
+                if (isConnectionActive()) {
+                    handleDisconnection();
+                }
+            }
+            closeResources();
+        } catch (IOException e) {
+            ServerLogger.logError("Error during disconnect: " + e.getMessage(), e);
+        }
+    }
+
+
+
+    // Private methods - Disconnection of server
+    private void handleDisconnection() {
+        try {
+            // Notify client about server shutdown
+            String serverShutdownMsg = ServerConstants.SERVER_SHUTDOWN_MESSAGE;
+            sendMessage(serverShutdownMsg);
+
+            // Give client time to receive the message
+            try {
+                Thread.sleep(100); // Brief delay to ensure message delivery
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                ServerLogger.logWarning("Shutdown notification interrupted for client: " + userName);
+            }
+
+            // Clear any pending messages
+            messageQueue.clear();
+
+            // Remove client from active clients list
+            synchronized (clients) {
+                clients.remove(this);
+            }
+
+            // Ensure final messages are sent
+            flushOutput();
+
+            ServerLogger.logInfo("Client " + userName + " disconnected due to server shutdown");
+        } catch (Exception e) {
+            ServerLogger.logError("Error during server shutdown disconnect for " + userName + ": " + e.getMessage(), e);
+        }
+    }
+
+    private void flushOutput() {
+        try {
+            if (out != null && !out.checkError()) {
+                out.flush();
+            }
+        } catch (Exception e) {
+            ServerLogger.logError("Error flushing final messages to " + userName + ": " + e.getMessage(), e);
+        }
+    }
+
+    // Private methods - Connection management
+    private String validateUsername(String message) {
+        String proposedUsername = message.replace(ServerConstants.JOIN_MESSAGE_PREFIX, "");
+        Pattern pattern = Pattern.compile(ClientConstants.USERNAME_PATTERN);
+        if (!pattern.matcher(proposedUsername).matches()) {
+            throw new IllegalArgumentException("Invalid username format");
+        }
+        return proposedUsername;
+    }
+
+    private void initializeClientConnection() {
+        synchronized (clients) {
+            clients.add(this);
+            sendInitialMessages();
+        }
+    }
+
+    private void sendInitialMessages() {
+        String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
+        ServerLogger.logInfo("Sending online users to new client: " + onlineUsersMessage);
+        broadcastMessage(onlineUsersMessage);
+
+        ChatServer.sendRecentMessagesToClient(this);
+        sendMessage("Welcome " + userName + "!");
+        broadcastMessage(userName + " is now online.");
+    }
+
+    // Private methods - Message handling
+    private void processClientMessages() throws IOException {
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            if (inputLine.endsWith(ServerConstants.LEAVE_MESSAGE_SUFFIX)) {
+                break;
+            }
+            broadcastMessage(inputLine);
+        }
+    }
+
+    private void broadcastMessage(String message) {
+        if (isDuplicateMessage(message)) {
+            return;
+        }
+
+        if (MessageHandler.isSystemMessage(message)) {
+            broadcastSystemMessage(message);
+        } else {
+            queueRegularMessage(message);
+        }
+    }
+
+    private void broadcastSystemMessage(String message) {
+        synchronized (clients) {
+            for (ClientHandler client : clients) {
+                client.sendMessage(message);
+            }
+        }
+    }
+
+    private void queueRegularMessage(String message) {
+        if (messageQueue.offer(message)) {
+            ServerLogger.logInfo("Message queued: " + message);
+            MessageRepository.saveMessage(userName, DatabaseManager.extractMessageContent(message));
+
+            if (isProcessingBroadcast.compareAndSet(false, true)) {
+                new BroadcastWorker().execute();
+            }
+        }
+    }
+
+    // Private methods - Utility
+    private boolean isConnectionActive() {
+        return clientSocket != null && !clientSocket.isClosed()
+                && in != null && out != null;
+    }
+
+    private boolean isValidConnection() {
+        if (clientSocket.isClosed()) {
+            ServerLogger.logWarning("Socket is closed, cannot send message");
+            return false;
+        }
+        if (out.checkError()) {
+            ServerLogger.logWarning("PrintWriter is in error state");
+            return false;
+        }
+        return true;
+    }
+
+    private void closeResources() throws IOException {
+        in.close();
+        out.close();
+        clientSocket.close();
     }
 
     private String getOnlineUsers() {
@@ -73,82 +239,86 @@ public class ClientHandler implements Runnable {
                 onlineUsers.append(client.getUserName()).append(",");
             }
         }
-        // Remove trailing comma if exists
         return !onlineUsers.isEmpty() ?
                 onlineUsers.substring(0, onlineUsers.length() - 1) : "";
     }
 
-    String getUserName() {
-        return this.userName;
-    }
-
-    public void run() {
-        try {
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                if (inputLine.endsWith(ServerConstants.LEAVE_MESSAGE_SUFFIX)) {
-                    // Handle client disconnection
-                    disconnect();
-                }
-                else {
-                    broadcastMessage(inputLine);
-                }
-
-            }
-        } catch (IOException e) {
-            ServerLogger.logError("An error occurred: " + e.getMessage(), e);
-        } finally {
-            disconnect();
-        }
-    }
-
-
-    private final java.util.concurrent.LinkedBlockingQueue<String> messageQueue = new java.util.concurrent.LinkedBlockingQueue<>();
-    private static final Object DB_LOCK = new Object();
-    private final AtomicBoolean isProcessingBroadcast = new AtomicBoolean(false);
-
-    private void broadcastMessage(String message) {
-        // Make sure the message is not a duplicate
+    // Private methods - Duplicate message handling
+    private boolean isDuplicateMessage(String message) {
+        // Check for duplicate online broadcast messages
         if (message.endsWith("is now online.") && isProcessingBroadcast.get()) {
             ServerLogger.logWarning("Skipping duplicate online broadcast: " + message);
-            return;
+            return true;
         }
-        // Only queue non-system messages
+
+        // Check for duplicate messages in queue
         if (!MessageHandler.isSystemMessage(message)) {
-            if (messageQueue.offer(message)) {
-                ServerLogger.logInfo("Message added to queue: " + message);
-            } else {
-                ServerLogger.logWarning("Failed to add message to queue: " + message);
-            }
-            ServerLogger.logInfo("Queue size: " + messageQueue.size());
-            String output = DatabaseManager.extractMessageContent(message);
-            MessageRepository.saveMessage(userName, output);
-        } else {
-            // For system messages, just broadcast without queueing
-            synchronized (clients) {
-                for (ClientHandler client : clients) {
-                    client.sendMessage(message);
+            for (String queuedMessage : messageQueue) {
+                if (isSimilarMessage(message, queuedMessage)) {
+                    ServerLogger.logWarning("Duplicate message detected: " + message);
+                    return true;
                 }
             }
-
         }
-        // Only start a new BroadcastWorker if one isn't already running
-        if (isProcessingBroadcast.compareAndSet(false, true)) {
-            new BroadcastWorker().execute();
+
+        return false;
+    }
+
+    private boolean isSimilarMessage(String message1, String message2) {
+        // Get timestamps if they exist
+        long timestamp1 = extractTimestamp(message1);
+        long timestamp2 = extractTimestamp(message2);
+
+        // If messages are within 2 seconds of each other
+        if (Math.abs(timestamp1 - timestamp2) <= 2000) {
+            // Remove timestamps and compare content
+            String content1 = stripMetadata(message1);
+            String content2 = stripMetadata(message2);
+
+            return content1.equals(content2);
+        }
+
+        return false;
+    }
+
+    private long extractTimestamp(String message) {
+        try {
+            // Assuming timestamp is at the start of the message in a specific format
+            // Adjust this based on your message format
+            int timestampEnd = message.indexOf("]");
+            if (timestampEnd != -1) {
+                String timestamp = message.substring(1, timestampEnd);
+                return Long.parseLong(timestamp);
+            }
+        } catch (Exception e) {
+            ServerLogger.logWarning("Could not extract timestamp from message: " + message);
+        }
+        return System.currentTimeMillis();
+    }
+
+    private String stripMetadata(String message) {
+        try {
+            // Remove timestamp and any other metadata
+            // Adjust this based on your message format
+            int contentStart = message.indexOf("]") + 1;
+            return message.substring(contentStart).trim();
+        } catch (Exception e) {
+            ServerLogger.logWarning("Could not strip metadata from message: " + message);
+            return message;
         }
     }
 
+
+    // Inner class
     private class BroadcastWorker extends SwingWorker<Void, String> {
         @Override
-        protected Void doInBackground(){
+        protected Void doInBackground() {
             try {
-                ServerLogger.logInfo("BroadcastWorker started");
                 processPendingMessages();
             } finally {
                 isProcessingBroadcast.set(false);
-                // Check if new messages arrived while processing
                 if (!messageQueue.isEmpty()) {
-                    broadcastMessage(messageQueue.peek()); // Trigger new worker if needed
+                    broadcastMessage(messageQueue.peek());
                 }
             }
             return null;
@@ -158,32 +328,34 @@ public class ClientHandler implements Runnable {
         protected void done() {
             try {
                 get();
-                ServerLogger.logInfo("BroadcastWorker done successfully");
+                ServerLogger.logInfo("BroadcastWorker completed successfully");
             } catch (InterruptedException e) {
-                ServerLogger.logError("Interruption error!", e);
-                // Cleanup?
+                ServerLogger.logError("Broadcast interrupted", e);
                 Thread.currentThread().interrupt();
             } catch (Exception e) {
                 ServerLogger.logError("Error processing messages: " + e.getMessage(), e);
             }
         }
 
+        // Private methods - Message processing
         private void processPendingMessages() {
-            ServerLogger.logInfo("Starting processPendingMessages");
-            java.util.List<String> messageBatch = new ArrayList<>();
+            List<String> messageBatch = collectMessageBatch();
+            broadcastMessageBatch(messageBatch);
+        }
 
-            // Collect messages from queue
+        private List<String> collectMessageBatch() {
+            List<String> messageBatch = new ArrayList<>();
             String message;
             while ((message = messageQueue.poll()) != null) {
-                ServerLogger.logInfo("Added to batch: " + message);
                 messageBatch.add(message);
+                ServerLogger.logInfo("Added to batch: " + message);
             }
+            return messageBatch;
+        }
 
-            ServerLogger.logInfo("Batch size: " + messageBatch.size());
-
+        private void broadcastMessageBatch(List<String> messageBatch) {
             synchronized (DB_LOCK) {
                 for (String msg : messageBatch) {
-                    ServerLogger.logInfo("Broadcasting message: " + msg);
                     for (ClientHandler client : clients) {
                         try {
                             client.sendMessage(msg);
@@ -195,58 +367,5 @@ public class ClientHandler implements Runnable {
             }
         }
     }
-
-    void sendMessage(String message) {
-        try {
-            if (clientSocket.isClosed()) {
-                ServerLogger.logWarning("Socket is closed, cannot send message");
-                return;
-            }
-            if (out.checkError()) {
-                ServerLogger.logWarning("PrintWriter is in error state");
-                return;
-            }
-            out.println(message);
-        } catch (Exception e) {
-            ServerLogger.logError("Error sending message: " + e.getMessage(), e);
-        }
-    }
-
-    void disconnect() {
-        try {
-            synchronized (clients) {
-                if (isConnectionActive()) {
-                    // Send final messages
-                    String disconnectMsg = ServerConstants.CLIENT_DISCONNECT_PREFIX + userName;
-                    broadcastSystemMessage(disconnectMsg);
-                    
-                    clients.remove(this);
-                    String onlineUsersMessage = ServerConstants.ONLINE_USERS_MESSAGE_PREFIX + getOnlineUsers();
-                    broadcastSystemMessage(onlineUsersMessage);
-                    
-                    // Flush remaining messages
-                    out.flush();
-                }
-            }
-
-            // Close resources
-            in.close();
-            out.close();
-            clientSocket.close();
-        } catch (IOException e) {
-            ServerLogger.logError("Error during disconnect: " + e.getMessage(), e);
-        }
-    }
-    private void broadcastSystemMessage(String message) {
-        synchronized (clients) {
-            for (ClientHandler client : clients) {
-                client.sendMessage(message);
-            }
-        }
-    }
-    
-    private boolean isConnectionActive() {
-        return clientSocket != null && !clientSocket.isClosed() 
-            && in != null && out != null;
-    }
 }
+

@@ -16,6 +16,8 @@ public class ServerConstants {
     public static final String CLIENT_DISCONNECT_PREFIX = "/leave ";
     public static final String CHAT_HISTORY_START = "--- Chat History ---";
     public static final String CHAT_HISTORY_END = "--- End of History ---";
+    @SuppressWarnings("SpellCheckingInspection") //Correct spelling in this spesific case
+    public static final String SERVER_SHUTDOWN_MESSAGE = "/serverclose";
     public static final String WELCOME_PREFIX = "Welcome ";
 
     // Database constants
