@@ -139,6 +139,7 @@ public class ChatWindow extends JFrame {
         // Replace the current focus request with:
         SwingUtilities.invokeLater(() -> {
             // Make sure the window is properly validated first
+            this.setPreferredSize(new Dimension(ClientConstants.WINDOW_WIDTH, ClientConstants.WINDOW_HEIGHT));
             this.validate();
             this.pack();
 
