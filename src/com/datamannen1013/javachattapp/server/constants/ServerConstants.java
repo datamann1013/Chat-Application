@@ -18,7 +18,6 @@ public class ServerConstants {
     public static final String CHAT_HISTORY_END = "--- End of History ---";
     @SuppressWarnings("SpellCheckingInspection") //Correct spelling in this spesific case
     public static final String SERVER_SHUTDOWN_MESSAGE = "/serverclose";
-    public static final String WELCOME_PREFIX = "Welcome ";
 
     // Database constants
     public static final int MESSAGE_HISTORY_LIMIT = 50; // Number of recent messages to load

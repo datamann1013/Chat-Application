@@ -4,6 +4,10 @@ import java.awt.*;
 
 public class ClientConstants {
 
+    //Private constructor for maintainability
+    private ClientConstants() {
+        throw new IllegalStateException("Utility class");
+    }
 
     // Constants for server address and port
     public static final String SERVER_ADDRESS = "127.0.0.1";
@@ -12,8 +16,11 @@ public class ClientConstants {
     // Command prefixes for handling specific message types
     @SuppressWarnings("SpellCheckingInspection") //Correct spelling in this spesific case
     public static final String ONLINE_USERS_MESSAGE_PREFIX = "/onlineusers ";
-    public static final String JOIN_MESSAGE_PREFIX = "/join ";
     public static final String LEAVE_MESSAGE_SUFFIX = " has left the chat.";
+    public static final String JOIN_MESSAGE_PREFIX = "/join ";
+    public static final String WELCOME_MESSAGE_PREFIX = "Welcome";
+    public static final String NEW_USER_SUFFIX = "is now online";
+    public static final String CLIENT_DISCONNECT_PREFIX = "/leave ";
 
     // Sizes for the GUI components
     public static final int WINDOW_WIDTH = 600;
@@ -31,7 +38,7 @@ public class ClientConstants {
 
     // Font variables for the GUI components
     public static final Font TEXT_FONT = new Font("Arial", Font.PLAIN, 14); // Font for text areas
-    public static final Font BUTTON_FONT = new Font("Arial", Font.BOLD, 12); // Font for buttons;
+    public static final Font BUTTON_FONT = new Font("Arial", Font.BOLD, 12); // Font for buttons
 
     // Dataformat for the timestamp
     public static final String TIMESTAMP_FORMAT = "HH:mm:ss";

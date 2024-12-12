@@ -1,7 +1,6 @@
 package com.datamannen1013.javachattapp.client;
 import com.datamannen1013.javachattapp.client.constants.ClientConstants;
 import com.datamannen1013.javachattapp.client.gui.ErrorHandler;
-import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -56,16 +55,24 @@ public class MessageHandler extends Component {
         }
         processedMessages.add(message);
 
+        // Handle welcome messages
+        if (message.startsWith(ClientConstants.WELCOME_MESSAGE_PREFIX) && message.contains(currentUserName)) {
+            displaySystemMessage(message);
+            return;
+        }
+        // Handle is now online messages
+        if (message.contains(ClientConstants.NEW_USER_SUFFIX) && !message.contains(currentUserName)) {
+            displaySystemMessage(message);
+            return;
+        } else if (message.contains(ClientConstants.NEW_USER_SUFFIX) && message.contains(currentUserName)) {
+            return;
+        }
         // Handle system messages
         if (isSystemMessage(message)) {
             handleSystemMessage(message);
             return;
         }
-        // Handle welcome messages
-        if (message.startsWith("Welcome ") && !message.contains(currentUserName)) {
-            displaySystemMessage(message);
-            return;
-        }
+
 
         // Start/End history markers
         if (message.equals(ClientConstants.CHAT_HISTORY_START) || message.equals(ClientConstants.CHAT_HISTORY_END)) {
@@ -93,10 +100,10 @@ public class MessageHandler extends Component {
         }
 
     public static boolean isSystemMessage(String message) {
-        return message.startsWith(ServerConstants.ONLINE_USERS_MESSAGE_PREFIX) ||
-                message.equals(ServerConstants.CHAT_HISTORY_START) ||
-                message.equals(ServerConstants.CHAT_HISTORY_END) ||
-                message.startsWith(ServerConstants.CLIENT_DISCONNECT_PREFIX);
+        return message.startsWith(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX) ||
+                message.equals(ClientConstants.CHAT_HISTORY_START) ||
+                message.equals(ClientConstants.CHAT_HISTORY_END) ||
+                message.startsWith(ClientConstants.CLIENT_DISCONNECT_PREFIX);
     }
 
     private void displaySystemMessage(String message) throws BadLocationException {
@@ -239,7 +246,7 @@ public class MessageHandler extends Component {
         }
     }
 
-    private void handleOnlineUsersMessage(String message) throws BadLocationException {
+    private void handleOnlineUsersMessage(String message){
         // Extract and display online users
         String users = message;
 
@@ -255,7 +262,8 @@ public class MessageHandler extends Component {
         Style systemStyle = messageArea.addStyle("System Style", null);
         StyleConstants.setForeground(systemStyle, ClientConstants.SYSTEM_MESSAGE_COLOR);
         StyleConstants.setItalic(systemStyle, true);
-        doc.insertString(doc.getLength(), "Online users: " + users + "\n", systemStyle);
         messageArea.setCaretPosition(doc.getLength());
+
+        onlineUsersTextArea.setText(users);
     }
 }
