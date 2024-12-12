@@ -49,7 +49,7 @@ public class ServerConstants {
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     "username TEXT NOT NULL UNIQUE, " +
                     "password_hash VARCHAR(255) NOT NULL, " +
-                    "created_at DATETIME DEFAULT CURRENT_TIMESTAMP)";
+                    "email TEXT NOT NULL UNIQUE)";
     @SuppressWarnings("unused") // Will be implemented
     public static final String INSERT_USER =
             "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";

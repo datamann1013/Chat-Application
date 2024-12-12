@@ -1,5 +1,7 @@
 package com.datamannen1013.javachattapp.client;
+
 import com.datamannen1013.javachattapp.client.constants.ClientConstants;
+import com.datamannen1013.javachattapp.client.gui.ChatWindow;
 import com.datamannen1013.javachattapp.client.gui.ErrorHandler;
 
 import javax.swing.*;
@@ -55,42 +57,46 @@ public class ClientMessageHandler extends Component {
         }
         processedMessages.add(message);
 
-        // Handle welcome messages
-        if (message.startsWith(ClientConstants.WELCOME_MESSAGE_PREFIX) && message.contains(currentUserName)) {
+        // Handle welcome messages and is now online messages and Start/End history markers
+        if (message.startsWith(ClientConstants.WELCOME_MESSAGE_PREFIX) && message.contains(currentUserName) ||
+                message.contains(ClientConstants.NEW_USER_SUFFIX) && !message.contains(currentUserName)) {
             displaySystemMessage(message);
             return;
         }
-        // Handle is now online messages
-        if (message.contains(ClientConstants.NEW_USER_SUFFIX) && !message.contains(currentUserName)) {
-            displaySystemMessage(message);
-            return;
-        } else if (message.contains(ClientConstants.NEW_USER_SUFFIX) && message.contains(currentUserName)) {
+
+        else if (message.contains(ClientConstants.NEW_USER_SUFFIX) && message.contains(currentUserName)) {
             return;
         }
+        // Handle server shutdown
+        else if(message.equals(ClientConstants.SERVER_SHUTDOWN_MESSAGE)) {
+            disconnectServer();
+            return;
+        }
+
         // Handle system messages
-        if (isSystemMessage(message)) {
+        else if (isSystemMessage(message)) {
             handleSystemMessage(message);
             return;
         }
 
-
-        // Start/End history markers
-        if (message.equals(ClientConstants.CHAT_HISTORY_START) || message.equals(ClientConstants.CHAT_HISTORY_END)) {
-            displaySystemMessage(message);
-            return;
-        }
-
-
         // Regular messages
-            new MessageProcessingWorker(message).execute();
+        new MessageProcessingWorker(message).execute();
         }
 
-        private void handleSystemMessage(String message) {
+    private void disconnectServer() throws BadLocationException {
+        displaySystemMessage("Server is disconnected! Shutting down");
+        ChatWindow.initiateGracefulShutdown();
+    }
+
+    private void handleSystemMessage(String message) {
             SwingUtilities.invokeLater(() -> {
                 try {
                     if (message.startsWith(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX)) {
                         handleOnlineUsersMessage(message);
-                    } else {
+                    }
+                    else if (message.startsWith(ClientConstants.WELCOME_MESSAGE_PREFIX) && !message.contains(currentUserName)){}
+                    else if (message.contains(ClientConstants.NEW_USER_SUFFIX) && message.contains(currentUserName)) {}
+                    else {
                         displaySystemMessage(message);
                     }
                 } catch (BadLocationException e) {
@@ -103,7 +109,10 @@ public class ClientMessageHandler extends Component {
         return message.startsWith(ClientConstants.ONLINE_USERS_MESSAGE_PREFIX) ||
                 message.equals(ClientConstants.CHAT_HISTORY_START) ||
                 message.equals(ClientConstants.CHAT_HISTORY_END) ||
-                message.startsWith(ClientConstants.CLIENT_DISCONNECT_PREFIX);
+                message.startsWith(ClientConstants.CLIENT_DISCONNECT_PREFIX) ||
+                message.equals(ClientConstants.SERVER_SHUTDOWN_MESSAGE) ||
+                message.startsWith(ClientConstants.WELCOME_MESSAGE_PREFIX)||
+                message.contains(ClientConstants.NEW_USER_SUFFIX);
     }
 
     private void displaySystemMessage(String message) throws BadLocationException {

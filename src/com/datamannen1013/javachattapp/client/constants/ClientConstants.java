@@ -21,6 +21,8 @@ public class ClientConstants {
     public static final String WELCOME_MESSAGE_PREFIX = "Welcome";
     public static final String NEW_USER_SUFFIX = "is now online";
     public static final String CLIENT_DISCONNECT_PREFIX = "/leave ";
+    @SuppressWarnings("SpellCheckingInspection") //Correct spelling in this spesific case
+    public static final String SERVER_SHUTDOWN_MESSAGE = "/serverclose";
 
     // Sizes for the GUI components
     public static final int WINDOW_WIDTH = 600;

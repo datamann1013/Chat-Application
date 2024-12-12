@@ -21,12 +21,12 @@ public class ChatWindow extends JFrame {
     private final JTextField textField; // Input field for user messages
     private final JTextArea onlineUsersTextArea;
     private String name;
-    private ChatClient client; // Chat client instance for handling communication
+    private static ChatClient client; // Chat client instance for handling communication
     private final ClientMessageHandler clientMessageHandler;
-
+    private static ChatWindow instance;
 
     // Constructor to set up the GUI
-    public ChatWindow() {
+    private ChatWindow() {
         super(ClientConstants.APPLICATION_NAME); // Set the title of the window
         setSize(ClientConstants.WINDOW_WIDTH, ClientConstants.WINDOW_HEIGHT); // Set the size of the window
 
@@ -156,6 +156,20 @@ public class ChatWindow extends JFrame {
         });
     }
 
+    // Static method to get the instance
+    public static synchronized ChatWindow getInstance() {
+        if (instance == null) {
+            instance = new ChatWindow();
+        }
+        return instance;
+    }
+
+    // Static method to trigger shutdown
+    public static void initiateGracefulShutdown() {
+        ChatWindow instance = getInstance();
+        instance.performGracefulShutdown();
+    }
+
     private JButton getExitButton() {
         JButton exitButton = new JButton("Exit"); // Create exit button
         exitButton.setFont(ClientConstants.BUTTON_FONT); // Set font for the button
@@ -226,7 +240,7 @@ public class ChatWindow extends JFrame {
         }
     }
 
-    private void performGracefulShutdown() {
+    public void performGracefulShutdown() {
         final Object shutdownLock = new Object();
         final boolean[] shutdownComplete = {false};
         final int MAX_RETRIES = 3;

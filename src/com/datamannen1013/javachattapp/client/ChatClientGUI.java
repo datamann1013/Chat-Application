@@ -30,7 +30,7 @@ public class ChatClientGUI {
                 instanceCount++;
                 System.out.println("Creating new instance #" + instanceCount);
                 try {
-                    instance = new ChatWindow();
+                    instance = ChatWindow.getInstance();
                     instance.setVisible(true);
                 } finally {
                     isInitializing = false;

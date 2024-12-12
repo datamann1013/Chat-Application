@@ -12,6 +12,6 @@ public class ChatClientGUI2 {
         // Use SwingUtilities to ensure that the GUI is created on the Event Dispatch Thread (EDT)
         SwingUtilities.invokeLater(() ->
             // Create an instance of ChatClientGUI and make it visible
-            new ChatWindow().setVisible(true));
+            ChatWindow.getInstance().setVisible(true));
     }
 }
