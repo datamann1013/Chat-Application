@@ -1,7 +1,7 @@
 package com.datamannen1013.javachattapp.client.gui;
 
 import com.datamannen1013.javachattapp.client.ChatClient;
-import com.datamannen1013.javachattapp.client.MessageHandler;
+import com.datamannen1013.javachattapp.client.ClientMessageHandler;
 import com.datamannen1013.javachattapp.client.constants.ClientConstants;
 
 import javax.swing.*;
@@ -22,7 +22,7 @@ public class ChatWindow extends JFrame {
     private final JTextArea onlineUsersTextArea;
     private String name;
     private ChatClient client; // Chat client instance for handling communication
-    private final MessageHandler messageHandler;
+    private final ClientMessageHandler clientMessageHandler;
 
 
     // Constructor to set up the GUI
@@ -134,7 +134,7 @@ public class ChatWindow extends JFrame {
         }
 
         // Initialize message handler
-        messageHandler = new MessageHandler(messageArea, onlineUsersTextArea, name);
+        clientMessageHandler = new ClientMessageHandler(messageArea, onlineUsersTextArea, name);
 
         // Replace the current focus request with:
         SwingUtilities.invokeLater(() -> {
@@ -290,7 +290,7 @@ public class ChatWindow extends JFrame {
                     ErrorHandler.showError(this, "Received empty or invalid message from server");
                     return;
                 }
-                messageHandler.handleMessage(message); // Process the received message using MessageHandler
+                clientMessageHandler.handleMessage(message); // Process the received message using MessageHandler
             } catch (Exception e) {
                 ErrorHandler.showError(this, "Error processing message: " + e.getMessage());
             }
@@ -332,7 +332,7 @@ public class ChatWindow extends JFrame {
                     statusLabel.setForeground(Color.ORANGE);
                     createClient(name, message -> {
                         try {
-                            messageHandler.handleMessage(message);
+                            clientMessageHandler.handleMessage(message);
                         } catch (BadLocationException e) {
                             SwingUtilities.invokeLater(() ->
                                     ErrorHandler.showError(this, "Error displaying message: " + e.getMessage())
@@ -350,7 +350,7 @@ public class ChatWindow extends JFrame {
                 statusLabel.setText("Connection Status: Reconnecting...");
                 createClient(name, message -> {
                     try {
-                        messageHandler.handleMessage(message);
+                        clientMessageHandler.handleMessage(message);
                     } catch (BadLocationException e) {
                         SwingUtilities.invokeLater(() ->
                                 ErrorHandler.showError(this, "Error displaying message: " + e.getMessage())

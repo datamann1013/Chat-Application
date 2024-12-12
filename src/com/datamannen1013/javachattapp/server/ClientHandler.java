@@ -1,7 +1,5 @@
 package com.datamannen1013.javachattapp.server;
 
-import com.datamannen1013.javachattapp.client.constants.ClientConstants;
-import com.datamannen1013.javachattapp.client.MessageHandler;
 import com.datamannen1013.javachattapp.server.constants.ServerConstants;
 import com.datamannen1013.javachattapp.server.database.DatabaseManager;
 import com.datamannen1013.javachattapp.server.database.repository.MessageRepository;
@@ -142,7 +140,7 @@ public class ClientHandler implements Runnable {
     // Private methods - Connection management
     private String validateUsername(String message) {
         String proposedUsername = message.replace(ServerConstants.JOIN_MESSAGE_PREFIX, "");
-        Pattern pattern = Pattern.compile(ClientConstants.USERNAME_PATTERN);
+        Pattern pattern = Pattern.compile(ServerConstants.USERNAME_PATTERN);
         if (!pattern.matcher(proposedUsername).matches()) {
             throw new IllegalArgumentException("Invalid username format");
         }
@@ -182,7 +180,7 @@ public class ClientHandler implements Runnable {
             return;
         }
 
-        if (MessageHandler.isSystemMessage(message)) {
+        if (ServerMessageHandler.isSystemMessage(message)) {
             broadcastSystemMessage(message);
         } else {
             queueRegularMessage(message);
@@ -252,7 +250,7 @@ public class ClientHandler implements Runnable {
         }
 
         // Check for duplicate messages in queue
-        if (!MessageHandler.isSystemMessage(message)) {
+        if (!ServerMessageHandler.isSystemMessage(message)) {
             for (String queuedMessage : messageQueue) {
                 if (isSimilarMessage(message, queuedMessage)) {
                     ServerLogger.logWarning("Duplicate message detected: " + message);

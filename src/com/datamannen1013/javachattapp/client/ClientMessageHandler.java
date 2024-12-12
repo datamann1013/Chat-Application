@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 /**
  * Handles message formatting and display in the chat window
  */
-public class MessageHandler extends Component {
+public class ClientMessageHandler extends Component {
     private final JTextPane messageArea;
     private final String currentUserName;
     private final JTextArea onlineUsersTextArea;
@@ -24,7 +24,7 @@ public class MessageHandler extends Component {
     private Style messageStyle;
     private final Set<String> processedMessages = new HashSet<>(); // To prevent duplicates
 
-    public MessageHandler(JTextPane messageArea, JTextArea onlineUsersTextArea, String currentUserName) {
+    public ClientMessageHandler(JTextPane messageArea, JTextArea onlineUsersTextArea, String currentUserName) {
         System.out.println("MessageHandler constructor start");
         this.messageArea = messageArea;
         this.onlineUsersTextArea = onlineUsersTextArea;
@@ -204,7 +204,7 @@ public class MessageHandler extends Component {
                     publish(formatMessage(timestamp, username, userMessage));
                 } else {
                     handleMessageError("Invalid message format", null);
-                    ErrorHandler.showErrorMessage(MessageHandler.this, message);
+                    ErrorHandler.showErrorMessage(ClientMessageHandler.this, message);
                     System.err.println("Message format is incorrect: " + message);
                 }
             } catch (BadLocationException e) {

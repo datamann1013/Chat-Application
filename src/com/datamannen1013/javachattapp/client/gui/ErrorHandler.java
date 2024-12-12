@@ -1,6 +1,6 @@
 package com.datamannen1013.javachattapp.client.gui;
 
-import com.datamannen1013.javachattapp.client.MessageHandler;
+import com.datamannen1013.javachattapp.client.ClientMessageHandler;
 
 import javax.swing.JOptionPane;
 import javax.swing.JFrame;
@@ -31,7 +31,7 @@ public class ErrorHandler {
             "Connection Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
         return choice == JOptionPane.YES_OPTION;
     }
-    public static void showErrorMessage(MessageHandler parent, String message) {
+    public static void showErrorMessage(ClientMessageHandler parent, String message) {
         JOptionPane.showMessageDialog(parent,
                 message,
                 "Error",

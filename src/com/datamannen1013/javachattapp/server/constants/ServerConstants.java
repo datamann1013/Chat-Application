@@ -2,6 +2,13 @@ package com.datamannen1013.javachattapp.server.constants;
 
 public class ServerConstants {
 
+    private ServerConstants() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    //Username rules
+    public static final String USERNAME_PATTERN = "^[a-zA-Z0-9_ -]{3,20}$";
+
     // Constants for server address and port
     public static final int SERVER_PORT = 5000;
 
