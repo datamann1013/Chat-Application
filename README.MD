@@ -27,8 +27,8 @@ Welcome to my first Java Chat Application! This is a simple, real-time chat syst
 
 ## Documentation
 
-- [Architecture of the project](docs/architecture.md)
-- [API](docs/api.md)
+- [Database](documentation/database.md)
+- [Serverlogger](documentation/serverlogger.md)
 
 ---
 
@@ -92,18 +92,38 @@ Chat-Application/
 │   │   ├── ChatClient.java
 │   │   ├── ChatClientGUI.java
 │   │   ├── ChatClientGUI2.java
-│   │   ├── gui/
-│   │   │   ├── MessageHandler.java
-│   │   │   ├── ChatWindow.java
-│   │   │   └── LoginWindow.java
-│   │   └── constants/
+│   │   ├── ClientMessageHandler.java
+│   │   └── gui/
+│   │       ├── MessageHandler.java
+│   │       ├── ChatWindow.java
+│   │       ├── LoginWindow.java
+│   │       │   └── constants/
 │   │       └── ClientConstants.java
 │   │
-│   ├── server/
+│   └── server/
 │       ├── ChatServer.java
 │       ├── ClientHandler.java
-│       └── constants/
-│           └── ClientConstants.java
+│       ├── ServerMessageHandler.java
+│       ├── constants/
+│       │   └── ClientConstants.java
+│       ├── database/
+│       │   ├── DatabaseConfig.java
+│       │   ├── DatabaseManager.java
+│       │   ├── exceptions/
+│       │   │   ├── ConnectionException.java
+│       │   │   ├── DatabaseException.java
+│       │   │   ├── InitializationException.java
+│       │   │   ├── MessageException.java
+│       │   │   ├── MessagePersistenceException.java
+│       │   │   └── MessageRetrievalException.java
+│       │   ├── models/
+│       │   │   └── Message.java
+│       │   └── repository/
+│       │       └── MessageRepository.java
+│       └── logger/
+│           ├── CustomLogFormatter.java
+│           ├── LoggerConfiguration.java
+│           └── ServerLogger.java
 │
 └── README.md
 
@@ -113,12 +133,15 @@ Chat-Application/
 
 ## Implementations done
 
-v 0.0.2
+v 0.0.3
 
-| Theme              | Action                                                                                                                                    |
-|--------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| Thread Safety      | Ensure thread safety in the application, particularly for background tasks like sending messages using SwingWorker or similar constructs. |
-
+| Theme               | Action                                                                                                                                    |
+|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| Thread Safety       | Ensure thread safety in the application, particularly for background tasks like sending messages using SwingWorker or similar constructs. |
+| Logger              | Implemented a logger in the server to improve log reliability and usability                                                               |
+| Long-term memory    | Implement a database to store messages                                                                                                    | 
+| Users               | Implement users in a database                                                                                                             |
+ 
 v 0.0.2
 
 | Theme                 | Action                                                                                                          |
@@ -156,7 +179,6 @@ v 0.0.2
 | Private Messaging         | Develop a feature for private messaging between users.                                         |
 | Code Optimization         | Review and optimize the code for better performance and maintainability.                       |
 | Message security?         | Implement handshake to make sure client gets message                                           |
-| Long-term memory          | Implement a database to store messages                                                         |
 | Username mix-up           | Implement session id so that multiple users can have same or similar names                     |
 | Log Management            | Implement archiving of logs (database?)                                                        |
 | Log Management            | Implement regular log cleanup                                                                  |
@@ -165,11 +187,12 @@ v 0.0.2
 | Log management            | Implement Log compression                                                                      |
 | Log security              | Make sure logs dont save sensitive data                                                        |
 | Log security              | Implement log encryption?                                                                      |
-| MessageCache              | Implement a rapid access directory instead of asking server every time                         |
-| Errorlogger               | Implement a logger instead of system out println                                               |
+| MessageCache              | Implement a rapid access directory instead of asking database every time                       |
 | Encryption                | Implement encryption of passwords for login                                                    |
 | Timezone                  | Implement timezones to make sure time works around the world                                   |
-| Users                     | Implement users in a database                                                                  |
 | Database                  | Improve Singleton pattern                                                                      |
+| Logger                    | Implement logger for client side                                                               |
+| Users                     | Implement usage of users                                                                       |
+
 
 
