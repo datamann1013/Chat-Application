@@ -281,6 +281,7 @@ public class ChatWindow extends JFrame {
             }
         } catch (InterruptedException e) {
             System.err.println("Shutdown wait interrupted: " + e.getMessage());
+            shutdownThread.interrupt();
         }
         if (!shutdownComplete[0]) dispose();
     }

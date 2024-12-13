@@ -2,13 +2,13 @@ package com.datamannen1013.javachattapp.server.database.models;
 
 import java.sql.Timestamp;
 
-public record Message(String id, String content, String sender, Timestamp timestamp) {
+public record Message(String id, String sender, String content, Timestamp timestamp) {
 
     // Builder pattern for more flexible construction
     public static class Builder {
         private String id;
-        private String content;
         private String sender;
+        private String content;
         private Timestamp timestamp;
 
         public Builder id(String id) {
@@ -32,7 +32,7 @@ public record Message(String id, String content, String sender, Timestamp timest
         }
 
         public Message build() {
-            return new Message(id, content, sender, timestamp);
+            return new Message(id, sender, content, timestamp);
         }
     }
 }

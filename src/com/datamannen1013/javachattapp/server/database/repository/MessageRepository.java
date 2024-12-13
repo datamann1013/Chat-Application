@@ -19,21 +19,30 @@ public class MessageRepository {
     }
 
     public static void saveMessage(String sender, String content) {
-        try (Connection conn = databaseManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(ServerConstants.INSERT_MESSAGE)) {
-
-            pstmt.setString(1, sender);
-            pstmt.setString(2, content);
-            pstmt.executeUpdate();
-
-            ServerLogger.logInfo("Message saved successfully from: " + sender);
-        } catch (SQLException e) {
-            throw MessagePersistenceException.builder()
-                    .errorCode(MessagePersistenceException.ErrorCode.SAVE_FAILED)
-                    .message("Failed to save message from " + sender)
-                    .cause(e)
-                    .build();
+        if (content.contains(ServerConstants.LEAVE_MESSAGE_SUFFIX)){
+            ServerLogger.logInfo("User left the chat: " + sender);
         }
+        else if (content.contains(ServerConstants.JOIN_MESSAGE_SUFFIX)){
+            ServerLogger.logInfo("User joined the chat: " + sender);
+        }
+        else {
+            try (Connection conn = databaseManager.getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(ServerConstants.INSERT_MESSAGE)) {
+
+                pstmt.setString(1, sender);
+                pstmt.setString(2, content);
+                pstmt.executeUpdate();
+
+                ServerLogger.logInfo("Message saved successfully from: " + sender);
+            } catch (SQLException e) {
+                throw MessagePersistenceException.builder()
+                        .errorCode(MessagePersistenceException.ErrorCode.SAVE_FAILED)
+                        .message("Failed to save message from " + sender)
+                        .cause(e)
+                        .build();
+            }
+        }
+
     }
 
     public static List<Message> getRecentMessages(int limit) throws SQLException {

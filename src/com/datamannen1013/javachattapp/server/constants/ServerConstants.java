@@ -17,11 +17,13 @@ public class ServerConstants {
     public static final String ONLINE_USERS_MESSAGE_PREFIX = "/onlineusers ";
     public static final String JOIN_MESSAGE_PREFIX = "/join ";
     public static final String LEAVE_MESSAGE_SUFFIX = " has left the chat.";
+    public static final String JOIN_MESSAGE_SUFFIX = " is now online.";
     public static final String CLIENT_DISCONNECT_PREFIX = "/leave ";
     public static final String CHAT_HISTORY_START = "--- Chat History ---";
     public static final String CHAT_HISTORY_END = "--- End of History ---";
     @SuppressWarnings("SpellCheckingInspection") //Correct spelling in this spesific case
     public static final String SERVER_SHUTDOWN_MESSAGE = "/serverclose";
+    public static final String SERVER_HISTORY_MESSAGE_PREFIX = "/history ";
 
     // Database constants
     public static final int MESSAGE_HISTORY_LIMIT = 50; // Number of recent messages to load

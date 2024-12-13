@@ -112,10 +112,14 @@ public class ClientMessageHandler extends Component {
                 message.startsWith(ClientConstants.CLIENT_DISCONNECT_PREFIX) ||
                 message.equals(ClientConstants.SERVER_SHUTDOWN_MESSAGE) ||
                 message.startsWith(ClientConstants.WELCOME_MESSAGE_PREFIX)||
-                message.contains(ClientConstants.NEW_USER_SUFFIX);
+                message.contains(ClientConstants.NEW_USER_SUFFIX) ||
+                message.startsWith(ClientConstants.SERVER_HISTORY_MESSAGE_PREFIX);
     }
 
     private void displaySystemMessage(String message) throws BadLocationException {
+        if (message.startsWith(ClientConstants.SERVER_HISTORY_MESSAGE_PREFIX)){
+            message = message.substring(9);
+        }
         StyledDocument doc = messageArea.getStyledDocument();
         Style systemStyle = messageArea.addStyle("System Style", null);
         StyleConstants.setForeground(systemStyle, ClientConstants.SYSTEM_MESSAGE_COLOR);
