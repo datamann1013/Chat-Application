@@ -36,7 +36,7 @@ public class MessageRepository {
         }
     }
 
-    public static List<Message> getRecentMessages(int limit) {
+    public static List<Message> getRecentMessages(int limit) throws SQLException {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement pstmt = prepareRecentMessagesQuery(conn, limit)) {
 

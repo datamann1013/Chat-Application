@@ -12,9 +12,6 @@ public class ServerConstants {
     // Constants for server address and port
     public static final int SERVER_PORT = 5000;
 
-    // Defines use of cache for faster mesage access
-    public static final boolean USE_MESSAGE_CACHE = false;
-
     // Command prefixes for handling specific message types
     @SuppressWarnings("SpellCheckingInspection") //Correct spelling in this spesific case
     public static final String ONLINE_USERS_MESSAGE_PREFIX = "/onlineusers ";
@@ -40,7 +37,7 @@ public class ServerConstants {
     public static final String INSERT_MESSAGE =
             "INSERT INTO messages (username, message) VALUES (?, ?)";
     public static final String GET_RECENT_MESSAGES =
-            "SELECT username, message, timestamp FROM messages " +
+            "SELECT * FROM messages " +
                     "ORDER BY timestamp DESC LIMIT ?";
 
     // Users database
