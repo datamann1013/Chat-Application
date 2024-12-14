@@ -59,8 +59,8 @@ Welcome to my first Java Chat Application! This is a simple, real-time chat syst
 ### Installation
 1. Clone the Repository
    ```bash
-   git clone https://github.com/datamann1013/javaChatApp
-   cd java-chat-application
+   git clone https://github.com/datamann1013/Chat-Application
+   cd Chat-Application
 
 ---
 
