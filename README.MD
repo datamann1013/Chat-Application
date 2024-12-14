@@ -4,7 +4,7 @@
 # **Java Chat Application**
 ![Java](https://img.shields.io/badge/Java-20-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Version](https://img.shields.io/badge/version-0.0.1-blue.svg)
+![Version](https://img.shields.io/badge/version-0.0.3-blue.svg)
 
 
 
