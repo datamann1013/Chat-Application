@@ -12,11 +12,14 @@ graph TD
     Developer -->|Push Code| GitRepo
     GitRepo -->|Triggers| AzureDevOps
     AzureDevOps -->|Runs Build & Tests| CI/CD
-    CI/CD -->|Deploys to| Kubernetes
-    Kubernetes -->|Manages Containers| {Frontend, Backend, DB, Storage}
-    Kubernetes -->|Hosted on| Proxmox
-```
+    CI/CD -->|Deploys to| KubernetesCluster
+    KubernetesCluster -->|Manages| Frontend
+    KubernetesCluster -->|Manages| Backend
+    KubernetesCluster -->|Manages| Database
+    KubernetesCluster -->|Manages| Storage
+    KubernetesCluster -->|Hosted on| Proxmox
 
+```
 ## Components
 - **Frontend:** React application served via Nginx.
 - **Backend:** ASP.NET Core API.

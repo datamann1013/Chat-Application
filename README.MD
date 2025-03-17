@@ -19,6 +19,10 @@ This project is a **secure peer-to-peer chat and file-sharing service** featurin
 3. [Deplyment architecture](documentation/deplymentarc.MD)
 4. [Enviroment setup](documentation/enviromentsetup.MD)
 5. [CI/CD pipeline](documentation/cicdpipeline.MD)
+6. [Database](documentation/database.MD)
+7. [kanban](documentation/kanban.MD)
+8. [Sequence diagram](documentation/sequencediagram.md)
+9. [Tests](documentation/tests.MD)
 
 ## 2. Key Features
 
