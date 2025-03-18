@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "q/n56ZMhYLE=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\admin\\RiderProjects\\Chat-Application\\Chat-application-backend\\Chat-application-backend.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\admin\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.0\\microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
+    "C:\\Users\\admin\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
