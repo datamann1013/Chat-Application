@@ -1,0 +1,21 @@
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/contentModel.xml
+/.idea.Chat-application-backend.iml
+/modules.xml
+/projectSettingsUpdater.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# Ignore build and dependency files
+bin/
+obj/
+node_modules/
+.env
+.DS_Store
+.idea/
+.vscode/
