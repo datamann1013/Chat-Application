@@ -48,6 +48,10 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.0, )"
+            },
+            "Testcontainers": {
+              "target": "Package",
+              "version": "[4.3.0, )"
             }
           },
           "imports": [
