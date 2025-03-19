@@ -1,13 +1,15 @@
 ﻿using System;
 using Chat_application_backend.src.ChatApplication.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Chat_application_backend.src.ChatApplication.Infrastructure.Data;
 
 namespace Chat_application_backend.tests.ChatApplication.IntegrationTests.Infrastructure
 {
+    /// <summary>
+    /// Provides an in-memory database fixture for integration tests.
+    /// </summary>
     public class DatabaseFixture : IDisposable
     {
-        public readonly ApplicationDbContext Context;
+        public ApplicationDbContext Context { get; private set; }
 
         public DatabaseFixture()
         {
@@ -16,7 +18,6 @@ namespace Chat_application_backend.tests.ChatApplication.IntegrationTests.Infras
                 .Options;
 
             Context = new ApplicationDbContext(options);
-            Context.Database.EnsureCreated();
         }
 
         public void Dispose()

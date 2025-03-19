@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chat_application_backend.src.ChatApplication.Core.Entities;
-using Chat_application_backend.src.ChatApplication.Core.Infrastructure;
-using Chat_application_backend.src.ChatApplication.Infrastructure.Services;
+using Chat_application_backend.src.ChatApplication.Core.Interfaces;
+using Chat_application_backend.src.ChatApplication.Services;
 
 namespace Chat_application_backend.tests.ChatApplication.UnitTests.Services
 {
