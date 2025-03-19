@@ -1,10 +1,11 @@
 ﻿using Xunit;
 using FluentAssertions;
-using ChatApplication.Infrastructure.Data;
-using ChatApplication.Infrastructure.Repositories;
-using ChatApplication.Core.Entities;
 using System;
 using System.Threading.Tasks;
+using Chat_application_backend.src.ChatApplication.Core.Entities;
+using Chat_application_backend.src.ChatApplication.Infrastructure.Data;
+using Chat_application_backend.src.ChatApplication.Infrastructure.Repositories;
+using Chat_application_backend.tests.ChatApplication.IntegrationTests.Infrastructure;
 
 namespace Chat_application_backend.tests.ChatApplication.IntegrationTests.Repositories
 {

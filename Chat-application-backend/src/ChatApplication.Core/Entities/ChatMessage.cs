@@ -1,20 +1,16 @@
-﻿namespace Chat_application_backend.src.ChatApplication.Core.Entities
+﻿using System;
+
+namespace Chat_application_backend.src.ChatApplication.Core.Entities
 {
+    /// <summary>
+    /// Represents a chat message between users.
+    /// </summary>
     public class ChatMessage
     {
-        // Unique identifier for the chat message
-        // public Guid Id { get; set; }
-
-        // Sender's user ID
-        // public Guid SenderId { get; set; }
-
-        // Receiver's user ID
-        // public Guid ReceiverId { get; set; }
-
-        // Message content
-        // public string Content { get; set; }
-
-        // Timestamp of when the message was sent
-        // public DateTime SentAt { get; set; }
+        public Guid Id { get; set; } // Unique identifier for the message
+        public Guid SenderId { get; set; } // ID of the sender
+        public Guid ReceiverId { get; set; } // ID of the receiver
+        public string Content { get; set; } // Message content
+        public DateTime Timestamp { get; set; } // When the message was sent
     }
 }

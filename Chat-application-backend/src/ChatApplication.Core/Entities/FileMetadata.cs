@@ -1,15 +1,15 @@
-﻿namespace Chat_application_backend.src.ChatApplication.Core.Entities
+﻿using System;
+
+namespace Chat_application_backend.src.ChatApplication.Core.Entities
 {
+    /// <summary>
+    /// Represents metadata for a shared file.
+    /// </summary>
     public class FileMetadata
     {
-        // Unique identifier for the file
-        // public Guid Id { get; set; }
-
-        // ID of the user who uploaded the file
-        // public Guid OwnerId { get; set; }
-
-        // Original file name
-        // public string FileName { get; set; }
+        public Guid Id { get; set; } // Unique file ID
+        public string FileName { get; set; } // Name of the file
+        public Guid OwnerId { get; set; } // User who uploaded it
 
         // Path to the file in storage
         // public string FilePath { get; set; }

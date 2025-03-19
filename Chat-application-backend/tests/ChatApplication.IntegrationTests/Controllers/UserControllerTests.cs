@@ -3,10 +3,10 @@ using System.Net.Http;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Chat_application_backend.ChatApplication.Tests.InteractionTests;
+using Chat_application_backend.tests.ChatApplication.IntegrationTests;
 using Newtonsoft.Json;
-using ChatApplication.Api;
-using ChatApplication.Core.Entities;
+using Chat_application_backend.src.ChatApplication.Api;
+using Chat_application_backend.src.ChatApplication.Core.Entities;
 using FluentAssertions;
 
 namespace Chat_application_backend.tests.ChatApplication.IntegrationTests.Controllers

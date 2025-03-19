@@ -1,6 +1,7 @@
 ﻿using System;
+using Chat_application_backend.src.ChatApplication.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using ChatApplication.Infrastructure.Data;
+using Chat_application_backend.src.ChatApplication.Infrastructure.Data;
 
 namespace Chat_application_backend.tests.ChatApplication.IntegrationTests.Infrastructure
 {
