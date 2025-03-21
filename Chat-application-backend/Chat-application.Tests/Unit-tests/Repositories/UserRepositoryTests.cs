@@ -1,39 +1,60 @@
 using Xunit;
-using FluentAssertions;
+using FluentAssertions;    
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
-using Chat_application_backend.src.ChatApplication.Core.Entities;
-using Chat_application_backend.src.ChatApplication.Infrastructure.Data;
-using Chat_application_backend.src.ChatApplication.Infrastructure.Repositories;
-using Chat_application_backend.tests.ChatApplication.IntegrationTests.Infrastructure;
-using Chat_application.Tests.Integration_tests.Infrastructure;
 
-namespace Chat_application.Tests.Unit_tests.Repositories
+namespace Chat_Application.Tests.Unit_Tests.Repositories
 {
-    public class UserRepositoryIntegrationTests : IClassFixture<DatabaseFixture>
+    /// <summary>
+    /// Tests for UserRepository using an in-memory EF Core database.
+    /// </summary>
+    public class UserRepositoryTests
     {
-        private readonly ApplicationDbContext _context;
-        private readonly UserRepository _userRepository;
-
-        public UserRepositoryIntegrationTests(DatabaseFixture fixture)
-        {
-            _context = fixture.Context;
-            _userRepository = new UserRepository(_context);
-        }
-
         [Fact]
-        public async Task AddUser_ShouldPersist_WhenValid()
+        public async Task AddUserAsync_ShouldPersist_WhenValid()
         {
             // Arrange
-            var user = new User { Id = Guid.NewGuid(), Username = "testuser", Email = "test@example.com" };
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase("UserRepoTestDB")
+                .Options;
+
+            // In a real test, you'd re-create context per test or use a fixture
+            using var context = new ApplicationDbContext(options);
+            var repo = new UserRepository(context);
+
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                Username = "TestUser",
+                Email = "test@example.com"
+            };
 
             // Act
-            await _userRepository.AddUserAsync(user);
-            var result = await _userRepository.GetUserByUsernameAsync("testuser");
+            await repo.AddUserAsync(user);
+            var result = await repo.GetUserByUsernameAsync("TestUser");
 
             // Assert
             result.Should().NotBeNull();
-            result.Username.Should().Be("testuser");
+            result.Email.Should().Be("test@example.com");
+        }
+
+        [Fact]
+        public async Task GetUserByUsernameAsync_ShouldReturnNull_WhenNotFound()
+        {
+            // Arrange
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase("UserRepoTestDB2")
+                .Options;
+
+            using var context = new ApplicationDbContext(options);
+            var repo = new UserRepository(context);
+
+            // Act
+            var result = await repo.GetUserByUsernameAsync("MissingUser");
+
+            // Assert
+            result.Should().BeNull();
         }
     }
 }
