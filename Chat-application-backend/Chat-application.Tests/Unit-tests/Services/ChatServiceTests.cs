@@ -3,6 +3,9 @@ using FluentAssertions;
 using Moq;
 using System;
 using System.Threading.Tasks;
+using Chat_application.API.Interfaces;
+using Chat_application.API.Models;
+using Chat_application.API.Services;
 
 namespace Chat_Application.Tests.Unit_Tests.Services
 {

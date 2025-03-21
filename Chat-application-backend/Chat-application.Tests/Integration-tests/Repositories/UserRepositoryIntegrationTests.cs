@@ -2,6 +2,9 @@ using Xunit;
 using FluentAssertions;
 using System;
 using System.Threading.Tasks;
+using Chat_application.API.Data;
+using Chat_application.API.Models;
+using Chat_application.API.Repositories;
 using Chat_Application.Tests.Integration_Tests.Infrastructure;
 
 namespace Chat_Application.Tests.Integration_Tests.Repositories

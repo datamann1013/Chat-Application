@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using Chat_application.Tests.Integration_tests;
 
 // For potential future usage, e.g., custom attributes or new features
 // using System.Net;

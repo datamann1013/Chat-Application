@@ -1,4 +1,5 @@
 using System;
+using Chat_application.API.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chat_Application.Tests.Integration_Tests.Infrastructure

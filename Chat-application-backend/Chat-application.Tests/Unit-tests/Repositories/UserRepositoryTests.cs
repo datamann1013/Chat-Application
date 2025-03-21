@@ -3,6 +3,10 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using Chat_application.API.Data;
+using Chat_application.API.Models;
+using Chat_application.API.Repositories;
+
 
 namespace Chat_Application.Tests.Unit_Tests.Repositories
 {
