@@ -1,6 +1,0 @@
-﻿services:
-  chat-application-backend:
-    image: chat-application-backend
-    build:
-      context: .
-      dockerfile: Chat-application-backend/Dockerfile
