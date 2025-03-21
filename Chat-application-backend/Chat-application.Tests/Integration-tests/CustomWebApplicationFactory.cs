@@ -1,31 +1,34 @@
-
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 
-namespace Chat_application.Tests.Integration_tests
+namespace Chat_Application.Tests.Integration_Tests
 {
-    public class CustomWebApplicationFactory : WebApplicationFactory<Program> // Use your entry point class here (e.g., Program)
+    /// <summary>
+    /// Custom factory for spinning up the test server with in-memory DB, etc.
+    /// </summary>
+    public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureServices(services =>
             {
-                // Remove the app's DbContext registration
+                // Remove existing DB context
                 var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType == typeof(DbContextOptions<ChatApplicationDbContext>));
+                    d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>)
+                );
                 if (descriptor != null)
                 {
                     services.Remove(descriptor);
                 }
 
-                // Add a test DbContext with in-memory database
-                services.AddDbContext<ChatApplicationDbContext>(options =>
+                // Add in-memory DB
+                services.AddDbContext<ApplicationDbContext>(options =>
                 {
                     options.UseInMemoryDatabase("TestDb");
                 });
-
-                // You can add more custom services or mocks as needed
             });
         }
     }

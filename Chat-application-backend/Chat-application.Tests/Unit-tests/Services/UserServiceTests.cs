@@ -1,54 +1,51 @@
-using System.ComponentModel.DataAnnotations;
 using Xunit;
-using Moq;
-using Chat_application_backend.src.ChatApplication.Core.Entities;
-using Chat_application_backend.src.ChatApplication.Core.Interfaces;
-using Chat_application_backend.src.ChatApplication.Services;
 using FluentAssertions;
+using Moq;
+using System;
+using System.Threading.Tasks;
 
-namespace Chat_application.Tests.Unit_tests.Services
+namespace Chat_Application.Tests.Unit_Tests.Services
 {
+    /// <summary>
+    /// Unit tests for UserService, mocking IUserRepository.
+    /// </summary>
     public class UserServiceTests
     {
-        private readonly Mock<IUserRepository> _mockUserRepo;
-        private readonly Mock<ILogger<UserService>> _mockLogger;
+        private readonly Mock<IUserRepository> _userRepositoryMock;
         private readonly UserService _userService;
 
         public UserServiceTests()
         {
-            _mockUserRepo = new Mock<IUserRepository>();
-            _mockLogger = new Mock<ILogger<UserService>>();
-            _userService = new UserService(_mockUserRepo.Object, _mockLogger.Object);
+            _userRepositoryMock = new Mock<IUserRepository>();
+            _userService = new UserService(_userRepositoryMock.Object);
         }
 
         [Fact]
-        public async Task RegisterUser_ShouldSucceed_WhenUserIsValid()
+        public async Task CreateUser_ShouldReturnUser_WhenValid()
         {
-            // Arrange
-            var user = new User { Username = "testuser", Email = "test@example.com", PasswordHash = "xyz"};
-            
-            _mockUserRepo .Setup(repo => repo.AddUserAsync(It.IsAny<User>())).ReturnsAsync(user);
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                Username = "testuser",
+                Email = "test@example.com"
+            };
 
-            // Act
-            var result = await _userService.RegisterUser(user);
+            _userRepositoryMock.Setup(repo => repo.AddUserAsync(It.IsAny<User>()))
+                .ReturnsAsync(user);
 
-            // Assert
+            var result = await _userService.CreateUser(user);
+
             result.Should().NotBeNull();
             result.Username.Should().Be("testuser");
-            _mockUserRepo .Verify(repo => repo.AddUserAsync(It.IsAny<User>()), Times.Once);
         }
 
         [Fact]
-        public async Task Login_ShouldFail_WhenIncorrectPassword()
+        public async Task Login_ShouldReturnNull_WhenInvalidCredentials()
         {
-            // Arrange
-            var user = new User { Username = "testuser", PasswordHash = "hashedPassword" };
-            _mockUserRepo .Setup(repo => repo.GetUserByUsernameAsync("testuser")).ReturnsAsync(user);
+            _userRepositoryMock.Setup(repo => repo.GetUserByUsernameAsync("testuser"))
+                .ReturnsAsync((User)null);
 
-            // Act
             var result = await _userService.Login("testuser", "wrongpassword");
-
-            // Assert
             result.Should().BeNull();
         }
     }

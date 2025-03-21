@@ -1,11 +1,11 @@
 using System;
-using Chat_application_backend.src.ChatApplication.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Chat_application.Tests.Integration_tests.Infrastructure
+namespace Chat_Application.Tests.Integration_Tests.Infrastructure
 {
     /// <summary>
     /// Provides an in-memory database fixture for integration tests.
+    /// Use this fixture to avoid collisions between tests.
     /// </summary>
     public class DatabaseFixture : IDisposable
     {
