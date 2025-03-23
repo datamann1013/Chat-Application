@@ -95,77 +95,15 @@ The color palette for this project was selected to create a modern, visually app
 
 Here’s a simple visual representation of the color palette used in this project:
 
-| Color Name    | Hex       | Example     |
-|---------------|-----------|-------------|
-| Background    | #d3dcef   | ![#d3dcef](https://via.placeholder.com/50/d3dcef/ffffff?text=+) |
-| Header        | #b0b9d8   | ![#b0b9d8](https://via.placeholder.com/50/b0b9d8/ffffff?text=+) |
-| Card Background| #ffffff   | ![#ffffff](https://via.placeholder.com/50/ffffff/333333?text=+) |
-| Text Color    | #333333   | ![#333333](https://via.placeholder.com/50/333333/ffffff?text=+) |
+| Color Name      | Hex     | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+|-----------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Background      | #d3dcef | <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAYAAAD/Rn+7AAAAAXNSR0IArs4c6QAAAhNJREFUSEuVVsl1QyEMhP67i69OC3EJykMLjDZs5xJ/QAuj0Yj5eL5o7D/7Oc8S7NGcY9AYskvr55i6VhiMMYnP05his8yX/frQUOpFfYpXPc0uJyZIU3xKeHWkqUze1ACcpXyspNlGg9pPS5jdgV/2Hb4hYrrnTrByjLeOQTzqGfGqFl0MA4PRDSk6BN0elEGwFlhjCVqbXUuzjemVpOgRzDuHJ3dXUF9gktTxTRIRBKMWmM2f5x8hKQ0p79rfXoi94p8M3uFzLa8Fs4T5v1j0JXYZHvcbGOj9+jKQUoFU1RhYC+b8SvFHZSZVIzg9pA9YLF621SwY2yZb04ERrIjv0nBOM+fwbMVIEU/R0H0Wfap8sWIGXdUEb3z+oFQFAYlWMBBBp6NRS/qGbDkoqJq+oOzK1UXvG9FpyghMVu2JfrF9Jekk1GU3FiOKJ0II85myVXbBE49IhWePukmDUHCsa7Q7Es9gtG2cgw1KVsXTKPJukqjUQIm/wUPPpoamYTN7I8xnoo4q50sq+LMFBy93ZYQO/H1JwUdzb1k+4nXGqV/zCULtURpqvvWIC2j4rjqNZcPHvZou5C1fMxlDXcEnFZanrrifRfrE6rhsk+W8BuXkfPy+bLT6e0TCWydYBeD7lCvO5qyhDvdiWn313NpdVb46hIsixlkne+mvqNE/4g4HuxmJZb1wpUcmJ5RWIHbc+wdy+T1o5lbiNAAAAABJRU5ErkJggg==">                                                                     |
+| Header          | #b0b9d8 | <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAYAAAD/Rn+7AAAAAXNSR0IArs4c6QAAAkdJREFUSEudVkt2AzEIs3P/w2TZ3CQ9TEMfXwsbJk2z6czUxgIk4Xl/PGn4j59mvP3jgTdrkDlIn2iO16Bxm/aF9Ag5FM6aNAZN2CkvNGYCaHsWYo6kCz1eeoKFU05lEIJKI5GhwVSPIuC6lZhvOQDqCRo/Mo1PXpd14n4eNiAlylu2xXt8LCrnJhjuX0/6pK00XmOOmyK0INJC7U9ULl4RGCTf88crqvDPCm47qywZGGclbY2Sr438+TXGuBmvMJlMlQYmVBoqWEI5WBkyCFJvED0404+LcSG1Jam8jpnIXyQUi+SkZp1npGCnJgAmJg6rFMB+AuoGsMQGQboQ5v3xLQ37y++oMXEr1UKSeK3zFOp36fhfBLxF3YWENoNLsapd851bkz1OTS/yjFcTzqn/uiSpvd7ifqnyoPoh6MpqflgksNGN+IzVpG8cNhVj6d+HUL4sEfhzAm3/b6kTWV0ogGNIi90U7eDWFz802iwiHG2XpEkDovHBM8B1SK2T8FD80YixGfOKYSa8uSjaDscRR9BJ0jkSNChVD3wqlugEoKktcwGliYJrxY7AP6oZHZNkU30QWr5v4I9AdqrcC+Zga8ElaXmzN3dn8xK3masWVv5XV8ZaLKMuj/hKxe/sSy8LeB+0Yriueibm/2BhHIhOFHeHQstFNTMH7S5SATwvWquNOjL8QCNy1bpjbDVRQUhVRS8vrOUGIHZHxzROJKFOhL1JexHAqEmu5z4/U1Pk5gL3wCgotLFBG/dH8Frlp111WhYo0X4BhLBGKMHkPxQAAAAASUVORK5CYII="> |
+| Card Background | #ffffff | <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAYAAAD/Rn+7AAAAAXNSR0IArs4c6QAAAcFJREFUSEudVltiwCAIq/e/s2wKKI+gbv3pQwsxkGgjIvrWNR7bfp1P928jQmt7Hgekr6VYIbS8KoCYeQy3TkRoIAFzOOXFfGOQJuN4RmtTjGDMfuJn+hp1GkstrzoHfd9YGvh3MyJPxTxeweSJb7OYPmbbJQ5QKmQnVpQyy+xKf6Es0c3zBeAdXKa/Zp1z7TbIBJLAOZROGG29E63eQTlnJWU1B0xw6KEK2mvaLvGXRtRHe/v42l4XASPd2EDx98HbUPa8o74EAR1Ap8Q/suXBKJQhg3e72W4nljBu0AdXtp32SGYUa2jYSNZJZ6vkUtUAUNQO7VrdyLRDKolahqY5sAfKaXmZi9oM1mvSkaOKLxJfmg3qXkp3nu4zQgZT+7l/EGS8JVYzneUFJiPnDPAmx+c9K0OqxHMMaRjCRv2i4Cj5e+e7qKfpduIEiOyFhclhLn6Pl5NNcO8u4UxxOD9EmwEnELGQ6lBwBJ9oeqPZemcWyXPQ6FjFPjl3Dnjoke8yChlH58EwEQd/7aC48YlPWsNLR1tfssXgf1KWWpo57Ak2bfXcMYg19Xrtf39YsNW/9cvlUA9aJXrcnlLU9xfsD8ZFHs/hP4KZAAAAAElFTkSuQmCC">                                                                                                                                                                                     |
+| Text Color      | #333333 | <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAUCAYAAAD/Rn+7AAAAAXNSR0IArs4c6QAAAkVJREFUSEuNVlEWwyAI0yvV+5/NPUlAQOzan22dCoQk2McYc7bWemtNP1vxTFnVWu9rJZ7qXd4a18y2jpEjZkdQPWudbQnsTPozxloanluiVbAVpDPSbFO+22cqSkqcU4p8A8Mn0xeCHjvgxOJyRWullOmSkoDcIet5gp7K/6Q4V0zCji1xwBJqJsgUQ1kh1UAABANuRg9NYAId/HNSQiiifX6FEX9ago5YJIkDOiGZuXdykU3mvv9cdZnqHu3kGA+wfxNJUSmCdhJ+4aWIkyIUE4BFCDDUP4r1fm8s4cKNYEpiK3u2rjLyqlvcA6nIH6AmaVhyu83RKWKwo36oCTTyIsnZ51oPtQeVMkGqlIKlgJJNfPIMdkISPCkQbaDMHJtu/AIIRPMQXy611DRAjAlWZFPPqVGQ6iQbzy/W7Ew9j4EzUi1pGPWlt68u4EWeDdkL6NLdGPIeKdnMZWGymcDNPAKTtWS/NEd2eiZZilbN6IO3Oq7vbTqgxWY9OlicYKrErtPfBSxm8bc0AZyzESKp6GLeKj/TRMlY5ZA+QdiMPtqffcLNsTRBHfymWN5yvBeGG9B2y2TaJ1kltib4VVXqP6udmKucInoRcBzcSQJt/P4qPXp1RLCQHPFdUperlMpvYsypD9rYSwgaEQ6lnyO/csONoF4k30zfXVJNnelmQ31I4rhpcc4rR3kLMiQdoPpVVS2Q+MtCMT6C+GxqcAZbm29el+6AeX85PxID+jOe1ay/zIBo90XAt86L4NUji/b/aVj7AZLlcv4roOKOAAAAAElFTkSuQmCC">     |
 
 #### Explanation
 - The **light blue-lavender background** is easy on the eyes, promoting focus while avoiding any overwhelming effects.
 - The **muted blue header** brings attention to important content while maintaining a harmonious, soft color scheme.
 - The **white card background** contrasts nicely with the text and creates a clean, modern design.
 - The **dark gray text color** ensures readability across various lighting conditions, providing a softer alternative to pure black.
-
-### Live Preview Example
-
-You can also view this color combination live in your browser by using the following HTML and CSS code:
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Combo Preview</title>
-    <style>
-        body {
-            background-color: #d3dcef; /* Light blue-lavender background */
-            color: #2a2a2a; /* Dark text for readability */
-            font-family: Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        .header {
-            background-color: #b0b9d8; /* Muted blue header */
-            width: 100%;
-            text-align: center;
-            padding: 20px;
-            font-size: 24px;
-            font-weight: bold;
-            border-bottom: 2px solid #a0a9c8;
-        }
-
-        .card {
-            background-color: #ffffff; /* White card background */
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            border: 1px solid #d0d7e4;
-        }
-
-        .card h2 {
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        .card p {
-            font-size: 1em;
-            color: #555;
-        }
-    </style>
-</head>
-<body>
-    <div class="header">Color Combo Preview</div>
-    <div class="card">
-        <h2>Card Title</h2>
-        <p>This is a simple preview of the color scheme used in the project. The background color is a soft light blue-lavender, while the header has a muted blue color to add contrast. The cards are white to maintain a minimalist design, with dark text for easy readability.</p>
-    </div>
-</body>
-</html>
