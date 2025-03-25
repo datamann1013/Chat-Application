@@ -1,107 +1,119 @@
 .global-header {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: auto 1fr auto; /* Left, center, right */
     align-items: center;
-    background-color: var(--header-bg, #b0b9d8); /* Use a CSS variable or fallback hex */
-    padding: 10px 20px;
+    background-color: var(--header-bg, #b0b9d8);
+    padding: 10px;
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 1000;
 }
 
+/* Left: Logo */
+.header-left {
+    display: flex;
+    align-items: center;
+}
 .header-left .logo {
-    height: 40px; /* Adjust as needed */
+    height: 60px;         /* Limit height to keep it from dominating the header */
+    max-width: 300px;     /* Limit width for very wide images */
+    object-fit: contain;
 }
 
+/* Center: Current page and dropdown */
 .header-center {
-    position: relative;
-    flex-grow: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
+    position: relative;
 }
-
 .dropdown-toggle {
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    background-color: #ffffff;
+    padding: 8px 14px;
     border: 1px solid #ccc;
-    padding: 5px 10px;
-    border-radius: 4px;
+    border-radius: 25px; /* Round shape */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
 .current-page {
     margin-right: 5px;
+    font-weight: bold;
+    color: var(--header-bg, #b0b9d8); /* Contrasting text color */
 }
-
 .arrow {
     font-size: 0.8em;
+    color: var(--header-bg, #b0b9d8);
 }
-
 .dropdown-menu {
     position: absolute;
-    top: 45px;
+    top: 50px; /* Slightly below toggle */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     background-color: #ffffff;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 8px;
     z-index: 1100;
     width: 400px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 .dropdown-left,
 .dropdown-right {
     width: 50%;
     padding: 10px;
 }
-
 .dropdown-left ul,
 .dropdown-right ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
-
 .dropdown-left ul li,
 .dropdown-right ul li {
     padding: 5px 0;
 }
-
 .dropdown-left ul li a,
 .dropdown-right ul li a {
     text-decoration: none;
     color: var(--text-color, #2a2a2a);
 }
 
+/* Right: Login button */
 .header-right {
     display: flex;
     align-items: center;
-    margin-right: 10px; /* Adjust so the login button is visible */
+    justify-content: flex-end;
 }
-
 .login-btn {
-    padding: 5px 10px;
+    padding: 8px 14px;
     border: none;
-    background-color: var(--header-bg, #b0b9d8);
-    color: var(--text-color, #2a2a2a);
-    border-radius: 4px;
+    background-color: #4e5b74; /* Slightly darker or same as logo color if you prefer */
+    color: #ffffff;
+    border-radius: 25px;
     cursor: pointer;
+    font-weight: bold;
 }
 
-/* Responsive styles */
+/* Responsive */
 @media (max-width: 768px) {
     .global-header {
+        grid-template-columns: 1fr auto; /* Remove strict left-center-right on mobile */
         flex-wrap: wrap;
     }
-    .header-center {
-        width: 100%;
-        justify-content: space-between;
+    .header-left {
+        margin-bottom: 10px;
     }
-    .header-right {
-        margin-right: 0;
+    .header-center {
+        margin-bottom: 10px;
+        justify-content: flex-start;
+    }
+    .dropdown-menu {
+        left: 0;
+        transform: none;
+    }
+    .login-btn {
+        margin-left: 10px;
     }
 }

@@ -20,15 +20,13 @@ interface Section {
 
 export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
     const location = useLocation();
-    // @ts-ignore
     const [sections, setSections] = useState<Section[]>([]);
     const [currentPageTitle, setCurrentPageTitle] = useState<string>("Current Page");
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [hoveredPageSections, setHoveredPageSections] = useState<Section[]>([]);
 
-    // Update current page title and scan current page for H2 sections
     useEffect(() => {
-        const currentItem = navItems.find(item => item.link === location.pathname);
+        const currentItem = navItems.find((item) => item.link === location.pathname);
         setCurrentPageTitle(currentItem ? currentItem.title : "Current Page");
 
         const content = document.getElementById("page-content");
@@ -39,10 +37,12 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
                 title: header.textContent || `Section ${idx + 1}`,
             }));
             setSections(sects);
+            // Default to current page sections if nothing is hovered
+            setHoveredPageSections(sects);
         }
     }, [location]);
 
-    // Placeholder: When hovering over a page in dropdown, update section preview
+    // On hover over a page link, update section preview
     const handlePageHover = (page: NavItem) => {
         let dummySections: Section[] = [];
         if (page.title === "Landing") {
@@ -65,22 +65,30 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
         setHoveredPageSections(dummySections);
     };
 
+    // Revert to current page's sections when mouse leaves the left side
+    const handleDropdownMouseLeave = () => {
+        setHoveredPageSections(sections);
+    };
+
     return (
         <header className="global-header">
+            {/* Left: Logo */}
             <div className="header-left">
-                {/* Replace "logo.png" with your actual logo image placed in the /public folder */}
                 <Link to="/">
                     <img src="/logo.png" alt="Logo" className="logo" />
                 </Link>
             </div>
+
+            {/* Center: Current page + dropdown */}
             <div className="header-center">
                 <div className="dropdown-toggle" onClick={() => setDropdownOpen(!dropdownOpen)}>
                     <span className="current-page">{currentPageTitle}</span>
                     <span className="arrow">▼</span>
                 </div>
+
                 {dropdownOpen && (
                     <div className="dropdown-menu">
-                        <div className="dropdown-left">
+                        <div className="dropdown-left" onMouseLeave={handleDropdownMouseLeave}>
                             <ul>
                                 {navItems.map((item) => (
                                     <li key={item.title} onMouseEnter={() => handlePageHover(item)}>
@@ -96,7 +104,9 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
                                 {hoveredPageSections.length > 0 ? (
                                     hoveredPageSections.map((sect) => (
                                         <li key={sect.id}>
-                                            <a href={`#${sect.id}`}>{sect.title}</a>
+                                            <a href={`#${sect.id}`} onClick={() => setDropdownOpen(false)}>
+                                                {sect.title}
+                                            </a>
                                         </li>
                                     ))
                                 ) : (
@@ -107,6 +117,8 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
                     </div>
                 )}
             </div>
+
+            {/* Right: Login button */}
             <div className="header-right">
                 <button className="login-btn" onClick={onLoginClick}>Login</button>
             </div>
