@@ -42,7 +42,6 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
         }
     }, [location]);
 
-    // On hover over a page link, update section preview
     const handlePageHover = (page: NavItem) => {
         let dummySections: Section[] = [];
         if (page.title === "Landing") {
@@ -65,21 +64,20 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
         setHoveredPageSections(dummySections);
     };
 
-    // Revert to current page's sections when mouse leaves the left side
     const handleDropdownMouseLeave = () => {
         setHoveredPageSections(sections);
     };
 
     return (
         <header className="global-header">
-            {/* Left: Logo */}
+            {/* Left column: Logo */}
             <div className="header-left">
                 <Link to="/">
                     <img src="/logo.png" alt="Logo" className="logo" />
                 </Link>
             </div>
 
-            {/* Center: Current page + dropdown */}
+            {/* Center column: Current page + dropdown */}
             <div className="header-center">
                 <div className="dropdown-toggle" onClick={() => setDropdownOpen(!dropdownOpen)}>
                     <span className="current-page">{currentPageTitle}</span>
@@ -87,8 +85,8 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
                 </div>
 
                 {dropdownOpen && (
-                    <div className="dropdown-menu">
-                        <div className="dropdown-left" onMouseLeave={handleDropdownMouseLeave}>
+                    <div className="dropdown-menu" onMouseLeave={handleDropdownMouseLeave}>
+                        <div className="dropdown-left">
                             <ul>
                                 {navItems.map((item) => (
                                     <li key={item.title} onMouseEnter={() => handlePageHover(item)}>
@@ -118,9 +116,11 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
                 )}
             </div>
 
-            {/* Right: Login button */}
+            {/* Right column: Login button */}
             <div className="header-right">
-                <button className="login-btn" onClick={onLoginClick}>Login</button>
+                <button className="login-btn" onClick={onLoginClick}>
+                    Log in
+                </button>
             </div>
         </header>
     );
