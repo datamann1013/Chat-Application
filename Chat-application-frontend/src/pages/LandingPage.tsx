@@ -2,12 +2,16 @@ import "./LandingPage.css";
 import React, { useState } from "react";
 import ThreeBoxSection from "../components/Sections/ThreeBoxSection";
 import HeroSection from "../components/Sections/HeroSection";
+import TeamSection from "../components/Sections/TeamSection";
+import SignUpSection from "../components/Sections/SignUpSection";
+
+import Footer from "../components/Footer";
+
 import LoginModal from "../components/Modals/LoginModal";
 import FeedbackModal from "../components/Modals/FeedbackModal";
 import NewsletterModal from "../components/Modals/NewsletterModal";
-import Footer from "../components/Footer";
-import TeamSection from "../components/Sections/TeamSection";
-import SignUpSection from "../components/Sections/SignUpSection";
+
+
 
 const heroData = [
     {
@@ -40,17 +44,16 @@ const boxData = [
 ];
 
 const teamMembers = [
-    { name: "Alice", role: "Backend Engineer" },
-    { name: "Bob", role: "Frontend Engineer" },
-    { name: "Charlie", role: "DevOps Engineer" },
-    { name: "Diana", role: "Security Specialist" },
-];
+    { name: "Alice", role: "Backend Engineer", image: "/images/alice.png" },
+    { name: "Bob", role: "Frontend Engineer", image: "/images/bob.png" },
+    { name: "Charlie", role: "DevOps Engineer", image: "/images/charlie.png" },
+    { name: "Diana", role: "Security Specialist", image: "/images/diana.png" }
 
+];
 const roadmap = [
-    "Enterprise-scale support",
-    "API integrations",
-    "Advanced 3D modeling features",
-    "End-to-end encryption enhancements",
+    { title: "Enterprise-scale support", date: "2024-10-01", implemented: false },
+    { title: "API integrations", date: "2023-05-15", implemented: true },
+    // ...
 ];
 
 const LandingPage: React.FC = () => {
