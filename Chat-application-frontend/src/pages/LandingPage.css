@@ -1,6 +1,6 @@
 .landing-page {
     padding-top: 80px;
-    max-width: 100vh;
     margin: 0 auto;
-
+    overflow: visible;
+    min-height: 100vh;
 }

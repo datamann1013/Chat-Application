@@ -4,7 +4,7 @@
     align-items: stretch;
     gap: 30px;
     margin: 30px auto;
-    padding: 0 20px;
+    padding: 0 20px 30px;
 }
 
 .box {
@@ -14,7 +14,6 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     padding: 40px;
-    min-height: 50vh;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

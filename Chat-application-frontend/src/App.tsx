@@ -15,7 +15,7 @@ export default function App() {
             <Header onLoginClick={() => setModalOpen(true)} />
             {isModalOpen && <LoginModal onClose={() => setModalOpen(false)} />}
             {/* Wrap routes in a div with an ID so Header can dynamically scan for H2s */}
-            <div id="page-content" style={{ paddingTop: "80px" }}>
+            <div id="page-content">
                 <Routes>
                     <Route path="/" element={<LandingPage />} />
                     <Route path="/chat" element={<ChatPage />} />
