@@ -3,12 +3,19 @@ import "./TeamSection.css";
 interface TeamMember {
     name: string;
     role: string;
+    image: string;  // path to an image
+}
+
+interface RoadmapItem {
+    title: string;
+    date: string;   // e.g. "2024-10-01" or "2025-03-15"
+    implemented: boolean; // true if done, false if future
 }
 
 interface TeamSectionProps {
     team: TeamMember[];
     mission: string;
-    roadmap: string[];
+    roadmap: RoadmapItem[];
     onFeedbackClick: () => void;
 }
 
@@ -19,12 +26,14 @@ export default function TeamSection({
                                         onFeedbackClick,
                                     }: TeamSectionProps) {
     return (
-        <div className="team-section">
+        <section className="team-section">
             <h2>Meet the Team</h2>
             <p className="mission-statement">{mission}</p>
-            <div className="team-members">
+
+            <div className="team-grid">
                 {team.map((member, idx) => (
-                    <div className="team-member" key={idx}>
+                    <div className="team-card" key={idx}>
+                        <img src={member.image} alt={member.name} className="team-image" />
                         <h3>{member.name}</h3>
                         <p>{member.role}</p>
                     </div>
@@ -32,15 +41,23 @@ export default function TeamSection({
             </div>
 
             <h3>Roadmap</h3>
-            <ul className="roadmap-list">
+            <div className="roadmap-snake">
                 {roadmap.map((item, idx) => (
-                    <li key={idx}>{item}</li>
+                    <div className="roadmap-point" key={idx}>
+                        <div className={`roadmap-connector ${item.implemented ? "done" : "future"}`}>
+                            <span className="snake-line"></span>
+                        </div>
+                        <div className="roadmap-content">
+                            <h4>{item.title}</h4>
+                            <p>{item.implemented ? `Released: ${item.date}` : `Planned: ${item.date}`}</p>
+                        </div>
+                    </div>
                 ))}
-            </ul>
+            </div>
 
             <button className="feedback-btn" onClick={onFeedbackClick}>
-                Give Feedback
+                Send Feedback
             </button>
-        </div>
+        </section>
     );
 }
