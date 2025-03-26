@@ -4,7 +4,7 @@ import ThreeBoxSection from "../components/ThreeBoxSection";
 export default function LandingPage() {
     const boxData = [
         {
-            title: "Overview",
+            title: "Secure. Fast. Norwegian.",
             content: "Welcome to our chat and file sharing service. Enjoy secure, fast communication and seamless file transfers."
         },
         {
