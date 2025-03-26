@@ -1,9 +1,13 @@
 import { useState } from "react";
-import "./LoginModal.css";
+import "./ModalStyles.css";
 
 type ModalView = "login" | "signup" | "reset";
 
-export default function LoginModal({ onClose }: { onClose: () => void }) {
+interface LoginModalProps {
+    onClose: () => void;
+}
+
+export default function LoginModal({ onClose }: LoginModalProps) {
     const [view, setView] = useState<ModalView>("login");
 
     return (
