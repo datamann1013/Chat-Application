@@ -1,10 +1,9 @@
 .three-box-container {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: flex-start;
     gap: 20px;
-    max-width: 1400px;       /* Allows boxes to be wider on large screens */
-    margin: 60px auto;       /* Centers the container, adds vertical spacing */
+    margin: 20px auto;       /* Centers the container, adds vertical spacing */
     padding: 0 20px;         /* Optional horizontal padding */
 }
 
