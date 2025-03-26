@@ -1,10 +1,26 @@
 import "./LandingPage.css";
-import BoxesSection from "../components/BoxesSection";
+import ThreeBoxSection from "../components/ThreeBoxSection";
 
 export default function LandingPage() {
+    const boxData = [
+        {
+            title: "Overview",
+            content: "Welcome to our chat and file sharing service. Enjoy secure, fast communication and seamless file transfers."
+        },
+        {
+            title: "Features",
+            content: "Our platform offers real-time chat, secure file uploads, and an integrated experience for effortless collaboration."
+        },
+        {
+            title: "About",
+            content: "Learn more about our mission to provide a unified chat and file sharing solution that prioritizes security and simplicity."
+        }
+    ];
+
     return (
         <div className="landing-page">
-            <BoxesSection />
+            {/* You can add a hero/banner section above if desired */}
+            <ThreeBoxSection items={boxData} />
         </div>
     );
 }

@@ -1,0 +1,49 @@
+.three-box-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    gap: 20px;
+    max-width: 1400px;       /* Allows boxes to be wider on large screens */
+    margin: 60px auto;       /* Centers the container, adds vertical spacing */
+    padding: 0 20px;         /* Optional horizontal padding */
+}
+
+.box {
+    flex: 0 0 32%;           /* Force each box to take ~1/3 of the row */
+    background-color: #e0e6f1;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 40px;
+    min-height: 50vh;        /* Cover at least half the viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Vertically center text if there's extra space */
+}
+
+.box h2 {
+    margin-top: 0;
+    font-size: 1.8rem;       /* Larger header text */
+    margin-bottom: 20px;
+    color: #4e5b74;          /* Ties in with your header/button color */
+}
+
+.box p {
+    font-size: 1.2rem;       /* Larger paragraph text */
+    color: #2a2a2a;
+    line-height: 1.6;
+}
+
+/* Responsive: stack boxes on smaller screens */
+@media (max-width: 768px) {
+    .three-box-container {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+    }
+    .box {
+        flex: 0 0 auto;
+        width: 100%;
+        margin-bottom: 20px;
+        min-height: auto; /* remove forced 50vh if you prefer for mobile */
+    }
+}
