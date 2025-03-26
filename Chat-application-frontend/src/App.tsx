@@ -4,7 +4,7 @@ import Header from "./components/Header";
 import LandingPage from "./pages/LandingPage";
 import ChatPage from "./pages/ChatPage";
 import FilesPage from "./pages/FilesPage";
-import LoginModal from "./components/LoginModal";
+import LoginModal from "./components/Modals/LoginModal.tsx";
 import "./index.css";
 
 export default function App() {

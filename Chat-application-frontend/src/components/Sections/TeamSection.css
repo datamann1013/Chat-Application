@@ -1,0 +1,47 @@
+.team-section {
+    max-width: 800px;
+    margin: 40px auto;
+    text-align: center;
+    padding: 0 20px;
+}
+
+.mission-statement {
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+.team-members {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.team-member {
+    background-color: #e0e6f1;
+    border-radius: 8px;
+    padding: 20px;
+    width: 200px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.team-member h3 {
+    margin-top: 0;
+    color: #4e5b74;
+}
+
+.roadmap-list {
+    text-align: left;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.feedback-btn {
+    background-color: #4e5b74;
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+}
