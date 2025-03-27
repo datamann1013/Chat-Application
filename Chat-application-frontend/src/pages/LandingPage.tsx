@@ -44,10 +44,10 @@ const boxData = [
 ];
 
 const teamMembers = [
-    { name: "Alice", role: "Backend Engineer", image: "/images/alice.png" },
-    { name: "Bob", role: "Frontend Engineer", image: "/images/bob.png" },
-    { name: "Charlie", role: "DevOps Engineer", image: "/images/charlie.png" },
-    { name: "Diana", role: "Security Specialist", image: "/images/diana.png" }
+    { name: "Alice", role: "Backend Engineer", image: "../public/placeholderPerson.jpg" },
+    { name: "Bob", role: "Frontend Engineer", image: "../public/placeholderPerson.jpg" },
+    { name: "Charlie", role: "DevOps Engineer", image: "../public/placeholderPerson.jpg" },
+    { name: "Diana", role: "Security Specialist", image: "../public/placeholderPerson.jpg" }
 
 ];
 const roadmap = [

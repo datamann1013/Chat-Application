@@ -1,5 +1,231 @@
+/**************************************
+ Layout Container
+**************************************/
 .chat-page {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.chat-page-container {
+    display: flex;
+    flex: 1;
+    background-color: var(--background, #f2f4f8);
+}
+
+/**************************************
+ Sidebar
+**************************************/
+.chat-sidebar {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    /* Blue gradient background from top to bottom */
+    background: linear-gradient(180deg, #b0b9d8 0%, #4e5b74 100%);
+    color: var(--text-color, #2a2a2a);
+    padding: 10px;
+}
+
+/* Top server icons */
+.sidebar-top {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.server-icon {
+    width: 48px;
+    height: 48px;
+    background-color: #202225;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    color: #fff;
+    font-weight: bold;
+}
+.server-icon.active {
+    background-color: #5865f2;
+}
+.unread-indicator {
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: none;
+}
+.server-icon.active .unread-indicator,
+.server-icon .unread-indicator {
+    display: block; /* example logic, you can toggle it with data */
+}
+.icon-letter {
+    font-size: 1.2rem;
+}
+
+/* Search bar */
+.sidebar-search {
+    margin-bottom: 15px;
+}
+.sidebar-search input {
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* Channel list */
+.channel-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.channel-item {
+    padding: 6px 8px;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #fff; /* For better contrast on the gradient */
+}
+.channel-item:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+.channel-item.unread .unread-indicator {
+    display: block;
+}
+
+/* user info at bottom */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 4px;
+}
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #2a2a2a;
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.user-details {
+    text-align: left;
+}
+.username {
+    font-weight: bold;
+    color: #fff;
+}
+.status {
+    font-size: 0.8rem;
+    color: #ccc;
+}
+
+/**************************************
+ Main Chat Area
+**************************************/
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background, #f2f4f8);
+}
+
+/* Top bar in chat main */
+.chat-topbar {
+    height: 50px;
+    background-color: var(--header-bg, #b0b9d8);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+}
+.channel-title {
+    font-weight: bold;
+}
+.member-list-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color, #2a2a2a);
+}
+
+/* Messages area */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 16px;
+    color: var(--text-color, #2a2a2a);
+}
+.message-row {
+    margin-bottom: 10px;
+}
+.message-info {
+    display: flex;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #555;
+}
+.message-user {
+    font-weight: bold;
+    color: #4e5b74;
+}
+.message-text {
+    margin-left: 8px;
+    line-height: 1.4;
+}
+.message-divider {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 8px 0;
+}
+
+/* Chat input */
+.chat-input {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    background-color: var(--header-bg, #b0b9d8);
+    gap: 8px;
+}
+.chat-input button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+.chat-input input {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/**************************************
+ Responsive
+**************************************/
+@media (max-width: 768px) {
+    .chat-sidebar {
+        width: 60px; /* narrower for mobile? */
+    }
+    .channel-item span {
+        display: none; /* hide text, show icons only? */
+    }
+    .user-details {
+        display: none; /* optional to keep it minimal on mobile */
+    }
 }

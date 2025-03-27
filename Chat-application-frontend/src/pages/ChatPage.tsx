@@ -1,10 +1,20 @@
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 import "./ChatPage.css";
+import ChatSidebar from "../components/Sections/Chatspesific/ChatSidebar.tsx";
+import ChatMain from "../components/Sections/Chatspesific/ChatMain.tsx";
 
 export default function ChatPage() {
     return (
         <div className="chat-page">
-            <h2 id="chat-overview">Chat Overview</h2>
-            <p>This is the chat page, where real-time messaging occurs.</p>
+            <Header onLoginClick={function(): void {
+                throw new Error("Function not implemented.");
+            } } />
+            <div className="chat-page-container">
+                <ChatSidebar />
+                <ChatMain />
+            </div>
+            <Footer />
         </div>
     );
 }
