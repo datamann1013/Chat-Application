@@ -197,7 +197,7 @@
 
 /* Chat input */
 .chat-input {
-    height: 60px;
+    height: 75px;
     display: flex;
     align-items: center;
     padding: 0 16px;
