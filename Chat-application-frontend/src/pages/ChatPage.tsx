@@ -1,5 +1,4 @@
 import Header from "../components/Header";
-import Footer from "../components/Footer";
 import "./ChatPage.css";
 import ChatSidebar from "../components/Sections/Chatspesific/ChatSidebar.tsx";
 import ChatMain from "../components/Sections/Chatspesific/ChatMain.tsx";
@@ -14,7 +13,6 @@ export default function ChatPage() {
                 <ChatSidebar />
                 <ChatMain />
             </div>
-            <Footer />
         </div>
     );
 }
