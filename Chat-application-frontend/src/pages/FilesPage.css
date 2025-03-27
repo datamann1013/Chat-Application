@@ -1,5 +1,151 @@
-.files-page {
+.file-manager-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* The container that holds the sidebar and main area */
+.file-manager-container {
+    margin-top: 80px;
+    margin-bottom: -40px;
+    display: flex;
+    flex: 1; /* fill the space between header and footer */
+    background-color: var(--background, #f2f4f8);
+}
+
+/**************************************
+ Sidebar
+**************************************/
+.fm-sidebar {
+    width: 220px;
+    background-color: var(--header-bg, #b0b9d8);
+    color: var(--header-text-color, #4e5b74);
     padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-section h3 {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+}
+
+.sidebar-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-section li {
+    padding: 6px 0;
+    cursor: pointer;
+    color: var(--text-color, #2a2a2a);
+}
+
+.sidebar-section li.active {
+    font-weight: bold;
+    color: var(--header-text-color, #4e5b74);
+}
+
+/**************************************
+ Main Area
+**************************************/
+.fm-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+/* Top bar with upload/new folder + search */
+.fm-topbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.fm-actions button {
+    margin-right: 10px;
+    background-color: var(--button-color, #4e5b74);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: var(--button-font-size, 1rem);
+}
+
+.fm-actions button:hover {
+    opacity: 0.9;
+}
+
+.fm-search input {
+    border: 1px solid var(--button-border, #ccc);
+    border-radius: 4px;
+    padding: 8px 10px;
+    width: 200px;
+}
+
+/**************************************
+ Files table-like layout
+**************************************/
+.fm-files {
+    background-color: var(--background-contrast-color, #e0e6f1);
+    border-radius: 8px;
+    padding: 10px;
+    /* You can add a box-shadow if you want a card effect */
+}
+
+.fm-files-header,
+.fm-file-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 0.5fr; /* name, date, size */
+    gap: 10px;
+    padding: 8px 0;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.fm-files-header {
+    font-weight: bold;
+    background-color: rgba(255,255,255,0.4);
+    border-bottom: 2px solid #aaa;
+}
+
+.fm-file-row:hover {
+    background-color: rgba(255,255,255,0.3);
+}
+
+/* Columns in the row */
+.col-name {
+    padding-left: 10px;
+}
+.col-date,
+.col-size {
+    text-align: right;
+}
+
+/* Remove bottom border from last row, if needed */
+.fm-file-row:last-child {
+    border-bottom: none;
+}
+
+/**************************************
+ Responsive
+**************************************/
+@media (max-width: 768px) {
+    .fm-sidebar {
+        width: 60px;
+    }
+    .sidebar-section h3,
+    .sidebar-section li {
+        display: none; /* or turn them into icons */
+    }
+    .fm-search input {
+        width: 120px;
+    }
+    .fm-files-header,
+    .fm-file-row {
+        grid-template-columns: 1fr 0.8fr 0.5fr;
+    }
 }
