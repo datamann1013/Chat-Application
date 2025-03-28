@@ -1,9 +1,9 @@
 import "./LandingPage.css";
 import React, { useState } from "react";
-import ThreeBoxSection from "../components/Sections/ThreeBoxSection";
-import HeroSection from "../components/Sections/HeroSection";
-import TeamSection from "../components/Sections/TeamSection";
-import SignUpSection from "../components/Sections/SignUpSection";
+import ThreeBoxSection from "../components/Sections/Generics/ThreeBoxSection.tsx";
+import HeroSection from "../components/Sections/Landingspesific/HeroSection.tsx";
+import TeamSection from "../components/Sections/Landingspesific/TeamSection.tsx";
+import SignUpSection from "../components/Sections/Generics/SignUpSection.tsx";
 
 import Footer from "../components/Footer";
 

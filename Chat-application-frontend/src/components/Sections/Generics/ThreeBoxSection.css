@@ -1,0 +1,82 @@
+/* ThreeBoxSection.css */
+.three-box-wrapper {
+    max-width: 1920px; /* Maximum width for ultra-wide screens */
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.three-box-heading {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: clamp(1.5rem, 5vw, 2.5rem); /* Responsive font size */
+}
+
+.three-box-container {
+    display: grid;
+    gap: 2rem;
+}
+
+.box {
+    background-color: var(--background-contrast-color);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+/* Mobile-first approach */
+.box {
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) { /* Tablet breakpoint */
+    .three-box-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+
+    .box:hover {
+        transform: translateY(-5px);
+    }
+}
+
+@media (min-width: 1200px) { /* Small PC breakpoint */
+    .three-box-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .box {
+        padding: 2.5rem;
+    }
+}
+
+@media (min-width: 1920px) { /* Large PC breakpoint */
+    .three-box-wrapper {
+        padding: 3rem;
+    }
+
+    .box {
+        padding: 3rem;
+        border-radius: 12px;
+    }
+}
+
+@media (min-width: 2560px) { /* Ultra-wide small breakpoint */
+    .three-box-container {
+        gap: 3rem;
+    }
+
+    .box {
+        padding: 3.5rem;
+    }
+}
+
+@media (min-width: 3200px) { /* Ultra-wide big breakpoint */
+    .three-box-container {
+        gap: 4rem;
+    }
+
+    .box {
+        padding: 4rem;
+        border-radius: 16px;
+    }
+}

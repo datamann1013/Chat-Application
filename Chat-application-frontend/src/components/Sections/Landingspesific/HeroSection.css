@@ -1,0 +1,175 @@
+.hero-container {
+    position: relative;
+    display: block;
+    max-width: 1920px;
+    width: 90%;
+    height: 70vh;
+    overflow: hidden;
+    border: 2px solid #ccc;
+    border-radius: 20px;
+    margin: 3rem auto;
+    max-height: 100vh;
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.hero-overlay {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    z-index: 1;
+}
+
+.hero-title {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    z-index: 1;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    max-width: 60%;
+    z-index: 1;
+}
+
+/* Phone screens (up to 768px) */
+@media (max-width: 768px) {
+    .hero-container {
+        width: 95%;
+        height: 60vh;
+        margin: 2rem auto;
+    }
+
+    .hero-overlay {
+        padding: 1.5rem;
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        max-width: 80%;
+    }
+}
+
+/* Tablet screens (769px to 1200px) */
+@media (min-width: 769px) and (max-width: 1200px) {
+    .hero-container {
+        width: 85%;
+        height: 65vh;
+    }
+
+    .hero-overlay {
+        padding: 2rem;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.4rem;
+        max-width: 70%;
+    }
+}
+
+/* Small PC (1920x1080 16") */
+@media (min-width: 1201px) and (max-width: 1920px) {
+    .hero-container {
+        width: 75%;
+        height: 70vh;
+    }
+
+    .hero-overlay {
+        padding: 2.5rem;
+    }
+
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.5rem;
+        max-width: 60%;
+    }
+}
+
+/* Large PC (1920x1080 24" and up) */
+@media (min-width: 1921px) and (max-width: 2560px) {
+    .hero-container {
+        width: 70%;
+        height: 70vh;
+    }
+
+    .hero-overlay {
+        padding: 3rem;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.8rem;
+        max-width: 55%;
+    }
+}
+
+/* Ultrawide small (25") */
+@media (min-width: 2561px) and (max-width: 3200px) {
+    .hero-container {
+        width: 65%;
+        height: 70vh;
+    }
+
+    .hero-overlay {
+        padding: 3.5rem;
+    }
+
+    .hero-title {
+        font-size: 4rem;
+    }
+
+    .hero-subtitle {
+        font-size: 2rem;
+        max-width: 50%;
+    }
+}
+
+/* Ultrawide big (35" and up) */
+@media (min-width: 3201px) {
+    .hero-container {
+        width: 60%;
+        height: 70vh;
+    }
+
+    .hero-overlay {
+        padding: 4rem;
+    }
+
+    .hero-title {
+        font-size: 4.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 2.2rem;
+        max-width: 45%;
+    }
+}
