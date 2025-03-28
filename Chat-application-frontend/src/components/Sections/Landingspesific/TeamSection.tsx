@@ -3,13 +3,13 @@ import "./TeamSection.css";
 interface TeamMember {
     name: string;
     role: string;
-    image: string;  // path to an image
+    image: string;
 }
 
 interface RoadmapItem {
     title: string;
-    date: string;   // e.g. "2024-10-01" or "2025-03-15"
-    implemented: boolean; // true if done, false if future
+    date: string;
+    implemented: boolean;
 }
 
 interface TeamSectionProps {

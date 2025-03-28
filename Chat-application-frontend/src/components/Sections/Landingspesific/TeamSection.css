@@ -1,37 +1,43 @@
 .team-section {
-    max-width: 900px;
-    margin: 60px auto;
+    max-width: 1920px;
+    margin: 0 auto;
+    padding: 2rem;
     text-align: center;
-    padding: 0 20px;
 }
 
 .team-section h2 {
-    font-size: 2rem;
-    margin-bottom: 10px;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    margin-bottom: 1rem;
+
 }
 
 .mission-statement {
     font-style: italic;
-    margin-bottom: 30px;
+    margin-bottom: 2rem;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    margin-left: 15rem;
+    margin-right: 15rem;
 }
 
 /* Team Cards */
 .team-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px;
-    margin-bottom: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
 }
 
 .team-card {
-    background-color: #e0e6f1;
-    border-radius: 8px;
-    width: 220px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    text-align: center;
-    padding: 20px;
-    flex: 0 0 auto;
+    background-color: var(--background-contrast-color);
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
 }
 
 .team-image {
@@ -39,30 +45,31 @@
     height: 100px;
     object-fit: cover;
     border-radius: 50%;
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
+    border: 3px solid #f2f4f8;
 }
 
 .team-card h3 {
     margin-top: 0;
     color: #4e5b74;
-    margin-bottom: 5px;
+    margin-bottom: 0.5rem;
+    font-size: clamp(1rem, 3vw, 1.5rem);
 }
 
-/* Snake Roadmap */
+/* Roadmap */
 .roadmap-snake {
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
-    margin-bottom: 30px;
+    margin-bottom: 3rem;
 }
 
-/* Each point is stacked vertically */
 .roadmap-point {
     display: flex;
     align-items: center;
     width: 100%;
-    margin: 10px 0;
+    margin: 1rem 0;
     position: relative;
 }
 
@@ -80,65 +87,99 @@
     height: 60px;
     border-radius: 2px;
     background-color: var(--background-contrast-color, #cccccc);
+    transition: background-color 0.3s ease;
 }
 
 .roadmap-connector.done .snake-line {
-    background-color: #4e5b74; /* a darker color for done steps */
-}
-
-.roadmap-connector.future .snake-line {
-    background-color: var(--background-contrast-color, #cccccc);
+    background-color: #4e5b74;
 }
 
 .roadmap-content {
     background-color: #f2f4f8;
     border-radius: 8px;
-    padding: 10px 20px;
+    padding: 1rem;
     flex: 1;
-    margin-left: 10px;
+    margin-left: 1rem;
     text-align: left;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
-.roadmap-content h4 {
-    margin: 0 0 5px 0;
-    color: #4e5b74;
+.roadmap-content:hover {
+    transform: translateY(-3px);
 }
 
-/* Feedback button at the bottom */
+/* Feedback button */
 .feedback-btn {
     background-color: #4e5b74;
     color: #fff;
     border: none;
     border-radius: 25px;
-    padding: 10px 20px;
+    padding: 0.75rem 1.5rem;
     cursor: pointer;
+    transition: transform 0.3s ease;
+    margin: 2rem auto;
+    display: block;
 }
 
-/* Responsive adjustments */
-@media (min-width: 992px) {
-    .team-grid {
-        flex-wrap: nowrap;
-    }
+.feedback-btn:hover {
+    transform: scale(1.05);
 }
 
+/* Responsive breakpoints */
 @media (max-width: 768px) {
     .team-grid {
-        flex-direction: column;
-        align-items: center;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
+
     .team-card {
-        width: 80%;
+        padding: 1rem;
     }
-    .roadmap-content {
-        margin-left: 0;
-        margin-top: 10px;
-    }
+
     .roadmap-point {
         flex-direction: column;
         align-items: flex-start;
     }
+
     .roadmap-connector {
-        margin-bottom: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .roadmap-content {
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+@media (min-width: 1201px) {
+    .team-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+    }
+
+    .team-card {
+        padding: 1.5rem;
+    }
+}
+
+@media (min-width: 1920px) {
+    .team-grid {
+        gap: 2.5rem;
+    }
+
+    .team-card {
+        padding: 2rem;
+    }
+
+    .roadmap-content {
+        padding: 1.5rem;
     }
 }
