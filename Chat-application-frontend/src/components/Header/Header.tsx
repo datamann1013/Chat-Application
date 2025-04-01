@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Button } from '../UI/Button/Button.tsx'
 import "./Header.css";
 
 interface NavItem {
@@ -79,9 +80,15 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
 
             {/* Center column: Current page + dropdown */}
             <div className="header-center">
-                <div className="dropdown-toggle" onClick={() => setDropdownOpen(!dropdownOpen)}>
-                    <span className="current-page">{currentPageTitle}</span>
-                    <span className="arrow">▼</span>
+                <div className="dropdown-toggle">
+                    <Button
+                        variant="default"
+                        size="md"
+                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                    >
+                        <span className="current-page">{currentPageTitle}</span>
+                        <span className="arrow">▼</span>
+                    </Button>
                 </div>
 
                 {dropdownOpen && (
@@ -118,9 +125,13 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
 
             {/* Right column: Login button */}
             <div className="header-right">
-                <button className="login-btn" onClick={onLoginClick}>
+                <Button
+                    onClick={onLoginClick}
+                    variant="default"
+                    size="md"
+                >
                     Log in
-                </button>
+                </Button>
             </div>
         </header>
     );

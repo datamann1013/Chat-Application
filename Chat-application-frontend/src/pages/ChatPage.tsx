@@ -1,4 +1,4 @@
-import Header from "../components/Header";
+import Header from "../components/Header/Header.tsx";
 import "./ChatPage.css";
 import ChatSidebar from "../components/Sections/Chatspesific/ChatSidebar.tsx";
 import ChatMain from "../components/Sections/Chatspesific/ChatMain.tsx";

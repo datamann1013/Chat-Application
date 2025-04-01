@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import Header from "./components/Header";
+import Header from "./components/Header/Header.tsx";
 import LandingPage from "./pages/LandingPage";
 import ChatPage from "./pages/ChatPage";
 import FilesPage from "./pages/FilesPage";

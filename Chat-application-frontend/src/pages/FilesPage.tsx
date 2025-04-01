@@ -1,4 +1,4 @@
-import Header from "../components/Header";
+import Header from "../components/Header/Header.tsx";
 import Footer from "../components/Footer";
 import "./FilesPage.css";
 

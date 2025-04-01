@@ -1,24 +1,32 @@
-import "./ModalStyles.css";
+import React from 'react';
+import AbstractModal from './AbstractModal';
+import { FeedbackModalProps } from './types';
 
-interface FeedbackModalProps {
-    onClose: () => void;
-}
+export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
+    private handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const feedback = formData.get('feedback') as string;
 
-export default function FeedbackModal({ onClose }: FeedbackModalProps) {
-    return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h2>Feedback</h2>
-                    <button className="close-btn" onClick={onClose}>×</button>
-                </div>
-                <div className="modal-body">
-                    <form>
-                        <textarea placeholder="Your feedback..." rows={5} />
-                        <button type="submit">Send Feedback</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    );
+        if (this.props.onSubmit) {
+            this.props.onSubmit(feedback);
+        }
+    };
+
+    protected renderContent(): React.ReactNode {
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <textarea
+                    name="feedback"
+                    placeholder="Your feedback..."
+                    rows={5}
+                    required
+                    className="modal-textarea"
+                />
+                <button type="submit" className="modal-submit">
+                    Send Feedback
+                </button>
+            </form>
+        );
+    }
 }

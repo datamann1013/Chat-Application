@@ -8,14 +8,14 @@ import SignUpSection from "../components/Sections/Generics/SignUpSection.tsx";
 import Footer from "../components/Footer";
 
 import LoginModal from "../components/Modals/LoginModal";
-import FeedbackModal from "../components/Modals/FeedbackModal";
-import NewsletterModal from "../components/Modals/NewsletterModal";
+import {FeedbackModal} from "../components/Modals/FeedbackModal";
+import {NewsletterModal} from "../components/Modals/NewsletterModal";
 
 
 
 const heroData = [
     {
-        imageUrl: "../public/3Dmodel.jpg",
+        imageUrl: "/3Dmodel.jpg",
         title: "Welcome to Our Secure Platform",
         subtitle:
             "Experience unparalleled security and privacy with our state-of-the-art tools designed for businesses and safety services.",
@@ -95,8 +95,9 @@ const LandingPage: React.FC = () => {
 
             <Footer />
 
-            {newsletterOpen && <NewsletterModal onClose={() => setNewsletterOpen(false)} />}
-            {feedbackOpen && <FeedbackModal onClose={() => setFeedbackOpen(false)} />}
+            {newsletterOpen && <NewsletterModal onClose={() => setNewsletterOpen(false)} isOpen={false}
+                                                children={undefined} />}
+            {feedbackOpen && <FeedbackModal onClose={() => setFeedbackOpen(false)} isOpen={false} children={undefined} />}
             {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} />}
         </div>
     );

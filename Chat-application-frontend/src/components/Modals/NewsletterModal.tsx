@@ -1,24 +1,32 @@
-import "./ModalStyles.css";
+import React from 'react';
+import AbstractModal from './AbstractModal';
+import { NewsletterModalProps } from './types';
 
-interface NewsletterModalProps {
-    onClose: () => void;
-}
+export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
+    private handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const email = formData.get('email') as string;
 
-export default function NewsletterModal({ onClose }: NewsletterModalProps) {
-    return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h2>Newsletter Signup</h2>
-                    <button className="close-btn" onClick={onClose}>×</button>
-                </div>
-                <div className="modal-body">
-                    <form>
-                        <input type="email" placeholder="Your Email" required />
-                        <button type="submit">Subscribe</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    );
+        if (this.props.onSubmit) {
+            this.props.onSubmit(email);
+        }
+    };
+
+    protected renderContent(): React.ReactNode {
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Your Email"
+                    required
+                    className="modal-input"
+                />
+                <button type="submit" className="modal-submit">
+                    Subscribe
+                </button>
+            </form>
+        );
+    }
 }
