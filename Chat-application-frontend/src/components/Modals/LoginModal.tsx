@@ -1,5 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "./ModalStyles.css";
+import {Button} from "../UI/Button/Button.tsx";
 
 type ModalView = "login" | "signup" | "reset";
 
@@ -97,7 +98,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
                                     value={formData.password}
                                     onChange={handleInputChange}
                                 />
-                                <button type="submit">Login</button>
+                                <Button type= "submit" variant="default" size="modal">Log in</Button>
                             </>
                         )}
                         {view === "signup" && (
@@ -142,7 +143,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
                                     value={formData.confirmPassword}
                                     onChange={handleInputChange}
                                 />
-                                <button type="submit">Sign Up</button>
+                                <Button type= "submit" variant="default" size="modal">Sign Up</Button>
                             </>
                         )}
                         {view === "reset" && (
@@ -155,7 +156,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
                                     value={formData.username}
                                     onChange={handleInputChange}
                                 />
-                                <button type="submit">Reset Password</button>
+                                <Button type= "submit" variant="default" size="modal">Reset Password</Button>
                             </>
                         )}
                     </form>

@@ -1,6 +1,7 @@
 import React from 'react';
 import AbstractModal from './AbstractModal';
 import { NewsletterModalProps } from './types';
+import {Button} from "../UI/Button/Button.tsx";
 
 export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
     private handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -23,9 +24,7 @@ export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
                     required
                     className="modal-input"
                 />
-                <button type="submit" className="modal-submit">
-                    Subscribe
-                </button>
+                <Button type= "submit" variant="default" size="modal">Subscribe</Button>
             </form>
         );
     }

@@ -49,6 +49,7 @@ abstract class AbstractModal<P extends BaseModalProps> extends React.Component<P
                             >
                                 ×
                             </button>
+
                         </div>
                     )}
                     <div className="modal-body">

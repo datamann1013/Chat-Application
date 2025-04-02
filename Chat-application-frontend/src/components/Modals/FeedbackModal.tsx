@@ -1,6 +1,7 @@
 import React from 'react';
 import AbstractModal from './AbstractModal';
 import { FeedbackModalProps } from './types';
+import {Button} from "../UI/Button/Button.tsx";
 
 export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
     private handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -23,9 +24,7 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
                     required
                     className="modal-textarea"
                 />
-                <button type="submit" className="modal-submit">
-                    Send Feedback
-                </button>
+                <Button type= "submit" variant="default" size="modal">Send Feedback</Button>
             </form>
         );
     }

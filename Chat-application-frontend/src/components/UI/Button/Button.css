@@ -18,7 +18,6 @@
 }
 
 .button:focus {
-    outline: 2px solid var(--button-color);
     outline-offset: 2px;
 }
 
@@ -49,5 +48,10 @@
 
 .button--lg {
     padding: 12px 20px;
+    font-size: calc(var(--button-font-size) * 1.125);
+}
+
+.button--modal {
+    padding: 8px 20px;
     font-size: calc(var(--button-font-size) * 1.125);
 }
