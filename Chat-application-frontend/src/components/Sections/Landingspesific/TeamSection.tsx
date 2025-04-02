@@ -1,5 +1,6 @@
 import "./TeamSection.css";
 import {Button} from "../../UI/Button/Button.tsx";
+import HighlightBoxes from "../../UI/HighlightBox/HighlightBox.tsx";
 
 interface TeamMember {
     name: string;
@@ -20,12 +21,7 @@ interface TeamSectionProps {
     onFeedbackClick: () => void;
 }
 
-export default function TeamSection({
-                                        team,
-                                        mission,
-                                        roadmap,
-                                        onFeedbackClick,
-                                    }: TeamSectionProps) {
+export default function TeamSection({ team, mission, roadmap, onFeedbackClick }: TeamSectionProps) {
     return (
         <section className="team-section">
             <h2>Meet the Team</h2>
@@ -33,11 +29,13 @@ export default function TeamSection({
 
             <div className="team-grid">
                 {team.map((member, idx) => (
-                    <div className="team-card" key={idx}>
-                        <img src={member.image} alt={member.name} className="team-image" />
-                        <h3>{member.name}</h3>
-                        <p>{member.role}</p>
-                    </div>
+                    <HighlightBoxes
+                        key={idx}
+                        title={member.name}
+                        content={member.role}
+                        image={member.image}
+                        alt={member.name}
+                    />
                 ))}
             </div>
 

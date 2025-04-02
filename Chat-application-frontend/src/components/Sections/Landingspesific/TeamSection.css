@@ -27,35 +27,6 @@
     margin-bottom: 3rem;
 }
 
-.team-card {
-    background-color: var(--background-contrast-color);
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    transition: transform 0.3s ease;
-    cursor: pointer;
-}
-
-.team-card:hover {
-    transform: translateY(-5px);
-}
-
-.team-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 1rem;
-    border: 3px solid #f2f4f8;
-}
-
-.team-card h3 {
-    margin-top: 0;
-    color: #4e5b74;
-    margin-bottom: 0.5rem;
-    font-size: clamp(1rem, 3vw, 1.5rem);
-}
-
 /* Roadmap */
 .roadmap-snake {
     display: flex;
@@ -116,9 +87,6 @@
         gap: 1.5rem;
     }
 
-    .team-card {
-        padding: 1rem;
-    }
 
     .roadmap-point {
         flex-direction: column;
@@ -147,19 +115,11 @@
         grid-template-columns: repeat(4, 1fr);
         gap: 2rem;
     }
-
-    .team-card {
-        padding: 1.5rem;
-    }
 }
 
 @media (min-width: 1920px) {
     .team-grid {
         gap: 2.5rem;
-    }
-
-    .team-card {
-        padding: 2rem;
     }
 
     .roadmap-content {
