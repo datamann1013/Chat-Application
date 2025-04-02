@@ -10,6 +10,7 @@ import Footer from "../components/Footer";
 import LoginModal from "../components/Modals/LoginModal";
 import {FeedbackModal} from "../components/Modals/FeedbackModal";
 import {NewsletterModal} from "../components/Modals/NewsletterModal";
+import Roadmap from "../components/Sections/Landingspesific/Roadmap";
 
 
 
@@ -89,9 +90,9 @@ const LandingPage: React.FC = () => {
             <TeamSection
                 team={teamMembers}
                 mission="We believe in building a robust, secure environment that’s simple to use. Our four-person team combines expertise in backend, frontend, DevOps, and security."
-                roadmap={roadmap}
-                onFeedbackClick={() => setFeedbackOpen(true)}
             />
+
+            <Roadmap items={roadmap} />
 
             <Footer />
 

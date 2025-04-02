@@ -1,0 +1,86 @@
+/* Roadmap.css */
+
+h2{
+    text-align: center;
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+}
+
+.roadmap-container {
+    margin: 0 auto;
+    padding: 2rem;
+    max-width: 1920px;
+}
+
+.roadmap-snake {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.roadmap-point {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 1rem 0;
+    position: relative;
+}
+
+.roadmap-connector {
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.snake-line {
+    display: block;
+    width: 4px;
+    height: 60px;
+    border-radius: 2px;
+    background-color: var(--background-contrast-color, #cccccc);
+    transition: background-color 0.3s ease;
+}
+
+.roadmap-connector.done .snake-line {
+    background-color: #4e5b74;
+}
+
+.roadmap-content {
+    background-color: #f2f4f8;
+    border-radius: 8px;
+    padding: 1rem;
+    flex: 1;
+    margin-left: 1rem;
+    text-align: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.roadmap-content:hover {
+    transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+    .roadmap-point {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .roadmap-connector {
+        margin-bottom: 1rem;
+    }
+
+    .roadmap-content {
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+}
+
+@media (min-width: 1920px) {
+    .roadmap-content {
+        padding: 1.5rem;
+    }
+}
