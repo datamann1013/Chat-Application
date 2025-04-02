@@ -62,11 +62,6 @@ const LandingPage: React.FC = () => {
     const [feedbackOpen, setFeedbackOpen] = useState(false);
     const [loginOpen, setLoginOpen] = useState(false);
 
-    // We want to open the LoginModal in "signup" mode
-    // For simplicity, let's just open it normally:
-    const handleRegisterClick = () => {
-        setLoginOpen(true);
-    };
 
     return (
         <div className="landing-page">
@@ -82,7 +77,7 @@ const LandingPage: React.FC = () => {
             <SignUpSection
                 onNewsletterClick={() => setNewsletterOpen(true)}
                 onFeedbackClick={() => setFeedbackOpen(true)}
-                onRegisterClick={handleRegisterClick}
+                onRegisterClick={() => setLoginOpen(true)}
             />
 
             <ThreeBoxSection items={boxData} heading="Why Choose Our Platform?" />
@@ -96,10 +91,10 @@ const LandingPage: React.FC = () => {
 
             <Footer />
 
-            {newsletterOpen && <NewsletterModal onClose={() => setNewsletterOpen(false)} isOpen={false}
+            {newsletterOpen && <NewsletterModal onClose={() => setNewsletterOpen(false)} isOpen={newsletterOpen}
                                                 children={undefined} />}
-            {feedbackOpen && <FeedbackModal onClose={() => setFeedbackOpen(false)} isOpen={false} children={undefined} />}
-            {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} />}
+            {feedbackOpen && <FeedbackModal onClose={() => setFeedbackOpen(false)} isOpen={feedbackOpen} children={undefined} />}
+            {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} isOpen={loginOpen}  initialView="signup" />}
         </div>
     );
 };
