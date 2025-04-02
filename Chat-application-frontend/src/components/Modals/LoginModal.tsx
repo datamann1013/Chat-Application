@@ -1,19 +1,18 @@
+// LoginModal.tsx
 import React, { useState } from "react";
 import "./ModalStyles.css";
-import {Button} from "../UI/Button/Button.tsx";
+import { Button } from "../UI/Button/Button.tsx";
 
 type ModalView = "login" | "signup" | "reset";
 
 interface LoginModalProps {
     onClose: () => void;
-    initialView?: "login" | "signup" | "reset";
+    initialView?: ModalView;
     isOpen?: boolean;
 }
 
-export default function LoginModal({ onClose,initialView = "login" }: LoginModalProps) {
+export default function LoginModal({ onClose, initialView = "login", isOpen = false }: LoginModalProps) {
     const [view, setView] = useState<ModalView>(initialView);
-
-    // Form state management
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -22,7 +21,6 @@ export default function LoginModal({ onClose,initialView = "login" }: LoginModal
         confirmPassword: ""
     });
 
-    // Form submission handlers
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         switch (view) {
@@ -38,7 +36,6 @@ export default function LoginModal({ onClose,initialView = "login" }: LoginModal
         }
     };
 
-    // View-specific handlers
     const handleLogin = () => {
         console.log("Login attempted with:", formData.username, formData.password);
         // Add your login logic here
@@ -58,7 +55,6 @@ export default function LoginModal({ onClose,initialView = "login" }: LoginModal
         // Add your password reset logic here
     };
 
-    // Form field change handler
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -66,6 +62,8 @@ export default function LoginModal({ onClose,initialView = "login" }: LoginModal
             [name]: value
         }));
     };
+
+    if (!isOpen) return null;
 
     return (
         <div className="modal-overlay" onClick={onClose}>
@@ -100,7 +98,7 @@ export default function LoginModal({ onClose,initialView = "login" }: LoginModal
                                     value={formData.password}
                                     onChange={handleInputChange}
                                 />
-                                <Button type= "submit" variant="default" size="modal">Log in</Button>
+                                <Button type="submit" variant="default" size="modal">Log in</Button>
                             </>
                         )}
                         {view === "signup" && (
@@ -145,7 +143,7 @@ export default function LoginModal({ onClose,initialView = "login" }: LoginModal
                                     value={formData.confirmPassword}
                                     onChange={handleInputChange}
                                 />
-                                <Button type= "submit" variant="default" size="modal">Sign Up</Button>
+                                <Button type="submit" variant="default" size="modal">Sign Up</Button>
                             </>
                         )}
                         {view === "reset" && (
@@ -158,7 +156,7 @@ export default function LoginModal({ onClose,initialView = "login" }: LoginModal
                                     value={formData.username}
                                     onChange={handleInputChange}
                                 />
-                                <Button type= "submit" variant="default" size="modal">Reset Password</Button>
+                                <Button type="submit" variant="default" size="modal">Reset Password</Button>
                             </>
                         )}
                     </form>

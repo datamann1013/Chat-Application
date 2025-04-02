@@ -1,8 +1,5 @@
-
-
+// AbstractModal.tsx
 import React from 'react';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { BaseModalProps } from './types';
 
 abstract class AbstractModal<P extends BaseModalProps> extends React.Component<P> {
@@ -49,7 +46,6 @@ abstract class AbstractModal<P extends BaseModalProps> extends React.Component<P
                             >
                                 ×
                             </button>
-
                         </div>
                     )}
                     <div className="modal-body">

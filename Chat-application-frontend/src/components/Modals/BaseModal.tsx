@@ -1,10 +1,5 @@
-interface BaseModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    children: React.ReactNode;
-    title?: string;
-    className?: string;
-}
+// BaseModal.tsx
+import { BaseModalProps } from './types';
 
 export function BaseModal({
                               isOpen,
