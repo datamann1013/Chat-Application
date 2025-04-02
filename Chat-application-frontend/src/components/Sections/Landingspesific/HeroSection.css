@@ -93,8 +93,8 @@
 /* Small PC (1920x1080 16") */
 @media (min-width: 1201px) and (max-width: 1920px) {
     .hero-container {
-        width: 75%;
-        height: 70vh;
+        width: 90%;
+        height: 80vh;
     }
 
     .hero-overlay {
