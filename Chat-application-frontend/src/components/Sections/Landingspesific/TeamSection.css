@@ -109,23 +109,6 @@
     transform: translateY(-3px);
 }
 
-/* Feedback button */
-.feedback-btn {
-    background-color: #4e5b74;
-    color: #fff;
-    border: none;
-    border-radius: 25px;
-    padding: 0.75rem 1.5rem;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    margin: 2rem auto;
-    display: block;
-}
-
-.feedback-btn:hover {
-    transform: scale(1.05);
-}
-
 /* Responsive breakpoints */
 @media (max-width: 768px) {
     .team-grid {

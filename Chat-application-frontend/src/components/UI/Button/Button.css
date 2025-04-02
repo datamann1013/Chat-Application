@@ -14,8 +14,7 @@
 }
 
 .button:hover {
-    background-color: var(--header-bg-hover);
-    border-color: var(--button-border);
+    transform: scale(1.05);
 }
 
 .button:focus {

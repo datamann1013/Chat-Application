@@ -1,4 +1,5 @@
 import "./TeamSection.css";
+import {Button} from "../../UI/Button/Button.tsx";
 
 interface TeamMember {
     name: string;
@@ -55,9 +56,13 @@ export default function TeamSection({
                 ))}
             </div>
 
-            <button className="feedback-btn" onClick={onFeedbackClick}>
+            <Button
+                onClick={onFeedbackClick}
+                variant="default"
+                size="lg"
+            >
                 Send Feedback
-            </button>
+            </Button>
         </section>
     );
 }
