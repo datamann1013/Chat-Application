@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from '../UI/Button/Button.tsx'
 import "./Header.css";
+import LoginModal from '../Modals/LoginModal';
 
 interface NavItem {
     title: string;
     link: string;
 }
+
 
 const navItems: NavItem[] = [
     { title: "Landing", link: "/" },
@@ -18,13 +20,20 @@ interface Section {
     id: string;
     title: string;
 }
+interface HeaderProps {
+    isLoggedIn: boolean;
+    onLogin: () => Promise<void>;
+    onLogout: () => void;
+}
 
-export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
+export default function Header({ isLoggedIn, onLogin, onLogout }: { onLoginClick: () => void }, HeaderProps) {
     const location = useLocation();
     const [sections, setSections] = useState<Section[]>([]);
     const [currentPageTitle, setCurrentPageTitle] = useState<string>("Current Page");
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [hoveredPageSections, setHoveredPageSections] = useState<Section[]>([]);
+    const [loginOpen, setLoginOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const currentItem = navItems.find((item) => item.link === location.pathname);
@@ -67,6 +76,16 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
 
     const handleDropdownMouseLeave = () => {
         setHoveredPageSections(sections);
+    };
+
+    const handleLoginClick = async () => {
+        setLoginOpen(true);
+        setLoading(true);
+        try {
+            await onLogin();
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -125,14 +144,12 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
 
             {/* Right column: Login button */}
             <div className="header-right">
-                <Button
-                    onClick={onLoginClick}
-                    variant="default"
-                    size="md"
-                >
-                    Log in
+                <Button onClick={handleLoginClick}  disabled={loading} variant="default" size="md">
+                    {isLoggedIn ? 'Profile' : 'Log in'}
                 </Button>
             </div>
+
+            {loginOpen && (<LoginModal onClose={() => setLoginOpen(false)}/>)}
         </header>
     );
 }
