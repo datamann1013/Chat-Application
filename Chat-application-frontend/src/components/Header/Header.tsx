@@ -24,9 +24,10 @@ interface HeaderProps {
     isLoggedIn: boolean;
     onLogin: () => Promise<void>;
     onLogout: () => void;
+    onLoginClick: () => void;
 }
 
-export default function Header({ isLoggedIn, onLogin, onLogout }: { onLoginClick: () => void }, HeaderProps) {
+export default function Header({ isLoggedIn, onLogin, onLogout, onLoginClick }: HeaderProps) {
     const location = useLocation();
     const [sections, setSections] = useState<Section[]>([]);
     const [currentPageTitle, setCurrentPageTitle] = useState<string>("Current Page");

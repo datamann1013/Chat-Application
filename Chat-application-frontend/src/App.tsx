@@ -12,7 +12,11 @@ export default function App() {
 
     return (
         <Router>
-            <Header onLoginClick={() => setModalOpen(true)} />
+            <Header onLoginClick={() => setModalOpen(true)} isLoggedIn={false} onLogin={function (): Promise<void> {
+                throw new Error("Function not implemented.");
+            }} onLogout={function (): void {
+                throw new Error("Function not implemented.");
+            }} />
             {isModalOpen && <LoginModal onClose={() => setModalOpen(false)} />}
             {/* Wrap routes in a div with an ID so Header can dynamically scan for H2s */}
             <div id="page-content">
