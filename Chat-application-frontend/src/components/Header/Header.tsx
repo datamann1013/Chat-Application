@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from '../UI/Button/Button.tsx'
 import "./Header.css";
-import LoginModal from '../Modals/LoginModal';
 
 interface NavItem {
     title: string;
@@ -33,8 +32,16 @@ export default function Header({ isLoggedIn, onLogin, onLogout, onLoginClick }: 
     const [currentPageTitle, setCurrentPageTitle] = useState<string>("Current Page");
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [hoveredPageSections, setHoveredPageSections] = useState<Section[]>([]);
-    const [loginOpen, setLoginOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    const handleLoginClick = async () => {
+        setLoading(true);
+        try {
+            await onLogin();
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         const currentItem = navItems.find((item) => item.link === location.pathname);
@@ -77,16 +84,6 @@ export default function Header({ isLoggedIn, onLogin, onLogout, onLoginClick }: 
 
     const handleDropdownMouseLeave = () => {
         setHoveredPageSections(sections);
-    };
-
-    const handleLoginClick = async () => {
-        setLoginOpen(true);
-        setLoading(true);
-        try {
-            await onLogin();
-        } finally {
-            setLoading(false);
-        }
     };
 
     return (
@@ -145,12 +142,17 @@ export default function Header({ isLoggedIn, onLogin, onLogout, onLoginClick }: 
 
             {/* Right column: Login button */}
             <div className="header-right">
-                <Button onClick={handleLoginClick}  disabled={loading} variant="default" size="md">
+                <Button
+                    onClick={handleLoginClick}
+                    disabled={loading}
+                    variant="default"
+                    size="md"
+                >
                     {isLoggedIn ? 'Profile' : 'Log in'}
                 </Button>
             </div>
 
-            {loginOpen && (<LoginModal onClose={() => setLoginOpen(false)}/>)}
+            {/*loginOpen && (<LoginModal onClose={() => setLoginOpen(false)}/>)*/}
         </header>
     );
 }

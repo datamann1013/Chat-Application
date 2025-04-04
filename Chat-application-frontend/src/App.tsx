@@ -8,17 +8,33 @@ import LoginModal from "./components/Modals/LoginModal.tsx";
 import "./index.css";
 
 export default function App() {
-    const [isModalOpen, setModalOpen] = useState(false);
+    const [loginOpen, setLoginOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const handleLogin = async () => {
+        try {
+            // Your login logic here
+            setIsLoggedIn(true);
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
+    };
 
     return (
         <Router>
-            <Header onLoginClick={() => setModalOpen(true)} isLoggedIn={false} onLogin={function (): Promise<void> {
-                throw new Error("Function not implemented.");
-            }} onLogout={function (): void {
-                throw new Error("Function not implemented.");
-            }} />
-            {isModalOpen && <LoginModal onClose={() => setModalOpen(false)} />}
-            {/* Wrap routes in a div with an ID so Header can dynamically scan for H2s */}
+            <Header
+                onLoginClick={() => setLoginOpen(true)}
+                isLoggedIn={isLoggedIn}
+                onLogin={handleLogin}
+                onLogout={() => setIsLoggedIn(false)}
+            />
+            {loginOpen && (
+                <LoginModal
+                    isOpen={loginOpen}
+                    onClose={() => setLoginOpen(false)}
+                    onLogin={handleLogin}
+                />
+            )}
             <div id="page-content">
                 <Routes>
                     <Route path="/" element={<LandingPage />} />

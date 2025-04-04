@@ -1,17 +1,18 @@
-// LoginModal.tsx
-import React, { useState } from "react";
+
+import React, {useState} from "react";
 import "./ModalStyles.css";
-import { Button } from "../UI/Button/Button.tsx";
+import {Button} from "../UI/Button/Button.tsx";
 
 type ModalView = "login" | "signup" | "reset";
 
 interface LoginModalProps {
-    onClose: () => void;
-    initialView?: ModalView;
-    isOpen?: boolean;
+    onClose: () => void,
+    initialView?: ModalView,
+    isOpen?: boolean,
+    onLogin?: () => Promise<void>
 }
 
-export default function LoginModal({ onClose, initialView = "login", isOpen = false }: LoginModalProps) {
+export default function LoginModal({onClose, initialView = "login", isOpen = false, onLogin}: LoginModalProps) {
     const [view, setView] = useState<ModalView>(initialView);
     const [formData, setFormData] = useState({
         username: "",
@@ -56,7 +57,7 @@ export default function LoginModal({ onClose, initialView = "login", isOpen = fa
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setFormData(prev => ({
             ...prev,
             [name]: value

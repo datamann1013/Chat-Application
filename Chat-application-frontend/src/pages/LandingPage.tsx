@@ -7,7 +7,6 @@ import SignUpSection from "../components/Sections/Generics/SignUpSection.tsx";
 
 import Footer from "../components/Footer";
 
-import LoginModal from "../components/Modals/LoginModal";
 import {FeedbackModal} from "../components/Modals/FeedbackModal";
 import {NewsletterModal} from "../components/Modals/NewsletterModal";
 import Roadmap from "../components/Sections/Landingspesific/Roadmap";
@@ -60,7 +59,6 @@ const roadmap = [
 const LandingPage: React.FC = () => {
     const [newsletterOpen, setNewsletterOpen] = useState(false);
     const [feedbackOpen, setFeedbackOpen] = useState(false);
-    const [loginOpen, setLoginOpen] = useState(false);
 
 
     return (
@@ -94,7 +92,7 @@ const LandingPage: React.FC = () => {
             {newsletterOpen && <NewsletterModal onClose={() => setNewsletterOpen(false)} isOpen={newsletterOpen}
                                                 children={undefined} />}
             {feedbackOpen && <FeedbackModal onClose={() => setFeedbackOpen(false)} isOpen={feedbackOpen} children={undefined} />}
-            {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} isOpen={loginOpen}  initialView="signup" />}
+            {/*loginOpen && <LoginModal onClose={() => setLoginOpen(false)} isOpen={loginOpen}  initialView="signup" />*/}
         </div>
     );
 };
