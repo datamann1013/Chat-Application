@@ -1,15 +1,12 @@
 import "./LandingPage.css";
-import React, { useState } from "react";
 import ThreeBoxSection from "../components/Sections/Generics/ThreeBoxSection.tsx";
 import HeroSection from "../components/Sections/Landingspesific/HeroSection.tsx";
 import TeamSection from "../components/Sections/Landingspesific/TeamSection.tsx";
 import SignUpSection from "../components/Sections/Generics/SignUpSection.tsx";
 
 import Footer from "../components/Footer";
-
-import {FeedbackModal} from "../components/Modals/FeedbackModal";
-import {NewsletterModal} from "../components/Modals/NewsletterModal";
 import Roadmap from "../components/Sections/Landingspesific/Roadmap";
+import React from "react";
 
 
 
@@ -56,10 +53,11 @@ const roadmap = [
     // ...
 ];
 
-const LandingPage: React.FC = () => {
-    const [newsletterOpen, setNewsletterOpen] = useState(false);
-    const [feedbackOpen, setFeedbackOpen] = useState(false);
-
+const LandingPage: React.FC<{
+    onRegisterClick: () => void;
+    onNewsletterClick: () => void;
+    onFeedbackClick: () => void;
+}> = ({ onRegisterClick, onNewsletterClick, onFeedbackClick }) => {
 
     return (
         <div className="landing-page">
@@ -73,26 +71,21 @@ const LandingPage: React.FC = () => {
             ))}
 
             <SignUpSection
-                onNewsletterClick={() => setNewsletterOpen(true)}
-                onFeedbackClick={() => setFeedbackOpen(true)}
-                onRegisterClick={() => setLoginOpen(true)}
+                onNewsletterClick={onNewsletterClick}
+                onFeedbackClick={onFeedbackClick}
+                onRegisterClick={onRegisterClick}
             />
 
             <ThreeBoxSection items={boxData} heading="Why Choose Our Platform?" />
 
             <TeamSection
                 team={teamMembers}
-                mission="We believe in building a robust, secure environment that’s simple to use. Our four-person team combines expertise in backend, frontend, DevOps, and security."
+                mission="We believe in building a robust, secure environment that's simple to use. Our four-person team combines expertise in backend, frontend, DevOps, and security."
             />
 
             <Roadmap items={roadmap} />
 
             <Footer />
-
-            {newsletterOpen && <NewsletterModal onClose={() => setNewsletterOpen(false)} isOpen={newsletterOpen}
-                                                children={undefined} />}
-            {feedbackOpen && <FeedbackModal onClose={() => setFeedbackOpen(false)} isOpen={feedbackOpen} children={undefined} />}
-            {/*loginOpen && <LoginModal onClose={() => setLoginOpen(false)} isOpen={loginOpen}  initialView="signup" />*/}
         </div>
     );
 };

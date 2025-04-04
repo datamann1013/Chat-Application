@@ -1,7 +1,7 @@
-
 import React, {useState} from "react";
 import "./ModalStyles.css";
 import {Button} from "../UI/Button/Button.tsx";
+import {ModalView} from "./Types.ts";
 
 type ModalView = "login" | "signup" | "reset";
 
@@ -9,10 +9,17 @@ interface LoginModalProps {
     onClose: () => void,
     initialView?: ModalView,
     isOpen?: boolean,
-    onLogin?: () => Promise<void>
+    onLogin?: () => Promise<void>,
+    onRegister?: () => void
 }
 
-export default function LoginModal({onClose, initialView = "login", isOpen = false, onLogin}: LoginModalProps) {
+export default function LoginModal({
+                                       onClose,
+                                       initialView = "login",
+                                       isOpen = false,
+                                       onLogin,
+                                       onRegister
+                                   }: LoginModalProps) {
     const [view, setView] = useState<ModalView>(initialView);
     const [formData, setFormData] = useState({
         username: "",

@@ -24,6 +24,7 @@ interface HeaderProps {
     onLogin: () => Promise<void>;
     onLogout: () => void;
     onLoginClick: () => void;
+    onRegisterClick: () => void;
 }
 
 export default function Header({ isLoggedIn, onLogin, onLogout, onLoginClick }: HeaderProps) {
@@ -151,8 +152,6 @@ export default function Header({ isLoggedIn, onLogin, onLogout, onLoginClick }: 
                     {isLoggedIn ? 'Profile' : 'Log in'}
                 </Button>
             </div>
-
-            {/*loginOpen && (<LoginModal onClose={() => setLoginOpen(false)}/>)*/}
         </header>
     );
 }
