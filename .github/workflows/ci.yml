@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NUGET_FALLBACK_PACKAGES: ""
+      NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
     defaults:
       run:
         working-directory: Chat-application-backend
@@ -23,11 +24,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Clean
-        run: dotnet clean
-
       - name: Restore dependencies
         run: dotnet restore
+
+      - name: Clean
+        run: dotnet clean
 
       - name: Update test NuGet packages
         run: |
