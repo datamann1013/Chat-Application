@@ -1,6 +1,0 @@
-﻿services:
-  chat-application.api:
-    image: chat-application.api
-    build:
-      context: .
-      dockerfile: Chat-application.API/Dockerfile
