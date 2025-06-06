@@ -10,6 +10,8 @@ jobs:
   backend-build-and-test:
     name: Backend Build & Test
     runs-on: ubuntu-latest
+    env:
+      NUGET_FALLBACK_PACKAGES: ""
     defaults:
       run:
         working-directory: Chat-application-backend
