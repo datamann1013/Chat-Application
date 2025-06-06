@@ -3,15 +3,20 @@ import type { Config } from '@jest/types';
 const config: Config.InitialOptions = {
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
-    // Map module aliases (adjust if needed)
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
+        '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     },
     transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest',
     },
     testPathIgnorePatterns: ['/node_modules/', '/dist/'],
-    setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'], // If you have a setup file, otherwise remove
+    setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+    globals: {
+        'ts-jest': {
+            tsconfig: '<rootDir>/tsconfig.app.json',
+        },
+    },
 };
 
 export default config;
