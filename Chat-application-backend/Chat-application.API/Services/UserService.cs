@@ -12,13 +12,13 @@ public class UserService
         _userRepository = userRepository;
     }
     
-    public async Task<User> CreateUser(User user)
+    public async Task<User?> CreateUser(User user)
     {
         // Implementation
         return await Task.FromResult<User?>(null);
     }
 
-    public async Task<User> Login(string username, string password)
+    public async Task<User?> Login(string username, string password)
     {
         // Implementation
         return await Task.FromResult<User?>(null);

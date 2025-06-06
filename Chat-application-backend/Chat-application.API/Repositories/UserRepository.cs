@@ -12,14 +12,14 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<User> AddUserAsync(User user)
+    public async Task<User?> AddUserAsync(User user)
     {
         // Implementation
         return await Task.FromResult<User?>(null);
 
     }
 
-    public async Task<User> GetUserByUsernameAsync(string username)
+    public async Task<User?> GetUserByUsernameAsync(string username)
     {
        // Implementation
        return await Task.FromResult<User?>(null);

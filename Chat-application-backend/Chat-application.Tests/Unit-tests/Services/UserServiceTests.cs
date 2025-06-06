@@ -34,7 +34,10 @@ namespace Chat_Application.Tests.Unit_Tests.Services
             };
 
             _userRepositoryMock.Setup(repo => repo.AddUserAsync(It.IsAny<User>()))
-                .ReturnsAsync(user);
+                .ReturnsAsync(user); // user is not null, so this is fine
+
+            _userRepositoryMock.Setup(repo => repo.GetUserByUsernameAsync("testuser"))
+                .ReturnsAsync((User?)null); // explicitly nullable
 
             var result = await _userService.CreateUser(user);
 
