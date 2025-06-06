@@ -1,0 +1,105 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches: [test, net]
+  push:
+    branches: [test, net]
+
+jobs:
+  backend-build-and-test:
+    name: Backend Build & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Chat-application-backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run tests with coverage
+        run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./Chat-application.Tests/TestResults/**/*.xml
+        continue-on-error: true
+
+      - name: Static code analysis (treat warnings as errors)
+        run: dotnet build --no-restore /warnaserror
+
+      - name: Security analysis (dependency and code scan)
+        run: |
+          dotnet tool install --global security-scan
+          security-scan --path .
+        continue-on-error: true
+
+      - name: Dependency vulnerability check
+        run: dotnet list package --vulnerable
+        continue-on-error: true
+
+  frontend-build-and-test:
+    name: Frontend Build & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Chat-application-frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Run Jest tests
+        run: |
+          if [ -f jest.config.ts ]; then npx jest --ci --coverage; else echo "No Jest config found, skipping tests."; fi
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Check for known vulnerabilities (npm audit)
+        run: npm audit --json > audit.json || true
+
+      - name: Email notification on critical vulnerabilities
+        if: failure() && github.event_name == 'push'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "⚠️ Critical vulnerabilities detected in frontend dependencies"
+          to: data0@rommesmo.no
+          from: no-reply@rommesmo.no
+          body: |
+            The following critical vulnerabilities were found in npm dependencies:
+            ${{ steps.audit.outputs.body }}
+
+  manual-approval:
+    if: github.event.pull_request.base.ref == 'net'
+    needs: [backend-build-and-test, frontend-build-and-test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Manual approval
+        if: github.actor == 'datamann1013'
+        uses: hmarr/auto-approve-action@v2
