@@ -2,11 +2,95 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Header from './Header';
 
-test('renders Header', () => {
-    render(
-        <MemoryRouter>
-            <Header onLoginClick={jest.fn()} />
-        </MemoryRouter>
-    );
-    expect(screen.getByText(/Log in/i)).toBeInTheDocument();
+describe('Header', () => {
+    const onLoginClick = jest.fn();
+
+    beforeEach(() => {
+        onLoginClick.mockClear();
+    });
+
+    test('renders logo and login button', () => {
+        render(
+            <MemoryRouter>
+                <Header onLoginClick={onLoginClick} />
+            </MemoryRouter>
+        );
+        expect(screen.getByAltText(/logo/i)).toBeInTheDocument();
+        expect(screen.getByText(/log in/i)).toBeInTheDocument();
+    });
+
+    test('calls onLoginClick when login button is clicked', () => {
+        render(
+            <MemoryRouter>
+                <Header onLoginClick={onLoginClick} />
+            </MemoryRouter>
+        );
+        fireEvent.click(screen.getByText(/log in/i));
+        expect(onLoginClick).toHaveBeenCalledTimes(1);
+    });
+
+    test('shows current page title based on location', () => {
+        render(
+            <MemoryRouter initialEntries={['/chat']}>
+                <Header onLoginClick={onLoginClick} />
+            </MemoryRouter>
+        );
+        expect(screen.getByText(/chat/i)).toBeInTheDocument();
+    });
+
+    test('opens and closes dropdown menu', () => {
+        render(
+            <MemoryRouter initialEntries={['/']}>
+                <Header onLoginClick={jest.fn()} />
+            </MemoryRouter>
+        );
+
+        // Menu should be closed initially
+        expect(document.querySelectorAll('.dropdown-menu').length).toBe(0);
+
+        // Open the menu
+        const button = screen.getByLabelText('Current Page');
+        fireEvent.click(button);
+
+        // Menu should be open (1 dropdown-menu)
+        expect(document.querySelectorAll('.dropdown-menu').length).toBe(1);
+    });
+
+    test('shows section preview on nav item hover', () => {
+        render(
+            <MemoryRouter>
+                <Header onLoginClick={onLoginClick} />
+            </MemoryRouter>
+        );
+        // Open the dropdown
+        fireEvent.click(screen.getByRole('button', { name: /current page/i }));
+
+        // Hover over the "Landing" nav item
+        const landingNav = screen.getByRole('link', { name: /landing/i });
+        fireEvent.mouseEnter(landingNav);
+
+        // Now "Overview" should appear
+        expect(screen.getByText(/overview/i)).toBeInTheDocument();
+    });
+
+    test('dropdown closes when section link is clicked', () => {
+        render(
+            <MemoryRouter>
+                <Header onLoginClick={onLoginClick} />
+            </MemoryRouter>
+        );
+        const toggle = screen.getByRole('button', { name: /current page/i });
+        fireEvent.click(toggle);
+
+        // Hover to show sections
+        const landingLink = screen.getAllByRole('link', { name: /landing/i })[0];
+        fireEvent.mouseEnter(landingLink);
+
+        // Click a section link
+        const sectionLink = screen.getByText(/overview/i);
+        fireEvent.click(sectionLink);
+
+        // Dropdown should close
+        expect(screen.queryByText(/overview/i)).not.toBeInTheDocument();
+    });
 });

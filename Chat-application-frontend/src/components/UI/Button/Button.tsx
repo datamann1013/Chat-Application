@@ -1,7 +1,7 @@
 import React from 'react';
 import './Button.css';
 
-interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>  {
     onClick?: () => void;
     children?: React.ReactNode;
     variant?: 'default' | 'secondary' | 'ghost';
@@ -9,6 +9,7 @@ interface ButtonProps {
     className?: string;
     type?: 'button' | 'submit';
     disabled?: boolean;
+    'aria-label': string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -18,7 +19,8 @@ export const Button: React.FC<ButtonProps> = ({
                                                   size = 'md',
                                                   className = '',
                                                   type = 'button',
-                                                  disabled = false
+                                                  disabled = false,
+                                                  'aria-label': ariaLabel,
                                               }) => {
     const variantClass = variant === 'default' ? '' : ` button--${variant}`;
     const sizeClass = size === 'md' ? '' : ` button--${size}`;
@@ -29,6 +31,7 @@ export const Button: React.FC<ButtonProps> = ({
             onClick={onClick}
             className={`button${variantClass}${sizeClass} ${className}`}
             disabled={disabled}
+            aria-label={ariaLabel}
         >
             {children}
         </button>
