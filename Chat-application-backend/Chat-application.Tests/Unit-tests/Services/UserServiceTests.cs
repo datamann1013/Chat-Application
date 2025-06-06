@@ -46,7 +46,7 @@ namespace Chat_Application.Tests.Unit_Tests.Services
         public async Task Login_ShouldReturnNull_WhenInvalidCredentials()
         {
             _userRepositoryMock.Setup(repo => repo.GetUserByUsernameAsync("testuser"))
-                .ReturnsAsync((User)null);
+                .ReturnsAsync((User?)null);
 
             var result = await _userService.Login("testuser", "wrongpassword");
             result.Should().BeNull();

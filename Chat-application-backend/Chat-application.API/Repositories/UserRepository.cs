@@ -15,17 +15,19 @@ public class UserRepository : IUserRepository
     public async Task<User> AddUserAsync(User user)
     {
         // Implementation
-        return null;
+        return await Task.FromResult<User?>(null);
+
     }
 
     public async Task<User> GetUserByUsernameAsync(string username)
     {
        // Implementation
-       return null;
+       return await Task.FromResult<User?>(null);
+
     }
     public async Task<bool> DeleteUserAsync(Guid userId)
     {
         // Implementation
-        return false;
+        return await Task.FromResult(false);
     }
 }

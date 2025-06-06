@@ -15,12 +15,12 @@ public class FileService
     public async Task UploadFile(FileMetadata file)
     {
         // Implementation
-        return;
+        await Task.CompletedTask;
     }
 
     public async Task<bool> DeleteFile(Guid fileId)
     {
         // Implementation
-        return false;
+        return await Task.FromResult(false);
     }
 }

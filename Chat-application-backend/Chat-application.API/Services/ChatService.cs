@@ -15,12 +15,12 @@ public class ChatService
     public async Task SendMessage(ChatMessage message)
     {
         // Implementation
-        return;
+        await Task.CompletedTask;
     }
 
     public async Task<List<ChatMessage>> GetMessages(Guid user1, Guid user2)
     {
         // Implementation
-        return null;
+        return await Task.FromResult<List<ChatMessage>?>(null);
     }
 }

@@ -15,12 +15,12 @@ public class UserService
     public async Task<User> CreateUser(User user)
     {
         // Implementation
-        return null;
+        return await Task.FromResult<User?>(null);
     }
 
     public async Task<User> Login(string username, string password)
     {
         // Implementation
-        return null;
+        return await Task.FromResult<User?>(null);
     }
 }
