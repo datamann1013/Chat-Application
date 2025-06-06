@@ -21,18 +21,24 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Clean
+        run: dotnet clean
+
       - name: Restore dependencies
         run: dotnet restore
+
+      - name: Update test NuGet packages
+        run: |
+          dotnet add ./Chat-application.Tests package Microsoft.NET.Test.Sdk --version 17.11.0
+          dotnet add ./Chat-application.Tests package xunit --version 2.6.6
+          dotnet add ./Chat-application.Tests package xunit.runner.visualstudio --version 2.5.4
+          dotnet add ./Chat-application.Tests package Microsoft.AspNetCore.Mvc.Testing --version 8.0.5
 
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: Ensure testhost.deps.json is present
-        run: |
-          cp ./Chat-application.API/bin/Release/net8.0/testhost.deps.json ./Chat-application.Tests/bin/Release/net8.0/testhost.deps.json || true
-
       - name: Run tests with coverage
-        run: dotnet test --configuration Release --collect:"XPlat Code Coverage"
+        run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v4

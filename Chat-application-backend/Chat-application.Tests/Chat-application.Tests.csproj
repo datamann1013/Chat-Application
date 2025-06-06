@@ -30,4 +30,9 @@
       <ProjectReference Include="..\Chat-application.API\Chat-application.API.csproj" />
     </ItemGroup>
 
+  <Target Name="CopyDepsJsonAsTesthost" AfterTargets="Build">
+    <Copy SourceFiles="$(OutputPath)Chat-application.Tests.deps.json"
+          DestinationFiles="$(OutputPath)testhost.deps.json"
+          SkipUnchangedFiles="true" />
+  </Target>
 </Project>
