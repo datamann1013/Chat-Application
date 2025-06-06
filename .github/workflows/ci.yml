@@ -40,8 +40,11 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: Run tests with coverage
-        run: dotnet test --no-build --configuration Release --collect:"XPlat Code Coverage"
+      - name: Run unit tests with coverage
+        run: dotnet test ./Chat-application.Tests/Chat-application.Tests.csproj --filter "Category=Unit" --no-build --configuration Release --collect:"XPlat Code Coverage"
+
+      - name: Run integration tests (no coverage)
+        run: dotnet test ./Chat-application.Tests/Chat-application.Tests.csproj --filter "Category=Integration" --no-build --configuration Release
 
       - name: Upload coverage report
         uses: codecov/codecov-action@v4
