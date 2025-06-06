@@ -92,7 +92,7 @@ jobs:
 
       - name: Run Jest tests
         run: |
-          if [ -f jest.config.ts ]; then npx jest --ci --coverage; else echo "No Jest config found, skipping tests."; fi
+         then npx jest --ci --coverage;
 
       - name: Audit dependencies
         run: npm audit --audit-level=high
