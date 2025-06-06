@@ -27,6 +27,10 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
+      - name: Ensure testhost.deps.json is present
+        run: |
+          cp ./Chat-application.API/bin/Release/net8.0/testhost.deps.json ./Chat-application.Tests/bin/Release/net8.0/testhost.deps.json || true
+
       - name: Run tests with coverage
         run: dotnet test --configuration Release --collect:"XPlat Code Coverage"
 
