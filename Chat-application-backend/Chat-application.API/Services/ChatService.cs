@@ -18,7 +18,7 @@ public class ChatService
         await Task.CompletedTask;
     }
 
-    public async Task<List<ChatMessage?>> GetMessages(Guid user1, Guid user2)
+    public async Task<List<ChatMessage>?> GetMessages(Guid user1, Guid user2)
     {
         // Implementation
         return await Task.FromResult<List<ChatMessage>?>(null);
