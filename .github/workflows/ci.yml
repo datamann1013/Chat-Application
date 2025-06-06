@@ -64,7 +64,6 @@ jobs:
         run: |
           dotnet tool install --global security-scan
           security-scan --path ./Chat-application.API/Chat-application.API.csproj
-          working-directory: Chat-application-backend
         continue-on-error: true
 
       - name: Dependency vulnerability check
