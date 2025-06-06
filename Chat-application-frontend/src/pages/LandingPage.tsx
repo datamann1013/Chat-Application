@@ -5,7 +5,7 @@ import HeroSection from "../components/Sections/Landingspesific/HeroSection.tsx"
 import TeamSection from "../components/Sections/Landingspesific/TeamSection.tsx";
 import SignUpSection from "../components/Sections/Generics/SignUpSection.tsx";
 
-import Footer from "../components/Footer";
+import Footer from "../components/Sections/Generics/Footer.tsx";
 
 import LoginModal from "../components/Modals/LoginModal";
 import {FeedbackModal} from "../components/Modals/FeedbackModal";
