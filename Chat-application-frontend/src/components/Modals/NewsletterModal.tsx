@@ -40,7 +40,6 @@ export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
                 onClick={e => {
                     if (e.target === e.currentTarget) this.props.onClose();
                 }}
-                role="presentation"
                 tabIndex={-1}
                 onKeyDown={e => {
                     if (e.key === 'Escape') {

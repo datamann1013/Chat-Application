@@ -10,7 +10,7 @@ interface LoginModalProps {
     initialView?: ModalView; // Add this prop
 }
 
-export default function LoginModal({ onClose, initialView = "login" }: LoginModalProps) {
+export default function LoginModal({ onClose, initialView = "login" }: Readonly<LoginModalProps>) {
     const [view, setView] = useState<ModalView>(initialView);
 
     // Form state management

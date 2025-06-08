@@ -43,14 +43,7 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
                 <button
                     type="submit"
                     className="modal-submit"
-                    role="button"
-                    tabIndex={0}
                     aria-label="Send Feedback"
-                    onKeyDown={e => {
-                        if (e.key === "Enter" || e.key === " ") {
-                            (e.target as HTMLButtonElement).click();
-                        }
-                    }}
                 >
                     Send Feedback
                 </button>
@@ -66,17 +59,18 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
                 onClick={e => {
                     if (e.target === e.currentTarget) this.props.onClose();
                 }}
+                tabIndex={0}
+                onKeyDown={e => {
+                    if (e.key === 'Escape') {
+                        this.props.onClose();
+                    }
+                }}
             >
-                <div
+                <dialog
                     className={`modal-content ${(this.props.className ?? '')}`}
                     onClick={e => e.stopPropagation()}
-                    role="dialog"
                     tabIndex={-1}
-                    onKeyDown={e => {
-                        if (e.key === 'Escape') {
-                            this.props.onClose();
-                        }
-                    }}
+                    open
                 >
                     <div className="modal-header">
                         <h2>Feedback</h2>
@@ -91,7 +85,7 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
                     <div className="modal-body">
                         {this.renderContent()}
                     </div>
-                </div>
+                </dialog>
             </div>
         );
     }
