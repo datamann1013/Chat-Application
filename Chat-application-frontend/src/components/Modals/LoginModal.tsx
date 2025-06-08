@@ -7,10 +7,11 @@ type ModalView = "login" | "signup" | "reset";
 
 interface LoginModalProps {
     onClose: () => void;
+    initialView?: ModalView; // Add this prop
 }
 
-export default function LoginModal({ onClose }: LoginModalProps) {
-    const [view, setView] = useState<ModalView>("login");
+export default function LoginModal({ onClose, initialView = "login" }: LoginModalProps) {
+    const [view, setView] = useState<ModalView>(initialView);
 
     // Form state management
     const [formData, setFormData] = useState({
