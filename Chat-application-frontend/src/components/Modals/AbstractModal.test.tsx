@@ -7,7 +7,8 @@ const defaultProps = {
     isOpen: true,
     onClose: jest.fn(),
     title: "Test Modal",
-    className: "test-class"
+    className: "test-class",
+    children: <div /> // Add dummy children to satisfy BaseModalProps
 };
 
 class TestModal extends AbstractModal<typeof defaultProps> {
