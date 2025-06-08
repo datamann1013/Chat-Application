@@ -95,9 +95,16 @@ const LandingPage: React.FC = () => {
 
             <Footer />
 
-            {newsletterOpen && <NewsletterModal onClose={() => setNewsletterOpen(false)} isOpen={false}
-                                                children={undefined} />}
-            {feedbackOpen && <FeedbackModal onClose={() => setFeedbackOpen(false)} isOpen={false} children={undefined} />}
+            <NewsletterModal
+                onClose={() => setNewsletterOpen(false)}
+                isOpen={newsletterOpen}
+                children={undefined}
+            />
+            <FeedbackModal
+                onClose={() => setFeedbackOpen(false)}
+                isOpen={feedbackOpen}
+                children={undefined}
+            />
             {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} />}
         </div>
     );
