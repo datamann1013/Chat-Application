@@ -32,10 +32,3 @@
     padding: 12px 20px;
     font-size: 1.125rem;
 }
-
-.inputfield--full-modal-width {
-    width: 100%;
-    display: block;
-    margin-bottom: 12px;
-    border-radius: 999px; /* Overly rounded corners for visibility */
-}
