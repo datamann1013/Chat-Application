@@ -42,8 +42,15 @@ export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
                 }}
             >
                 <div
-                    className={`modal-content ${this.props.className || ''}`}
+                    className={`modal-content ${this.props.className ?? ''}`}
                     onClick={e => e.stopPropagation()}
+                    onKeyDown={e => {
+                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                            e.stopPropagation();
+                        }
+                    }}
+                    role="dialog"
+                    tabIndex={-1}
                 >
                     <div className="modal-header">
                         <h2>Newsletter</h2>
