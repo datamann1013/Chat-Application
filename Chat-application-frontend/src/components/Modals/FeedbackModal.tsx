@@ -1,13 +1,14 @@
 import React from 'react';
 import AbstractModal from './AbstractModal';
 import { FeedbackModalProps } from './types';
+import { InputField } from '../UI/InputField/InputField';
 
 export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
     private handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+        // Only pass feedback string, as expected by onSubmit
         const feedback = formData.get('feedback') as string;
-
         if (this.props.onSubmit) {
             this.props.onSubmit(feedback);
         }
@@ -16,6 +17,13 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
     protected renderContent(): React.ReactNode {
         return (
             <form onSubmit={this.handleSubmit}>
+                <InputField
+                    type="email"
+                    name="email"
+                    placeholder="Your Email"
+                    className="modal-input"
+                    fullModalWidth
+                />
                 <textarea
                     name="feedback"
                     placeholder="Your feedback..."
@@ -23,8 +31,27 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
                     required
                     className="modal-largetextinput"
                     style={{ width: "100%" }}
+                    tabIndex={0}
+                    aria-label="Feedback"
+                    onKeyDown={e => {
+                        // Allow Enter for newlines, but prevent tab from leaving if needed
+                        if (e.key === "Tab" && !e.shiftKey) {
+                            e.preventDefault();
+                        }
+                    }}
                 />
-                <button type="submit" className="modal-submit">
+                <button
+                    type="submit"
+                    className="modal-submit"
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Send Feedback"
+                    onKeyDown={e => {
+                        if (e.key === "Enter" || e.key === " ") {
+                            (e.target as HTMLButtonElement).click();
+                        }
+                    }}
+                >
                     Send Feedback
                 </button>
             </form>
@@ -41,8 +68,15 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
                 }}
             >
                 <div
-                    className={`modal-content ${this.props.className || ''}`}
+                    className={`modal-content ${(this.props.className ?? '')}`}
                     onClick={e => e.stopPropagation()}
+                    role="dialog"
+                    tabIndex={-1}
+                    onKeyDown={e => {
+                        if (e.key === 'Escape') {
+                            this.props.onClose();
+                        }
+                    }}
                 >
                     <div className="modal-header">
                         <h2>Feedback</h2>

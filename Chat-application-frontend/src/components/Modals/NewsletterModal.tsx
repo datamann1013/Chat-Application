@@ -40,17 +40,19 @@ export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
                 onClick={e => {
                     if (e.target === e.currentTarget) this.props.onClose();
                 }}
+                role="presentation"
+                tabIndex={-1}
+                onKeyDown={e => {
+                    if (e.key === 'Escape') {
+                        this.props.onClose();
+                    }
+                }}
             >
-                <div
+                <dialog
                     className={`modal-content ${this.props.className ?? ''}`}
                     onClick={e => e.stopPropagation()}
-                    onKeyDown={e => {
-                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
-                            e.stopPropagation();
-                        }
-                    }}
-                    role="dialog"
                     tabIndex={-1}
+                    open
                 >
                     <div className="modal-header">
                         <h2>Newsletter</h2>
@@ -65,7 +67,7 @@ export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
                     <div className="modal-body">
                         {this.renderContent()}
                     </div>
-                </div>
+                </dialog>
             </div>
         );
     }
