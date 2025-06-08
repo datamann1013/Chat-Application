@@ -19,7 +19,6 @@ describe("NewsletterModal", () => {
                 onClose={onClose}
                 onSubmit={onSubmit}
                 title="Newsletter"
-                // @ts-ignore
                 children={DummyChildren}
             />
         );
@@ -39,7 +38,6 @@ describe("NewsletterModal", () => {
                 onClose={onClose}
                 onSubmit={onSubmit}
                 title="Newsletter"
-                // @ts-ignore
                 children={DummyChildren}
             />
         );
@@ -57,7 +55,6 @@ describe("NewsletterModal", () => {
                 onClose={onClose}
                 onSubmit={onSubmit}
                 title="Newsletter"
-                // @ts-ignore
                 children={DummyChildren}
             />
         );
