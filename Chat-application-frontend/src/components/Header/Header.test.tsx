@@ -69,8 +69,10 @@ describe('Header', () => {
         const landingNav = screen.getByRole('link', { name: /landing/i });
         fireEvent.mouseEnter(landingNav);
 
-        // Now "Overview" should appear
-        expect(screen.getByText(/overview/i)).toBeInTheDocument();
+        // Now section links should appear
+        expect(screen.getByText("Why Choose Our Platform?")).toBeInTheDocument();
+        expect(screen.getByText("Meet the Team")).toBeInTheDocument();
+        expect(screen.getByText("Roadmap")).toBeInTheDocument();
     });
 
     test('dropdown closes when section link is clicked', () => {
@@ -87,10 +89,10 @@ describe('Header', () => {
         fireEvent.mouseEnter(landingLink);
 
         // Click a section link
-        const sectionLink = screen.getByText(/overview/i);
+        const sectionLink = screen.getByText("Why Choose Our Platform?");
         fireEvent.click(sectionLink);
 
         // Dropdown should close
-        expect(screen.queryByText(/overview/i)).not.toBeInTheDocument();
+        expect(screen.queryByText("Why Choose Our Platform?")).not.toBeInTheDocument();
     });
 });
