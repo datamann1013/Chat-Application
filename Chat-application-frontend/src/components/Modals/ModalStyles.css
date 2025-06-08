@@ -59,7 +59,6 @@
 .modal-body form textarea {
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 80px;
 }
 
 .modal-body form button {
@@ -89,4 +88,37 @@
 
 .modal-footer button:hover {
     background: #f3f3f3; /* Slightly darker on hover */
+}
+
+.modal-largetextinput {
+    resize: none;
+    border-radius: 30px;
+    font-size: 1.15rem;
+    padding: 14px 16px;
+    min-height: 100px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.modal-input {
+    border-radius: 80px;
+    font-size: 1.15rem;
+    padding: 14px 16px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+}
+
+.modal-exit-btn {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    font-size: 1.7rem;
+    color: #4e5b74;
+    cursor: pointer;
+    z-index: 2;
+    padding: 0;
+    line-height: 1;
 }

@@ -21,12 +21,44 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
                     placeholder="Your feedback..."
                     rows={5}
                     required
-                    className="modal-textarea"
+                    className="modal-largetextinput"
+                    style={{ width: "100%" }}
                 />
                 <button type="submit" className="modal-submit">
                     Send Feedback
                 </button>
             </form>
+        );
+    }
+
+    render() {
+        if (!this.props.isOpen) return null;
+        return (
+            <div
+                className="modal-overlay"
+                onClick={e => {
+                    if (e.target === e.currentTarget) this.props.onClose();
+                }}
+            >
+                <div
+                    className={`modal-content ${this.props.className || ''}`}
+                    onClick={e => e.stopPropagation()}
+                >
+                    <div className="modal-header">
+                        <h2>Feedback</h2>
+                        <button
+                            className="close-btn"
+                            onClick={this.props.onClose}
+                            aria-label="Close"
+                        >
+                            ×
+                        </button>
+                    </div>
+                    <div className="modal-body">
+                        {this.renderContent()}
+                    </div>
+                </div>
+            </div>
         );
     }
 }
