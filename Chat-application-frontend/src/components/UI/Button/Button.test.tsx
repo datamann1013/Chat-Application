@@ -45,4 +45,14 @@ describe('Button', () => {
         const btn = screen.getByRole('button', { name: /submit/i });
         expect(btn).toHaveAttribute('type', 'submit');
     });
+
+    it('applies full modal width class', () => {
+        render(
+            <Button fullModalWidth aria-label="full-width">
+                Full Width
+            </Button>
+        );
+        const btn = screen.getByRole('button', { name: /full-width/i });
+        expect(btn.className).toMatch(/button--full-modal-width/);
+    });
 });

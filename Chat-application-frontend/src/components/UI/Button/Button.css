@@ -1,8 +1,12 @@
+.button,
+.button--full-modal-width {
+    border-radius: 999px; /* Overly rounded corners for visibility */
+}
+
 .button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 25px;
     border: 1px solid var(--button-border);
     background-color: var(--button-color);
     color: var(--button-text-color);
@@ -51,4 +55,12 @@
 .button--lg {
     padding: 12px 20px;
     font-size: calc(var(--button-font-size) * 1.125);
+}
+
+.button--full-modal-width {
+    width: 100%;
+    display: block;
+    border-radius: 999px; /* Overly rounded corners for visibility */
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
