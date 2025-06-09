@@ -66,11 +66,10 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
                         this.props.onClose();
                     }
                 }}
-                tabIndex={0} // Make overlay focusable for keyboard events
             >
                 <dialog
                     className={`modal-content ${(this.props.className ?? '')}`}
-                    onClick={e => e.stopPropagation()}
+                    //onClick={e => e.stopPropagation()}
                     open
                     aria-modal="true"
                     aria-labelledby="feedback-modal-title"
