@@ -1,44 +1,59 @@
 import React from 'react';
 import AbstractModal from './AbstractModal';
 import { FeedbackModalProps } from './types';
-import { InputField } from '../UI/InputField/InputField';
+import { EmailValidation, RequiredTextValidation } from "./ValidationFields";
+import { isValidEmail, isNotEmpty } from "../../utils/validation";
+
+// Temporary array to store feedback until backend is ready
+const tempFeedback: Array<{ feedback: string; userEmail: string }> = [];
 
 export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
+    state = {
+        error: null as string | null,
+        success: null as string | null,
+        email: '',
+        feedback: '',
+        fieldErrors: {} as { [key: string]: string }
+    };
+
+    private handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        this.setState({ [name]: value } as never);
+    };
+
     private handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        // Only pass feedback string, as expected by onSubmit
-        const feedback = formData.get('feedback') as string;
-        if (this.props.onSubmit) {
-            this.props.onSubmit(feedback);
+        const { email, feedback } = this.state;
+        const errors: { [key: string]: string } = {};
+        if (!isNotEmpty(email)) errors.email = "Email is required.";
+        else if (!isValidEmail(email)) errors.email = "Invalid email format.";
+        if (!isNotEmpty(feedback)) errors.feedback = "Feedback is required.";
+        this.setState({ fieldErrors: errors });
+        if (Object.keys(errors).length > 0) {
+            this.setState({ error: "Please fix the errors below.", success: null });
+            return;
         }
+        // TEMP: Store feedback in tempFeedback
+        tempFeedback.push({ feedback, userEmail: email });
+        this.setState({ success: "Feedback sent! (TEMP: No backend yet)", error: null, email: '', feedback: '', fieldErrors: {} });
+        // TODO: Connect to backend for feedback submission
     };
 
     protected renderContent(): React.ReactNode {
         return (
             <form onSubmit={this.handleSubmit}>
-                <InputField
-                    type="email"
-                    name="email"
-                    placeholder="Your Email"
-                    className="modal-input"
-                    fullModalWidth
+                <EmailValidation
+                    value={this.state.email}
+                    onChange={this.handleInputChange}
+                    error={this.state.fieldErrors.email}
                 />
-                <textarea
+                <RequiredTextValidation
                     name="feedback"
                     placeholder="Your feedback..."
-                    rows={5}
-                    required
-                    className="modal-largetextinput"
-                    style={{ width: "100%" }}
-                    tabIndex={0}
-                    aria-label="Feedback"
-                    onKeyDown={e => {
-                        // Allow Enter for newlines, but prevent tab from leaving if needed
-                        if (e.key === "Tab" && !e.shiftKey) {
-                            e.preventDefault();
-                        }
-                    }}
+                    value={this.state.feedback}
+                    onChange={this.handleInputChange}
+                    error={this.state.fieldErrors.feedback}
+                    textarea
                 />
                 <button
                     type="submit"
@@ -69,7 +84,6 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
             >
                 <dialog
                     className={`modal-content ${(this.props.className ?? '')}`}
-
                     open
                     aria-modal="true"
                     aria-labelledby="feedback-modal-title"
@@ -86,6 +100,8 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
                         </button>
                     </div>
                     <div className="modal-body">
+                        {this.state.error && <div style={{ color: 'red', marginBottom: 8 }}>{this.state.error}</div>}
+                        {this.state.success && <div style={{ color: 'green', marginBottom: 8 }}>{this.state.success}</div>}
                         {this.renderContent()}
                     </div>
                 </dialog>

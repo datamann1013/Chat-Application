@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button } from "../UI/Button/Button";
-import { InputField } from "../UI/InputField/InputField";
 import "./ModalStyles.css";
+import { EmailValidation, PasswordValidation, ConfirmPasswordValidation, RequiredTextValidation } from "./ValidationFields";
+import { isValidEmail, isNotEmpty, passwordsMatch, isPasswordCompliant } from "../../utils/validation";
 
 type ModalView = "login" | "signup" | "reset";
 
@@ -10,8 +11,14 @@ interface LoginModalProps {
     initialView?: ModalView; // Add this prop
 }
 
+// Temporary array to store registered users until backend is ready
+const tempUsers: Array<{ username: string; email: string; fullName: string; password: string }> = [];
+
 export default function LoginModal({ onClose, initialView = "login" }: Readonly<LoginModalProps>) {
     const [view, setView] = useState<ModalView>(initialView);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
 
     // Form state management
     const [formData, setFormData] = useState({
@@ -40,26 +47,60 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
 
     // View-specific handlers
     const handleLogin = () => {
-        console.log("Login attempted with:", formData.username, formData.password);
-        // Add your login logic here
+        // TEMP: Check if user exists in tempUsers
+        const user = tempUsers.find(u => u.username === formData.username && u.password === formData.password);
+        if (!user) {
+            setError("Invalid username or password.");
+            setSuccess(null);
+            return;
+        }
+        setSuccess("Login successful! (TEMP: No backend yet)");
+        setError(null);
+        // TODO: Connect to backend for login
     };
 
     const handleSignup = () => {
-        if (formData.password !== formData.confirmPassword) {
-            alert("Passwords don't match!");
+        const errors: { [key: string]: string } = {};
+        if (!isNotEmpty(formData.username)) errors.username = "Username is required.";
+        if (!isNotEmpty(formData.email)) errors.email = "Email is required.";
+        else if (!isValidEmail(formData.email)) errors.email = "Invalid email format.";
+        if (!isNotEmpty(formData.fullName)) errors.fullName = "Full name is required.";
+        if (!isNotEmpty(formData.password)) errors.password = "Password is required.";
+        else if (!isPasswordCompliant(formData.password)) errors.password = "Password must be at least 6 characters, include a letter and a number.";
+        if (!isNotEmpty(formData.confirmPassword)) errors.confirmPassword = "Confirm your password.";
+        else if (!passwordsMatch(formData.password, formData.confirmPassword)) errors.confirmPassword = "Passwords do not match.";
+        setFieldErrors(errors);
+        if (Object.keys(errors).length > 0) {
+            setError("Please fix the errors below.");
+            setSuccess(null);
             return;
         }
-        console.log("Signup attempted with:", formData);
-        // Add your signup logic here
+        // TEMP: Store user in tempUsers
+        tempUsers.push({
+            username: formData.username,
+            email: formData.email,
+            fullName: formData.fullName,
+            password: formData.password
+        });
+        setSuccess("Registration successful! (TEMP: No backend yet)");
+        setError(null);
+        setFieldErrors({});
+        // TODO: Connect to backend for registration
     };
 
     const handleResetPassword = () => {
-        console.log("Reset password requested for:", formData.username);
-        // Add your password reset logic here
+        if (!isNotEmpty(formData.username)) {
+            setError("Username or email is required.");
+            setSuccess(null);
+            return;
+        }
+        setSuccess("If this account exists, a reset link will be sent. (TEMP: No backend yet)");
+        setError(null);
+        // TODO: Connect to backend for password reset
     };
 
     // Form field change handler
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -81,26 +122,22 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
                     <button className="close-btn" onClick={onClose}>×</button>
                 </div>
                 <div className="modal-body">
+                    {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}
+                    {success && <div style={{ color: 'green', marginBottom: 8 }}>{success}</div>}
                     <form onSubmit={handleSubmit}>
                         {view === "login" && (
                             <>
-                                <InputField
-                                    type="text"
+                                <RequiredTextValidation
                                     name="username"
                                     placeholder="Username"
-                                    required
                                     value={formData.username}
                                     onChange={handleInputChange}
-                                    fullModalWidth
+                                    error={fieldErrors.username}
                                 />
-                                <InputField
-                                    type="password"
-                                    name="password"
-                                    placeholder="Password"
-                                    required
+                                <PasswordValidation
                                     value={formData.password}
                                     onChange={handleInputChange}
-                                    fullModalWidth
+                                    error={fieldErrors.password}
                                 />
                                 <Button
                                     type="submit"
@@ -113,50 +150,34 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
                         )}
                         {view === "signup" && (
                             <>
-                                <InputField
-                                    type="text"
+                                <RequiredTextValidation
                                     name="username"
                                     placeholder="Username"
-                                    required
                                     value={formData.username}
                                     onChange={handleInputChange}
-                                    fullModalWidth
+                                    error={fieldErrors.username}
                                 />
-                                <InputField
-                                    type="email"
-                                    name="email"
-                                    placeholder="Email"
-                                    required
+                                <EmailValidation
                                     value={formData.email}
                                     onChange={handleInputChange}
-                                    fullModalWidth
+                                    error={fieldErrors.email}
                                 />
-                                <InputField
-                                    type="text"
+                                <RequiredTextValidation
                                     name="fullName"
                                     placeholder="Full Name"
-                                    required
                                     value={formData.fullName}
                                     onChange={handleInputChange}
-                                    fullModalWidth
+                                    error={fieldErrors.fullName}
                                 />
-                                <InputField
-                                    type="password"
-                                    name="password"
-                                    placeholder="Password"
-                                    required
+                                <PasswordValidation
                                     value={formData.password}
                                     onChange={handleInputChange}
-                                    fullModalWidth
+                                    error={fieldErrors.password}
                                 />
-                                <InputField
-                                    type="password"
-                                    name="confirmPassword"
-                                    placeholder="Confirm Password"
-                                    required
+                                <ConfirmPasswordValidation
                                     value={formData.confirmPassword}
                                     onChange={handleInputChange}
-                                    fullModalWidth
+                                    error={fieldErrors.confirmPassword}
                                 />
                                 <Button
                                     type="submit"
@@ -169,14 +190,12 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
                         )}
                         {view === "reset" && (
                             <>
-                                <InputField
-                                    type="text"
+                                <RequiredTextValidation
                                     name="username"
                                     placeholder="Username or Email"
-                                    required
                                     value={formData.username}
                                     onChange={handleInputChange}
-                                    fullModalWidth
+                                    error={fieldErrors.username}
                                 />
                                 <Button
                                     type="submit"
