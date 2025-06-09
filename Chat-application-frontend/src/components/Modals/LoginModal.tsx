@@ -18,7 +18,6 @@ const tempUsers: Array<{ username: string; email: string; fullName: string; pass
 
 export default function LoginModal({ onClose, initialView = "login" }: Readonly<LoginModalProps>) {
     const [view, setView] = useState<ModalView>(initialView);
-    const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
     // Ensure modals are not shown on mount
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
@@ -73,7 +72,6 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
         else if (!isPasswordCompliant(formData.password)) errors.password = "Password must be at least 6 characters, include a letter and a number.";
         if (!isNotEmpty(formData.confirmPassword)) errors.confirmPassword = "Confirm your password.";
         else if (!passwordsMatch(formData.password, formData.confirmPassword)) errors.confirmPassword = "Passwords do not match.";
-        setFieldErrors(errors);
         if (Object.keys(errors).length > 0) {
             // Show all error messages in the ErrorModal
             setModalMessage(Object.values(errors).join("\n"));
@@ -89,7 +87,6 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
         });
         setModalMessage("Registration successful! (TEMP: No backend yet)");
         setShowSuccessModal(true);
-        setFieldErrors({});
         // TODO: Connect to backend for registration
     };
 
@@ -261,13 +258,11 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
                     isOpen={true}
                     onClose={() => {
                         setShowErrorModal(false);
-                        setFieldErrors({});
                         setModalMessage("");
                     }}
                     message={modalMessage}
                     onBack={() => {
                         setShowErrorModal(false);
-                        setFieldErrors({});
                         setModalMessage("");
                     }}
                 />
