@@ -69,7 +69,7 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
             >
                 <dialog
                     className={`modal-content ${(this.props.className ?? '')}`}
-                    //onClick={e => e.stopPropagation()}
+
                     open
                     aria-modal="true"
                     aria-labelledby="feedback-modal-title"
