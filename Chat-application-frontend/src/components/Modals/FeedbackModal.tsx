@@ -61,14 +61,17 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
                 onClick={e => {
                     if (e.target === e.currentTarget) this.props.onClose();
                 }}
-                tabIndex={-1}
+                onKeyDown={e => {
+                    if (e.target === e.currentTarget && e.key === 'Escape') {
+                        this.props.onClose();
+                    }
+                }}
+                tabIndex={0} // Make overlay focusable for keyboard events
             >
                 <dialog
                     className={`modal-content ${(this.props.className ?? '')}`}
                     onClick={e => e.stopPropagation()}
-                    tabIndex={0}
                     open
-                    role="dialog"
                     aria-modal="true"
                     aria-labelledby="feedback-modal-title"
                 >
