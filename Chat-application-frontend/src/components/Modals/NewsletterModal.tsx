@@ -37,28 +37,29 @@ export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
         return (
             <div
                 className="modal-overlay"
+                role="presentation"
+                aria-hidden={!this.props.isOpen}
                 onClick={e => {
                     if (e.target === e.currentTarget) this.props.onClose();
                 }}
                 tabIndex={-1}
-                onKeyDown={e => {
-                    if (e.key === 'Escape') {
-                        this.props.onClose();
-                    }
-                }}
             >
                 <dialog
                     className={`modal-content ${this.props.className ?? ''}`}
                     onClick={e => e.stopPropagation()}
-                    tabIndex={-1}
+                    tabIndex={0}
                     open
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="newsletter-modal-title"
                 >
                     <div className="modal-header">
-                        <h2>Newsletter</h2>
+                        <h2 id="newsletter-modal-title">Newsletter</h2>
                         <button
                             className="close-btn"
                             onClick={this.props.onClose}
                             aria-label="Close"
+                            type="button"
                         >
                             ×
                         </button>
