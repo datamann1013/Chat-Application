@@ -46,10 +46,7 @@ export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
             >
                 <dialog
                     className={`modal-content ${this.props.className ?? ''}`}
-                    onClick={e => e.stopPropagation()}
-                    tabIndex={0}
                     open
-                    role="dialog"
                     aria-modal="true"
                     aria-labelledby="newsletter-modal-title"
                 >
