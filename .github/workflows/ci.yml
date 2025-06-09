@@ -87,6 +87,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install identity-obj-proxy
+        run: npm install --save-dev identity-obj-proxy
+
       - name: Lint code
         run: npm run lint
 

@@ -47,9 +47,9 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
         let dummySections: Section[] = [];
         if (page.title === "Landing") {
             dummySections = [
-                { id: "overview", title: "Overview" },
-                { id: "features", title: "Features" },
-                { id: "about", title: "About" },
+                { id: "Why Choose Our Platform?", title: "Why Choose Our Platform?" },
+                { id: "Meet the Team", title: "Meet the Team" },
+                { id: "Roadmap", title: "Roadmap" },
             ];
         } else if (page.title === "Chat") {
             dummySections = [
@@ -85,6 +85,7 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
                         variant="default"
                         size="md"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
+                        aria-label="Current Page"
                     >
                         <span className="current-page">{currentPageTitle}</span>
                         <span className="arrow">▼</span>
@@ -129,6 +130,7 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
                     onClick={onLoginClick}
                     variant="default"
                     size="md"
+                    aria-label="Login Button"
                 >
                     Log in
                 </Button>

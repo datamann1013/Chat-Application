@@ -5,7 +5,7 @@ import HeroSection from "../components/Sections/Landingspesific/HeroSection.tsx"
 import TeamSection from "../components/Sections/Landingspesific/TeamSection.tsx";
 import SignUpSection from "../components/Sections/Generics/SignUpSection.tsx";
 
-import Footer from "../components/Footer";
+import Footer from "../components/Sections/Generics/Footer.tsx";
 
 import LoginModal from "../components/Modals/LoginModal";
 import {FeedbackModal} from "../components/Modals/FeedbackModal";
@@ -60,10 +60,11 @@ const LandingPage: React.FC = () => {
     const [newsletterOpen, setNewsletterOpen] = useState(false);
     const [feedbackOpen, setFeedbackOpen] = useState(false);
     const [loginOpen, setLoginOpen] = useState(false);
+    const [loginView, setLoginView] = useState<"login" | "signup" | "reset">("login");
 
-    // We want to open the LoginModal in "signup" mode
-    // For simplicity, let's just open it normally:
+    // Open LoginModal in "signup" mode for Register button
     const handleRegisterClick = () => {
+        setLoginView("signup");
         setLoginOpen(true);
     };
 
@@ -95,10 +96,17 @@ const LandingPage: React.FC = () => {
 
             <Footer />
 
-            {newsletterOpen && <NewsletterModal onClose={() => setNewsletterOpen(false)} isOpen={false}
-                                                children={undefined} />}
-            {feedbackOpen && <FeedbackModal onClose={() => setFeedbackOpen(false)} isOpen={false} children={undefined} />}
-            {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} />}
+            <NewsletterModal
+                onClose={() => setNewsletterOpen(false)}
+                isOpen={newsletterOpen}
+                children={undefined}
+            />
+            <FeedbackModal
+                onClose={() => setFeedbackOpen(false)}
+                isOpen={feedbackOpen}
+                children={undefined}
+            />
+            {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} initialView={loginView} />}
         </div>
     );
 };

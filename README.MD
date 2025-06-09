@@ -1,5 +1,12 @@
 # Secure Chat & File Sharing System
 
+[![Build Status](https://github.com/datamann1013/Chat-Application/actions/workflows/ci.yml/badge.svg)](https://github.com/datamann1013/Chat-Application/actions)
+[![codecov](https://codecov.io/gh/datamann1013/Chat-Application/branch/main/graph/badge.svg)](https://codecov.io/gh/datamann1013/Chat-Application)
+[![quality gate](https://sonarcloud.io/api/project_badges/measure?project=datamann1013_Chat-Application&metric=alert_status)](https://sonarcloud.io/dashboard?id=datamann1013_Chat-Application)
+![GitHub last commit](https://img.shields.io/github/last-commit/datamann1013/Chat-Application)
+![GitHub license](https://img.shields.io/github/license/datamann1013/Chat-Application)
+![GitHub top language](https://img.shields.io/github/languages/top/datamann1013/Chat-Application)
+
 ## Overview
 
 This project is a **secure peer-to-peer chat and file-sharing service** featuring per-user storage quotas, robust encryption, and real-time communication. The application is built with a **.NET backend**, a **React frontend**, and uses **PostgreSQL** for data persistence. It is deployed in Docker containers orchestrated by **Kubernetes** running on an Ubuntu Server VM within a **Proxmox** cluster. User accounts are manually approved and each is assigned a single role that defines access permissions.

@@ -1,14 +1,17 @@
 import { useState } from "react";
+import { Button } from "../UI/Button/Button";
+import { InputField } from "../UI/InputField/InputField";
 import "./ModalStyles.css";
 
 type ModalView = "login" | "signup" | "reset";
 
 interface LoginModalProps {
     onClose: () => void;
+    initialView?: ModalView; // Add this prop
 }
 
-export default function LoginModal({ onClose }: LoginModalProps) {
-    const [view, setView] = useState<ModalView>("login");
+export default function LoginModal({ onClose, initialView = "login" }: Readonly<LoginModalProps>) {
+    const [view, setView] = useState<ModalView>(initialView);
 
     // Form state management
     const [formData, setFormData] = useState({
@@ -81,94 +84,141 @@ export default function LoginModal({ onClose }: LoginModalProps) {
                     <form onSubmit={handleSubmit}>
                         {view === "login" && (
                             <>
-                                <input
+                                <InputField
                                     type="text"
                                     name="username"
                                     placeholder="Username"
                                     required
                                     value={formData.username}
                                     onChange={handleInputChange}
+                                    fullModalWidth
                                 />
-                                <input
+                                <InputField
                                     type="password"
                                     name="password"
                                     placeholder="Password"
                                     required
                                     value={formData.password}
                                     onChange={handleInputChange}
+                                    fullModalWidth
                                 />
-                                <button type="submit">Login</button>
+                                <Button
+                                    type="submit"
+                                    aria-label="login"
+                                    fullModalWidth
+                                >
+                                    Login
+                                </Button>
                             </>
                         )}
                         {view === "signup" && (
                             <>
-                                <input
+                                <InputField
                                     type="text"
                                     name="username"
                                     placeholder="Username"
                                     required
                                     value={formData.username}
                                     onChange={handleInputChange}
+                                    fullModalWidth
                                 />
-                                <input
+                                <InputField
                                     type="email"
                                     name="email"
                                     placeholder="Email"
                                     required
                                     value={formData.email}
                                     onChange={handleInputChange}
+                                    fullModalWidth
                                 />
-                                <input
+                                <InputField
                                     type="text"
                                     name="fullName"
                                     placeholder="Full Name"
                                     required
                                     value={formData.fullName}
                                     onChange={handleInputChange}
+                                    fullModalWidth
                                 />
-                                <input
+                                <InputField
                                     type="password"
                                     name="password"
                                     placeholder="Password"
                                     required
                                     value={formData.password}
                                     onChange={handleInputChange}
+                                    fullModalWidth
                                 />
-                                <input
+                                <InputField
                                     type="password"
                                     name="confirmPassword"
                                     placeholder="Confirm Password"
                                     required
                                     value={formData.confirmPassword}
                                     onChange={handleInputChange}
+                                    fullModalWidth
                                 />
-                                <button type="submit">Sign Up</button>
+                                <Button
+                                    type="submit"
+                                    aria-label="sign up"
+                                    fullModalWidth
+                                >
+                                    Sign Up
+                                </Button>
                             </>
                         )}
                         {view === "reset" && (
                             <>
-                                <input
+                                <InputField
                                     type="text"
                                     name="username"
                                     placeholder="Username or Email"
                                     required
                                     value={formData.username}
                                     onChange={handleInputChange}
+                                    fullModalWidth
                                 />
-                                <button type="submit">Reset Password</button>
+                                <Button
+                                    type="submit"
+                                    aria-label="reset password"
+                                    fullModalWidth
+                                >
+                                    Reset Password
+                                </Button>
                             </>
                         )}
                     </form>
                 </div>
                 <div className="modal-footer">
                     {view !== "login" && (
-                        <button onClick={() => setView("login")}>Switch to Login</button>
+                        <Button
+                            onClick={() => setView("login")}
+                            aria-label="switch to login"
+                            fullModalWidth
+                            variant="ghost"
+                        >
+                            Switch to Login
+                        </Button>
                     )}
                     {view !== "signup" && (
-                        <button onClick={() => setView("signup")}>Switch to Sign Up</button>
+                        <Button
+                            onClick={() => setView("signup")}
+                            aria-label="switch to sign up"
+                            fullModalWidth
+                            variant="ghost"
+                        >
+                            Switch to Sign Up
+                        </Button>
                     )}
                     {view !== "reset" && (
-                        <button onClick={() => setView("reset")}>Forgot Password?</button>
+                        <Button
+                            onClick={() => setView("reset")}
+                            aria-label="forgot password"
+                            fullModalWidth
+                            variant="ghost"
+                        >
+                            Forgot Password?
+                        </Button>
                     )}
                 </div>
             </div>
