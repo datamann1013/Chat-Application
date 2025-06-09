@@ -56,28 +56,29 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
         return (
             <div
                 className="modal-overlay"
+                role="presentation"
+                aria-hidden={!this.props.isOpen}
                 onClick={e => {
                     if (e.target === e.currentTarget) this.props.onClose();
                 }}
-                tabIndex={0}
-                onKeyDown={e => {
-                    if (e.key === 'Escape') {
-                        this.props.onClose();
-                    }
-                }}
+                tabIndex={-1}
             >
                 <dialog
                     className={`modal-content ${(this.props.className ?? '')}`}
                     onClick={e => e.stopPropagation()}
-                    tabIndex={-1}
+                    tabIndex={0}
                     open
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="feedback-modal-title"
                 >
                     <div className="modal-header">
-                        <h2>Feedback</h2>
+                        <h2 id="feedback-modal-title">Feedback</h2>
                         <button
                             className="close-btn"
                             onClick={this.props.onClose}
                             aria-label="Close"
+                            type="button"
                         >
                             ×
                         </button>
