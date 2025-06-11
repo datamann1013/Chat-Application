@@ -51,7 +51,9 @@ describe("BaseModal", () => {
                 <div>Test Content</div>
             </BaseModal>
         );
-        fireEvent.click(screen.getByText("Test Content").closest(".modal-overlay")!);
+        const overlay = screen.getByText("Test Content").closest(".modal-overlay")!;
+        fireEvent.mouseDown(overlay);
+        fireEvent.mouseUp(overlay);
         expect(onClose).toHaveBeenCalled();
     });
 });

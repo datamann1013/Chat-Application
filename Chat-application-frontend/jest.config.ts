@@ -4,7 +4,8 @@ const config: Config.InitialOptions = {
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
     moduleNameMapper: {
-        '^.+\\.(css|less|scss|sass)$': 'identity-obj-proxy'
+        '^.+\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+        '\\.(jpg|jpeg|png|gif|svg)$': '<rootDir>/__mocks__/fileMock.js',
     },
     transform: {
         '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.app.json' }],
