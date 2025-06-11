@@ -1,5 +1,5 @@
 import { BaseModalProps } from './types';
-import errorIcon from '../../../public/icons/error.png'; // Place a red X image in assets
+import errorIcon from '../../icons/error.png'; // Place a red X image in assets
 
 interface ErrorModalProps extends Omit<BaseModalProps, 'children'> {
     message: string;

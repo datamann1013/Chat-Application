@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Button } from "../UI/Button/Button";
 import "./ModalStyles.css";
 import { EmailValidation, PasswordValidation, ConfirmPasswordValidation, RequiredTextValidation } from "./ValidationFields";
@@ -31,6 +31,39 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
         password: "",
         confirmPassword: ""
     });
+
+    // mousedown/mouseup logic
+    const modalContentRef = useRef<HTMLDivElement>(null);
+    const [mouseDownInside, setMouseDownInside] = useState<null | boolean>(null);
+
+    React.useEffect(() => {
+        if (!showSuccessModal && !showErrorModal) return;
+        const handleDocumentMouseUp = (e: MouseEvent) => {
+            if (
+                mouseDownInside === false &&
+                modalContentRef.current &&
+                !modalContentRef.current.contains(e.target as Node)
+            ) {
+                onClose();
+            }
+            setMouseDownInside(null);
+        };
+        document.addEventListener("mouseup", handleDocumentMouseUp);
+        return () => {
+            document.removeEventListener("mouseup", handleDocumentMouseUp);
+        };
+    }, [showSuccessModal, showErrorModal, mouseDownInside, onClose]);
+
+    const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (
+            modalContentRef.current &&
+            modalContentRef.current.contains(e.target as Node)
+        ) {
+            setMouseDownInside(true);
+        } else {
+            setMouseDownInside(false);
+        }
+    };
 
     // Form submission handlers
     const handleSubmit = (e: React.FormEvent) => {
@@ -112,8 +145,12 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
 
     return (
         <>
-            <div className="modal-overlay" onClick={onClose}>
-                <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-overlay" onMouseDown={handleMouseDown}>
+                <div
+                    ref={modalContentRef}
+                    className="modal-content"
+                    onClick={(e) => e.stopPropagation()}
+                >
                     <div className="modal-header">
                         <h2>
                             {view === "login"
