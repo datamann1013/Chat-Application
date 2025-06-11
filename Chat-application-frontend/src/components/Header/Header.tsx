@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from '../UI/Button/Button.tsx'
 import "./Header.css";
@@ -25,6 +25,8 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
     const [currentPageTitle, setCurrentPageTitle] = useState<string>("Current Page");
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [hoveredPageSections, setHoveredPageSections] = useState<Section[]>([]);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         const currentItem = navItems.find((item) => item.link === location.pathname);
@@ -69,6 +71,24 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
         setHoveredPageSections(sections);
     };
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                dropdownOpen &&
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node) &&
+                buttonRef.current &&
+                !buttonRef.current.contains(event.target as Node)
+            ) {
+                setDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [dropdownOpen]);
+
     return (
         <header className="global-header">
             {/* Left column: Logo */}
@@ -82,6 +102,7 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
             <div className="header-center">
                 <div className="dropdown-toggle">
                     <Button
+                        ref={buttonRef}
                         variant="default"
                         size="md"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -93,7 +114,7 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
                 </div>
 
                 {dropdownOpen && (
-                    <div className="dropdown-menu" onMouseLeave={handleDropdownMouseLeave}>
+                    <div className="dropdown-menu" ref={dropdownRef} onMouseLeave={handleDropdownMouseLeave}>
                         <div className="dropdown-left">
                             <ul>
                                 {navItems.map((item) => (
