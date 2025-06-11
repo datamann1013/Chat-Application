@@ -42,7 +42,9 @@ export default function ChatMain() {
                 <button className="emoji-btn">😊</button>
                 <button className="file-btn">📎</button>
                 <input type="text" placeholder="Message #general" />
+                <button className="send-btn" aria-label="Send">➤</button>
             </div>
         </main>
     );
 }
+
