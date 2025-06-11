@@ -25,7 +25,7 @@ describe("LoginModal", () => {
             el => el.tagName === "H2"
         );
         expect(heading).toBeInTheDocument();
-        expect(screen.getByPlaceholderText("Email")).toBeInTheDocument();
+        expect(screen.getByPlaceholderText("Your Email")).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Full Name")).toBeInTheDocument();
     });
 
@@ -62,7 +62,7 @@ describe("LoginModal", () => {
         render(<LoginModal onClose={onClose} />);
         fireEvent.click(screen.getByText("Switch to Sign Up"));
         fireEvent.change(screen.getByPlaceholderText("Username"), { target: { value: "user" } });
-        fireEvent.change(screen.getByPlaceholderText("Email"), { target: { value: "test@example.com" } });
+        fireEvent.change(screen.getByPlaceholderText("Your Email"), { target: { value: "test@example.com" } });
         fireEvent.change(screen.getByPlaceholderText("Full Name"), { target: { value: "Test User" } });
         fireEvent.change(screen.getByPlaceholderText("Password"), { target: { value: "pass" } });
         fireEvent.change(screen.getByPlaceholderText("Confirm Password"), { target: { value: "pass" } });

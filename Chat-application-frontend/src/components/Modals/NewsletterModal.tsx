@@ -34,6 +34,9 @@ export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
         }
         // TEMP: Store newsletter signup in tempNewsletter
         tempNewsletter.push({ email });
+        if (this.props.onSubmit) {
+            this.props.onSubmit(email);
+        }
         this.setState({ modalMessage: 'Subscribed! (TEMP: No backend yet)', showSuccessModal: true, email: '' });
         // TODO: Connect to backend for newsletter signup
     };

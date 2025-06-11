@@ -36,6 +36,9 @@ export class FeedbackModal extends AbstractModal<FeedbackModalProps> {
         }
         // TEMP: Store feedback in tempFeedback
         tempFeedback.push({ feedback, userEmail: email });
+        if (this.props.onSubmit) {
+            this.props.onSubmit(feedback);
+        }
         this.setState({ modalMessage: "Feedback sent! (TEMP: No backend yet)", showSuccessModal: true, email: '', feedback: '' });
         // TODO: Connect to backend for feedback submission
     };
