@@ -1,8 +1,8 @@
 .inputfield {
     border-radius: 999px; /* Overly rounded corners for visibility */
-    border: 1px solid var(--button-border, #b0b9d8);
+    border: 1px solid var(--input-border-color, #b0b9d8);
     background-color: #fff;
-    color: var(--button-text-color, #333);
+    color: var(--input-text-color, #333);
     font-size: var(--button-font-size, 1rem);
     padding: 8px 14px;
     outline: none;
