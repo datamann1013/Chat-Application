@@ -118,12 +118,3 @@ jobs:
           body: |
             The following critical vulnerabilities were found in npm dependencies:
             ${{ steps.audit.outputs.body }}
-
-  manual-approval:
-    if: github.event.pull_request.base.ref == 'net'
-    needs: [backend-build-and-test, frontend-build-and-test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Manual approval
-        if: github.actor == 'datamann1013'
-        uses: hmarr/auto-approve-action@v2
