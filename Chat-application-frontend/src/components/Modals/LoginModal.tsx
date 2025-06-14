@@ -1,10 +1,15 @@
-import React, { useRef, useState } from "react";
-import { Button } from "../UI/Button/Button";
+import React, {useRef, useState} from "react";
+import {Button} from "../UI/Button/Button";
 import "./ModalStyles.css";
-import { EmailValidation, PasswordValidation, ConfirmPasswordValidation, RequiredTextValidation } from "./ValidationFields";
-import { isValidEmail, isNotEmpty, passwordsMatch, isPasswordCompliant } from "../../utils/validation";
-import { SuccessModal } from "./SuccessModal";
-import { ErrorModal } from "./ErrorModal";
+import {
+    ConfirmPasswordValidation,
+    EmailValidation,
+    PasswordValidation,
+    RequiredTextValidation
+} from "./ValidationFields";
+import {isNotEmpty, isPasswordCompliant, isValidEmail, passwordsMatch} from "../../utils/validation";
+import {SuccessModal} from "./SuccessModal";
+import {ErrorModal} from "./ErrorModal";
 
 type ModalView = "login" | "signup" | "reset";
 
@@ -84,7 +89,8 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
     // View-specific handlers
     const handleLogin = () => {
         // TEMP: Check if user exists in tempUsers
-        const user = tempUsers.find(u => u.username === formData.username && u.password === formData.password);
+        const hashedInputPassword = hashPassword(formData.password);
+        const user = tempUsers.find(u => u.username === formData.username && u.password === hashedInputPassword);
         if (!user) {
             setModalMessage("Invalid username or password.");
             setShowErrorModal(true);
@@ -111,12 +117,12 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
             setShowErrorModal(true);
             return;
         }
-        // TEMP: Store user in tempUsers
+        // TEMP: Store user in tempUsers with hashed password
         tempUsers.push({
             username: formData.username,
             email: formData.email,
             fullName: formData.fullName,
-            password: formData.password
+            password: hashPassword(formData.password)
         });
         setModalMessage("Registration successful! (TEMP: No backend yet)");
         setShowSuccessModal(true);
@@ -306,4 +312,17 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
             )}
         </>
     );
+}
+
+// Basic hash function for demonstration only
+function hashPassword(password: string): string {
+    // TODO: Replace with a secure hash function with salt (e.g., bcrypt, argon2) before production
+    let hash = 0, i, chr;
+    if (password.length === 0) return hash.toString();
+    for (i = 0; i < password.length; i++) {
+        chr = password.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash.toString();
 }
