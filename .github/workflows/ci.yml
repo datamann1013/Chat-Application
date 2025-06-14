@@ -105,7 +105,7 @@ jobs:
         run: npm audit --json > audit.json || true
 
       - name: Email notification on critical vulnerabilities
-        if: failure() && github.event_name == 'push'
+        if: failure()
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.SMTP_SERVER }}
