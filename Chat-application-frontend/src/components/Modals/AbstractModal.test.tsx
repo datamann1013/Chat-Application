@@ -37,7 +37,9 @@ describe("AbstractModal", () => {
 
     it("calls onClose when overlay is clicked", () => {
         render(<TestModal {...defaultProps} />);
-        fireEvent.click(screen.getByText("Modal Content").closest(".modal-overlay")!);
+        const overlay = screen.getByText("Modal Content").closest(".modal-overlay")!;
+        fireEvent.mouseDown(overlay);
+        fireEvent.mouseUp(overlay);
         expect(defaultProps.onClose).toHaveBeenCalled();
     });
 

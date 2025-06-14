@@ -44,7 +44,8 @@ describe("NewsletterModal", () => {
         fireEvent.change(screen.getByPlaceholderText("Your Email"), {
             target: { value: "test@example.com" }
         });
-        fireEvent.click(screen.getByText("Subscribe"));
+        const form = screen.getByText("Subscribe").closest("form");
+        fireEvent.submit(form!);
         expect(onSubmit).toHaveBeenCalledWith("test@example.com");
     });
 
