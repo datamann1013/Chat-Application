@@ -19,7 +19,7 @@ interface Section {
     title: string;
 }
 
-export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
+export default function Header({ onLoginClick }: Readonly<{ onLoginClick: () => void }>) {
     const location = useLocation();
     const [sections, setSections] = useState<Section[]>([]);
     const [currentPageTitle, setCurrentPageTitle] = useState<string>("Current Page");
@@ -37,7 +37,7 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
             const headers = Array.from(content.querySelectorAll("h2"));
             const sects = headers.map((header, idx) => ({
                 id: header.id || `section-${idx}`,
-                title: header.textContent || `Section ${idx + 1}`,
+                title: header.textContent ?? `Section ${idx + 1}`,
             }));
             setSections(sects);
             // Default to current page sections if nothing is hovered
