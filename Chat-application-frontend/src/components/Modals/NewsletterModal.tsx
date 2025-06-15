@@ -1,10 +1,10 @@
 import React from 'react';
 import AbstractModal from './AbstractModal';
-import { NewsletterModalProps } from './types';
-import { EmailValidation } from './ValidationFields';
-import { isValidEmail, isNotEmpty } from '../../utils/validation';
-import { SuccessModal } from "./SuccessModal";
-import { ErrorModal } from "./ErrorModal";
+import {NewsletterModalProps} from './types';
+import {EmailValidation} from './ValidationFields';
+import {isNotEmpty, isValidEmail} from '../../utils/validation';
+import {SuccessModal} from "./SuccessModal";
+import {ErrorModal} from "./ErrorModal";
 
 // Temporary array to store newsletter signups until backend is ready
 const tempNewsletter: Array<{ email: string }> = [];
@@ -17,7 +17,7 @@ export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
         modalMessage: '',
     };
 
-    private handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    private readonly handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         this.setState({ [name]: value } as never);
     };
