@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, {useRef, useState} from 'react';
 
 interface BaseModalProps {
     isOpen: boolean;
@@ -62,6 +62,12 @@ export function BaseModal({
                 ref={modalContentRef}
                 className={`modal-content ${className}`}
                 onClick={(e) => e.stopPropagation()}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                    if (e.key === 'Escape') {
+                        onClose();
+                    }
+                }}
             >
                 <div className="modal-header">
                     {title && <h2>{title}</h2>}
