@@ -61,7 +61,6 @@ export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
             <>
                 <div
                     className="modal-overlay"
-                    role="presentation"
                     aria-hidden={!this.props.isOpen}
                     onClick={e => {
                         if (e.target === e.currentTarget) this.props.onClose();
