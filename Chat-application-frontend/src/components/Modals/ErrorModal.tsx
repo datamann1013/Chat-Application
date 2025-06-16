@@ -1,4 +1,4 @@
-import { BaseModalProps } from './types';
+import {BaseModalProps} from './types';
 import errorIcon from '../../icons/error.png'; // Place a red X image in assets
 
 interface ErrorModalProps extends Omit<BaseModalProps, 'children'> {
@@ -10,8 +10,24 @@ interface ErrorModalProps extends Omit<BaseModalProps, 'children'> {
 export function ErrorModal({onClose, message, onBack, backLabel = 'Back', title = 'Error', className }: ErrorModalProps) {
     return (
         <div>
-            <div className="modal-overlay" onClick={onClose}>
-                <div className={`modal-content ${className || ''}`} onClick={e => e.stopPropagation()}>
+            <div
+                className="modal-overlay"
+                onClick={onClose}
+                tabIndex={-1}
+                onKeyDown={e => {
+                    if (e.key === 'Escape') onClose();
+                }}
+                role="dialog"
+                aria-modal="true"
+            >
+                <div
+                    className={`modal-content ${className || ''}`}
+                    onClick={e => e.stopPropagation()}
+                    tabIndex={0}
+                    onKeyDown={e => {
+                        if (e.key === 'Escape') onClose();
+                    }}
+                >
                     <div className="modal-header">
                         <h2>{title}</h2>
                         <button className="close-btn" onClick={onClose}>×</button>
@@ -28,4 +44,3 @@ export function ErrorModal({onClose, message, onBack, backLabel = 'Back', title 
         </div>
     );
 }
-
