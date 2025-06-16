@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { BaseModalProps } from './types';
+import {BaseModalProps} from './types';
 import checkmark from '../../icons/success.png'; // Place a green checkmark image in assets
 
 interface SuccessModalProps extends Omit<BaseModalProps, 'children'> {
@@ -10,7 +10,16 @@ interface SuccessModalProps extends Omit<BaseModalProps, 'children'> {
 export function SuccessModal({onClose, message, title = 'Success', className }: SuccessModalProps) {
     return (
         <div>
-            <div className="modal-overlay" onClick={onClose}>
+            <div
+                className="modal-overlay"
+                onClick={onClose}
+                tabIndex={-1}
+                onKeyDown={e => {
+                    if (e.key === 'Escape') onClose();
+                }}
+                role="dialog"
+                aria-modal="true"
+            >
                 <div className={`modal-content ${className || ''}`} onClick={e => e.stopPropagation()}>
                     <div className="modal-header">
                         <h2>{title}</h2>
@@ -28,4 +37,3 @@ export function SuccessModal({onClose, message, title = 'Success', className }: 
         </div>
     );
 }
-
