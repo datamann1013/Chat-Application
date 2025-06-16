@@ -65,6 +65,12 @@ export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
                     onClick={e => {
                         if (e.target === e.currentTarget) this.props.onClose();
                     }}
+                    tabIndex={-1}
+                    onKeyDown={e => {
+                        if (e.key === 'Escape') this.props.onClose();
+                    }}
+                    role="dialog"
+                    aria-modal="true"
                 >
                     <dialog
                         className={`modal-content ${this.props.className ?? ''}`}
