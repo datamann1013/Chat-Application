@@ -1,4 +1,3 @@
-
 export interface CharacterCardModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -17,8 +16,29 @@ export default function CharacterCardModal({
   qualifications,
 }: CharacterCardModalProps) {
   if (!isOpen) return null;
+  const handleOverlayKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Escape") {
+      onClose();
+    }
+  };
   return (
-    <div className="modal-overlay" style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 2000, background: "rgba(0,0,0,0.5)" }} onClick={onClose}>
+      <div
+          className="modal-overlay"
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            zIndex: 2000,
+            background: "rgba(0,0,0,0.5)"
+          }}
+          onClick={onClose}
+          tabIndex={-1}
+          onKeyDown={handleOverlayKeyDown}
+          aria-modal="true"
+          role="dialog"
+      >
       <div
         className="modal-content"
         style={{ background: "#fff", margin: "5% auto", padding: 24, borderRadius: 8, maxWidth: 400, position: "relative" }}
@@ -40,4 +60,3 @@ export default function CharacterCardModal({
     </div>
   );
 }
-
