@@ -60,7 +60,6 @@ export function BaseModal({
         <div
             className="modal-overlay"
             onMouseDown={handleMouseDown}
-            tabIndex={-1}
             onKeyDown={e => {
                 if (e.key === 'Escape') onClose();
             }}
