@@ -121,23 +121,35 @@ export default function Header({ onLoginClick }: Readonly<{ onLoginClick: () => 
                                     <li
                                         key={item.title}
                                         onMouseEnter={() => handlePageHover(item)}
-                                        role="menuitem"
-                                        tabIndex={0}
-                                        onKeyDown={e => {
-                                            if (e.key === 'Enter' || e.key === ' ') {
-                                                setDropdownOpen(false);
-                                                // Optionally, navigate to the link programmatically if needed
-                                                const link = document.getElementById(`nav-link-${item.title}`);
-                                                if (link) (link as HTMLElement).click();
-                                            }
-                                        }}
-                                        aria-label={item.title}
                                         style={{cursor: 'pointer'}}
                                     >
-                                        <Link id={`nav-link-${item.title}`} to={item.link}
-                                              onClick={() => setDropdownOpen(false)}>
+                                        <button
+                                            id={`nav-link-${item.title}`}
+                                            type="button"
+                                            onClick={() => {
+                                                setDropdownOpen(false);
+                                                // Optionally, navigate to the link programmatically if needed
+                                                window.location.href = item.link;
+                                            }}
+                                            onKeyDown={e => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    setDropdownOpen(false);
+                                                    window.location.href = item.link;
+                                                }
+                                            }}
+                                            aria-label={item.title}
+                                            style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                padding: 0,
+                                                margin: 0,
+                                                cursor: 'pointer',
+                                                width: '100%',
+                                                textAlign: 'left'
+                                            }}
+                                        >
                                             {item.title}
-                                        </Link>
+                                        </button>
                                     </li>
                                 ))}
                             </ul>
