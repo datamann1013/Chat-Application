@@ -1,115 +1,77 @@
-import React from 'react';
-import AbstractModal from './AbstractModal';
+import React, {useState} from 'react';
+import {BaseModal} from './BaseModal';
 import {NewsletterModalProps} from './types';
 import {EmailValidation} from './ValidationFields';
 import {isNotEmpty, isValidEmail} from '../../utils/validation';
-import {SuccessModal} from "./SuccessModal";
-import {ErrorModal} from "./ErrorModal";
+import {SuccessModal} from './SuccessModal';
+import {ErrorModal} from './ErrorModal';
 
-// Temporary array to store newsletter signups until backend is ready
 const tempNewsletter: Array<{ email: string }> = [];
 
-export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
-    state = {
-        email: '',
-        showSuccessModal: false,
-        showErrorModal: false,
-        modalMessage: '',
+export function NewsletterModal({isOpen, onClose, onSubmit, className}: NewsletterModalProps) {
+    const [email, setEmail] = useState('');
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
     };
 
-    private readonly handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        this.setState({ [name]: value } as never);
-    };
-
-    private handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const { email } = this.state;
         const errors: string[] = [];
         if (!isNotEmpty(email)) errors.push('Email is required.');
         else if (!isValidEmail(email)) errors.push('Invalid email format.');
         if (errors.length > 0) {
-            this.setState({ modalMessage: errors.join("\n"), showErrorModal: true });
+            setModalMessage(errors.join("\n"));
+            setShowErrorModal(true);
             return;
         }
-        // TEMP: Store newsletter signup in tempNewsletter
         tempNewsletter.push({ email });
-        if (this.props.onSubmit) {
-            this.props.onSubmit(email);
-        }
-        this.setState({ modalMessage: 'Subscribed! (TEMP: No backend yet)', showSuccessModal: true, email: '' });
-        // TODO: Connect to backend for newsletter signup
+        if (onSubmit) onSubmit(email);
+        setModalMessage('Subscribed! (TEMP: No backend yet)');
+        setShowSuccessModal(true);
+        setEmail('');
     };
 
-    protected renderContent(): React.ReactNode {
-        return (
-            <form onSubmit={this.handleSubmit}>
-                <EmailValidation
-                    value={this.state.email}
-                    onChange={this.handleInputChange}
+    return (
+        <>
+            <BaseModal isOpen={isOpen} onClose={onClose} title="Newsletter" className={className}>
+                <form onSubmit={handleSubmit}>
+                    <EmailValidation
+                        value={email}
+                        onChange={handleInputChange}
+                    />
+                    <button type="submit" className="modal-submit">
+                        Subscribe
+                    </button>
+                </form>
+            </BaseModal>
+            {showSuccessModal && !!modalMessage && (
+                <SuccessModal
+                    isOpen={true}
+                    onClose={() => {
+                        setShowSuccessModal(false);
+                        setModalMessage('');
+                    }}
+                    message={modalMessage}
                 />
-                <button type="submit" className="modal-submit">
-                    Subscribe
-                </button>
-            </form>
-        );
-    }
-
-    render() {
-        if (!this.props.isOpen) return null;
-        return (
-            <>
-                <div
-                    className="modal-overlay"
-                    aria-hidden={!this.props.isOpen}
-                    onClick={e => {
-                        if (e.target === e.currentTarget) this.props.onClose();
+            )}
+            {showErrorModal && !!modalMessage && (
+                <ErrorModal
+                    isOpen={true}
+                    onClose={() => {
+                        setShowErrorModal(false);
+                        setModalMessage('');
                     }}
-                    tabIndex={-1}
-                    onKeyDown={e => {
-                        if (e.key === 'Escape') this.props.onClose();
+                    message={modalMessage}
+                    onBack={() => {
+                        setShowErrorModal(false);
+                        setModalMessage('');
                     }}
-                    role="dialog"
-                    aria-modal="true"
-                >
-                    <dialog
-                        className={`modal-content ${this.props.className ?? ''}`}
-                        open
-                        aria-modal="true"
-                        aria-labelledby="newsletter-modal-title"
-                    >
-                        <div className="modal-header">
-                            <h2 id="newsletter-modal-title">Newsletter</h2>
-                            <button
-                                className="close-btn"
-                                onClick={this.props.onClose}
-                                aria-label="Close"
-                                type="button"
-                            >
-                                ×
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            {this.renderContent()}
-                        </div>
-                    </dialog>
-                </div>
-                {this.state.showSuccessModal && !!this.state.modalMessage && (
-                    <SuccessModal
-                        isOpen={true}
-                        onClose={() => this.setState({ showSuccessModal: false, modalMessage: '' })}
-                        message={this.state.modalMessage}
-                    />
-                )}
-                {this.state.showErrorModal && !!this.state.modalMessage && (
-                    <ErrorModal
-                        isOpen={true}
-                        onClose={() => this.setState({ showErrorModal: false, modalMessage: '' })}
-                        message={this.state.modalMessage}
-                        onBack={() => this.setState({ showErrorModal: false, modalMessage: '' })}
-                    />
-                )}
-            </>
-        );
-    }
+                />
+            )}
+        </>
+    );
 }
