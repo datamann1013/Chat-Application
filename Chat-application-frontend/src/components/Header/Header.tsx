@@ -127,11 +127,15 @@ export default function Header({ onLoginClick }: Readonly<{ onLoginClick: () => 
                                             if (e.key === 'Enter' || e.key === ' ') {
                                                 setDropdownOpen(false);
                                                 // Optionally, navigate to the link programmatically if needed
+                                                const link = document.getElementById(`nav-link-${item.title}`);
+                                                if (link) (link as HTMLElement).click();
                                             }
                                         }}
                                         aria-label={item.title}
+                                        style={{cursor: 'pointer'}}
                                     >
-                                        <Link to={item.link} onClick={() => setDropdownOpen(false)}>
+                                        <Link id={`nav-link-${item.title}`} to={item.link}
+                                              onClick={() => setDropdownOpen(false)}>
                                             {item.title}
                                         </Link>
                                     </li>
