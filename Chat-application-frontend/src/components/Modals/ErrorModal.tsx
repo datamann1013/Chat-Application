@@ -13,7 +13,6 @@ export function ErrorModal({onClose, message, onBack, backLabel = 'Back', title 
             <div
                 className="modal-overlay"
                 onClick={onClose}
-                tabIndex={-1}
                 onKeyDown={e => {
                     if (e.key === 'Escape') onClose();
                 }}
