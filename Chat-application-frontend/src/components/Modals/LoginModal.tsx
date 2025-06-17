@@ -10,12 +10,13 @@ import {
 import {isNotEmpty, isPasswordCompliant, isValidEmail, passwordsMatch} from "../../utils/validation";
 import {useFeedbackModal} from './useFeedbackModal';
 import {BaseModal} from "./BaseModal";
+import type {LoginModalProps, ModalView} from "./Types";
 
 // Temporary array to store registered users until backend is ready
 const tempUsers: Array<{ username: string; email: string; fullName: string; password: string }> = [];
 
 export default function LoginModal({ onClose, initialView = "login" }: Readonly<LoginModalProps>) {
-    const [view, setView] = useState<ModalView>(initialView);
+    const [view, setView] = useState<ModalView>(initialView as ModalView);
     const {
         showSuccess,
         showError,
