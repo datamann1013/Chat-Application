@@ -55,9 +55,9 @@ export function BaseModal({
     };
 
     return (
-        <div
+        <dialog
             className="modal-overlay"
-            role="dialog"
+            open={isOpen}
             aria-modal="true"
             tabIndex={-1}
             onMouseDown={handleOverlayMouseDown}
@@ -82,6 +82,6 @@ export function BaseModal({
                     {children}
                 </div>
             </div>
-        </div>
+        </dialog>
     );
 }
