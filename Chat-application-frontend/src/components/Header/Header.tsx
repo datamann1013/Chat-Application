@@ -128,7 +128,6 @@ export default function Header({ onLoginClick }: Readonly<{ onLoginClick: () => 
                                             type="button"
                                             onClick={() => {
                                                 setDropdownOpen(false);
-                                                // Optionally, navigate to the link programmatically if needed
                                                 window.location.href = item.link;
                                             }}
                                             onKeyDown={e => {
@@ -147,6 +146,9 @@ export default function Header({ onLoginClick }: Readonly<{ onLoginClick: () => 
                                                 width: '100%',
                                                 textAlign: 'left'
                                             }}
+                                            role="menuitem"
+                                            tabIndex={0}
+                                            onMouseDown={e => e.preventDefault()} // Prevent focus loss
                                         >
                                             {item.title}
                                         </button>
