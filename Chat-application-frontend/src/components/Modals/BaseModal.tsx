@@ -43,38 +43,29 @@ export function BaseModal({
         };
     }, [isOpen, mouseDownInside, onClose]);
 
-    const isInteractive = (el: EventTarget | null) => {
-        if (!(el instanceof HTMLElement)) return false;
-        const tag = el.tagName.toLowerCase();
-        return tag === 'button' || tag === 'a' || tag === 'input' || tag === 'textarea' || tag === 'select' || el.hasAttribute('tabindex');
-    };
+    if (!isOpen) return null;
 
-    const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (
-            modalContentRef.current &&
-            modalContentRef.current.contains(e.target as Node) &&
-            !isInteractive(e.target)
-        ) {
-            setMouseDownInside(true);
-        } else {
+    // Move click-outside-to-close logic to overlay
+    const handleOverlayMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (modalContentRef.current && !modalContentRef.current.contains(e.target as Node)) {
             setMouseDownInside(false);
+        } else {
+            setMouseDownInside(true);
         }
     };
-
-    if (!isOpen) return null;
 
     return (
         <div
             className="modal-overlay"
             role="dialog"
             aria-modal="true"
+            onMouseDown={handleOverlayMouseDown}
         >
             <div
                 ref={modalContentRef}
                 className={`modal-content ${className}`}
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
                 tabIndex={0}
-                onMouseDown={handleMouseDown}
             >
                 <div className="modal-header">
                     {title && <h2>{title}</h2>}
