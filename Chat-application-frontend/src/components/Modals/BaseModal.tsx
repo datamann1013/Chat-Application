@@ -66,7 +66,6 @@ export function BaseModal({
     return (
         <div
             className="modal-overlay"
-            onMouseDown={handleMouseDown}
             role="dialog"
             aria-modal="true"
         >
@@ -75,6 +74,7 @@ export function BaseModal({
                 className={`modal-content ${className}`}
                 onClick={(e) => e.stopPropagation()}
                 tabIndex={0}
+                onMouseDown={handleMouseDown}
             >
                 <div className="modal-header">
                     {title && <h2>{title}</h2>}
