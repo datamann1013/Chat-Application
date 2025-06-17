@@ -8,7 +8,7 @@ import {useFeedbackModal} from './useFeedbackModal';
 // Temporary array to store feedback until backend is ready
 const tempFeedback: Array<{ feedback: string; userEmail: string }> = [];
 
-export function FeedbackModal({isOpen, onClose, onSubmit, className}: FeedbackModalProps) {
+export function FeedbackModal({isOpen, onClose, onSubmit, className}: Readonly<FeedbackModalProps>) {
     const [email, setEmail] = useState('');
     const [feedback, setFeedback] = useState('');
     const {
