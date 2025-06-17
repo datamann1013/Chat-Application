@@ -19,7 +19,7 @@ export default function CharacterCardModal({
   image,
   qualifications,
                                                className
-}: CharacterCardModalProps) {
+                                           }: Readonly<CharacterCardModalProps>) {
   return (
       <BaseModal isOpen={isOpen} onClose={onClose} title={undefined} className={className}>
           <div className="character-modal-content">
