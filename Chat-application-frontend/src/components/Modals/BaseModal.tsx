@@ -65,7 +65,6 @@ export function BaseModal({
                 ref={modalContentRef}
                 className={`modal-content ${className}`}
                 onClick={e => e.stopPropagation()}
-                tabIndex={0}
             >
                 <div className="modal-header">
                     {title && <h2>{title}</h2>}
