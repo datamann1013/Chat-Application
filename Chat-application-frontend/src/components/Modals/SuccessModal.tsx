@@ -20,7 +20,15 @@ export function SuccessModal({onClose, message, title = 'Success', className }: 
                 role="dialog"
                 aria-modal="true"
             >
-                <div className={`modal-content ${className || ''}`} onClick={e => e.stopPropagation()}>
+                <div
+                    className={`modal-content ${className || ''}`}
+                    onClick={e => e.stopPropagation()}
+                    tabIndex={0}
+                    role="document"
+                    onKeyDown={e => {
+                        if (e.key === 'Escape') onClose();
+                    }}
+                >
                     <div className="modal-header">
                         <h2>{title}</h2>
                         <button className="close-btn" onClick={onClose}>×</button>
