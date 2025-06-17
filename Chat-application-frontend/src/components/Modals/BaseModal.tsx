@@ -30,9 +30,16 @@ export function BaseModal({
             }
             setMouseDownInside(null);
         };
+        const handleDocumentKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onClose();
+            }
+        };
         document.addEventListener('mouseup', handleDocumentMouseUp);
+        document.addEventListener('keydown', handleDocumentKeyDown);
         return () => {
             document.removeEventListener('mouseup', handleDocumentMouseUp);
+            document.removeEventListener('keydown', handleDocumentKeyDown);
         };
     }, [isOpen, mouseDownInside, onClose]);
 
@@ -60,9 +67,6 @@ export function BaseModal({
         <div
             className="modal-overlay"
             onMouseDown={handleMouseDown}
-            onKeyDown={e => {
-                if (e.key === 'Escape') onClose();
-            }}
             role="dialog"
             aria-modal="true"
         >
@@ -71,11 +75,6 @@ export function BaseModal({
                 className={`modal-content ${className}`}
                 onClick={(e) => e.stopPropagation()}
                 tabIndex={0}
-                onKeyDown={(e) => {
-                    if (e.key === 'Escape') {
-                        onClose();
-                    }
-                }}
             >
                 <div className="modal-header">
                     {title && <h2>{title}</h2>}
