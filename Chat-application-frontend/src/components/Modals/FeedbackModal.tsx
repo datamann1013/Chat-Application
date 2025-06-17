@@ -3,8 +3,7 @@ import {BaseModal} from './BaseModal';
 import {FeedbackModalProps} from './types';
 import {EmailValidation, RequiredTextValidation} from "./ValidationFields";
 import {isNotEmpty, isValidEmail} from "../../utils/validation";
-import {SuccessModal} from "./SuccessModal";
-import {ErrorModal} from "./ErrorModal";
+import {useFeedbackModal} from './useFeedbackModal';
 
 // Temporary array to store feedback until backend is ready
 const tempFeedback: Array<{ feedback: string; userEmail: string }> = [];
@@ -12,9 +11,11 @@ const tempFeedback: Array<{ feedback: string; userEmail: string }> = [];
 export function FeedbackModal({isOpen, onClose, onSubmit, className}: FeedbackModalProps) {
     const [email, setEmail] = useState('');
     const [feedback, setFeedback] = useState('');
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [showErrorModal, setShowErrorModal] = useState(false);
-    const [modalMessage, setModalMessage] = useState('');
+    const {
+        showSuccess,
+        showError,
+        feedbackModals,
+    } = useFeedbackModal();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -29,15 +30,13 @@ export function FeedbackModal({isOpen, onClose, onSubmit, className}: FeedbackMo
         else if (!isValidEmail(email)) errors.push("Invalid email format.");
         if (!isNotEmpty(feedback)) errors.push("Feedback is required.");
         if (errors.length > 0) {
-            setModalMessage(errors.join("\n"));
-            setShowErrorModal(true);
+            showError(errors.join("\n"));
             return;
         }
         // TEMP: Store feedback in tempFeedback
         tempFeedback.push({ feedback, userEmail: email });
         if (onSubmit) onSubmit(feedback);
-        setModalMessage("Feedback sent! (TEMP: No backend yet)");
-        setShowSuccessModal(true);
+        showSuccess("Feedback sent! (TEMP: No backend yet)");
         setEmail('');
         setFeedback('');
     };
@@ -66,30 +65,7 @@ export function FeedbackModal({isOpen, onClose, onSubmit, className}: FeedbackMo
                     </button>
                 </form>
             </BaseModal>
-            {showSuccessModal && !!modalMessage && (
-                <SuccessModal
-                    isOpen={true}
-                    onClose={() => {
-                        setShowSuccessModal(false);
-                        setModalMessage('');
-                    }}
-                    message={modalMessage}
-                />
-            )}
-            {showErrorModal && !!modalMessage && (
-                <ErrorModal
-                    isOpen={true}
-                    onClose={() => {
-                        setShowErrorModal(false);
-                        setModalMessage('');
-                    }}
-                    message={modalMessage}
-                    onBack={() => {
-                        setShowErrorModal(false);
-                        setModalMessage('');
-                    }}
-                />
-            )}
+            {feedbackModals}
         </>
     );
 }

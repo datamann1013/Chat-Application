@@ -8,8 +8,7 @@ import {
     RequiredTextValidation
 } from "./ValidationFields";
 import {isNotEmpty, isPasswordCompliant, isValidEmail, passwordsMatch} from "../../utils/validation";
-import {SuccessModal} from "./SuccessModal";
-import {ErrorModal} from "./ErrorModal";
+import {useFeedbackModal} from './useFeedbackModal';
 import {BaseModal} from "./BaseModal";
 
 // Temporary array to store registered users until backend is ready
@@ -17,9 +16,11 @@ const tempUsers: Array<{ username: string; email: string; fullName: string; pass
 
 export default function LoginModal({ onClose, initialView = "login" }: Readonly<LoginModalProps>) {
     const [view, setView] = useState<ModalView>(initialView);
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [showErrorModal, setShowErrorModal] = useState(false);
-    const [modalMessage, setModalMessage] = useState("");
+    const {
+        showSuccess,
+        showError,
+        feedbackModals,
+    } = useFeedbackModal();
 
     // Form state management
     const [formData, setFormData] = useState({
@@ -48,17 +49,13 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
 
     // View-specific handlers
     const handleLogin = () => {
-        // TEMP: Check if user exists in tempUsers
         const hashedInputPassword = hashPassword(formData.password);
         const user = tempUsers.find(u => u.username === formData.username && u.password === hashedInputPassword);
         if (!user) {
-            setModalMessage("Invalid username or password.");
-            setShowErrorModal(true);
+            showError("Invalid username or password.");
             return;
         }
-        setModalMessage("Login successful! (TEMP: No backend yet)");
-        setShowSuccessModal(true);
-        // TODO: Connect to backend for login
+        showSuccess("Login successful! (TEMP: No backend yet)");
     };
 
     const handleSignup = () => {
@@ -72,32 +69,24 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
         if (!isNotEmpty(formData.confirmPassword)) errors.confirmPassword = "Confirm your password.";
         else if (!passwordsMatch(formData.password, formData.confirmPassword)) errors.confirmPassword = "Passwords do not match.";
         if (Object.keys(errors).length > 0) {
-            // Show all error messages in the ErrorModal
-            setModalMessage(Object.values(errors).join("\n"));
-            setShowErrorModal(true);
+            showError(Object.values(errors).join("\n"));
             return;
         }
-        // TEMP: Store user in tempUsers with hashed password
         tempUsers.push({
             username: formData.username,
             email: formData.email,
             fullName: formData.fullName,
             password: hashPassword(formData.password)
         });
-        setModalMessage("Registration successful! (TEMP: No backend yet)");
-        setShowSuccessModal(true);
-        // TODO: Connect to backend for registration
+        showSuccess("Registration successful! (TEMP: No backend yet)");
     };
 
     const handleResetPassword = () => {
         if (!isNotEmpty(formData.username)) {
-            setModalMessage("Username or email is required.");
-            setShowErrorModal(true);
+            showError("Username or email is required.");
             return;
         }
-        setModalMessage("If this account exists, a reset link will be sent. (TEMP: No backend yet)");
-        setShowSuccessModal(true);
-        // TODO: Connect to backend for password reset
+        showSuccess("If this account exists, a reset link will be sent. (TEMP: No backend yet)");
     };
 
     // Form field change handler
@@ -232,30 +221,7 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
                     )}
                 </div>
             </BaseModal>
-            {showSuccessModal && !!modalMessage && (
-                <SuccessModal
-                    isOpen={true}
-                    onClose={() => {
-                        setShowSuccessModal(false);
-                        setModalMessage("");
-                    }}
-                    message={modalMessage}
-                />
-            )}
-            {showErrorModal && !!modalMessage && (
-                <ErrorModal
-                    isOpen={true}
-                    onClose={() => {
-                        setShowErrorModal(false);
-                        setModalMessage("");
-                    }}
-                    message={modalMessage}
-                    onBack={() => {
-                        setShowErrorModal(false);
-                        setModalMessage("");
-                    }}
-                />
-            )}
+            {feedbackModals}
         </>
     );
 }
