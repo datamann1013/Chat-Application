@@ -98,12 +98,18 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
         }));
     };
 
+    let modalTitle = "Login";
+    if (view === "signup") {
+        modalTitle = "Sign Up";
+    } else if (view === "reset") {
+        modalTitle = "Reset Password";
+    }
     return (
         <>
             <BaseModal
                 isOpen={true}
                 onClose={onClose}
-                title={view === "login" ? "Login" : view === "signup" ? "Sign Up" : "Reset Password"}
+                title={modalTitle}
             >
                 <form onSubmit={handleSubmit}>
                     {view === "login" && (
