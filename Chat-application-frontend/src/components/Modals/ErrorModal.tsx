@@ -8,7 +8,14 @@ interface ErrorModalProps extends Omit<BaseModalProps, 'children'> {
     backLabel?: string;
 }
 
-export function ErrorModal({onClose, message, onBack, backLabel = 'Back', title = 'Error', className }: ErrorModalProps) {
+export function ErrorModal({
+                               onClose,
+                               message,
+                               onBack,
+                               backLabel = 'Back',
+                               title = 'Error',
+                               className
+                           }: Readonly<ErrorModalProps>) {
     return (
         <BaseModal isOpen={true} onClose={onClose} title={title} className={className}>
             <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
