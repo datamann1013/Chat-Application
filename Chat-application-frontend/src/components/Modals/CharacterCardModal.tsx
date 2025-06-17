@@ -31,7 +31,7 @@ export default function CharacterCardModal({
               <h2 className="character-modal-name">{name}</h2>
               <h4 className="character-modal-role">{role}</h4>
               <p className="character-modal-qualifications">{qualifications}</p>
-      </div>
+          </div>
       </BaseModal>
   );
 }
