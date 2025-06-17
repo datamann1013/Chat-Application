@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import {Button} from "../UI/Button/Button";
 import "./ModalStyles.css";
 import {
@@ -10,20 +10,13 @@ import {
 import {isNotEmpty, isPasswordCompliant, isValidEmail, passwordsMatch} from "../../utils/validation";
 import {SuccessModal} from "./SuccessModal";
 import {ErrorModal} from "./ErrorModal";
-
-type ModalView = "login" | "signup" | "reset";
-
-interface LoginModalProps {
-    onClose: () => void;
-    initialView?: ModalView; // Add this prop
-}
+import {BaseModal} from "./BaseModal";
 
 // Temporary array to store registered users until backend is ready
 const tempUsers: Array<{ username: string; email: string; fullName: string; password: string }> = [];
 
 export default function LoginModal({ onClose, initialView = "login" }: Readonly<LoginModalProps>) {
     const [view, setView] = useState<ModalView>(initialView);
-    // Ensure modals are not shown on mount
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
@@ -36,39 +29,6 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
         password: "",
         confirmPassword: ""
     });
-
-    // mousedown/mouseup logic
-    const modalContentRef = useRef<HTMLDivElement>(null);
-    const [mouseDownInside, setMouseDownInside] = useState<null | boolean>(null);
-
-    React.useEffect(() => {
-        if (!showSuccessModal && !showErrorModal) return;
-        const handleDocumentMouseUp = (e: MouseEvent) => {
-            if (
-                mouseDownInside === false &&
-                modalContentRef.current &&
-                !modalContentRef.current.contains(e.target as Node)
-            ) {
-                onClose();
-            }
-            setMouseDownInside(null);
-        };
-        document.addEventListener("mouseup", handleDocumentMouseUp);
-        return () => {
-            document.removeEventListener("mouseup", handleDocumentMouseUp);
-        };
-    }, [showSuccessModal, showErrorModal, mouseDownInside, onClose]);
-
-    const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (
-            modalContentRef.current &&
-            modalContentRef.current.contains(e.target as Node)
-        ) {
-            setMouseDownInside(true);
-        } else {
-            setMouseDownInside(false);
-        }
-    };
 
     // Form submission handlers
     const handleSubmit = (e: React.FormEvent) => {
@@ -151,148 +111,127 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
 
     return (
         <>
-            <div className="modal-overlay" onMouseDown={handleMouseDown} tabIndex={-1} onKeyDown={e => {
-                if (e.key === 'Escape') onClose();
-            }} role="dialog" aria-modal="true">
-                <div
-                    ref={modalContentRef}
-                    className="modal-content"
-                    onClick={(e) => e.stopPropagation()}
-                    tabIndex={0}
-                    role="document"
-                    onKeyDown={e => {
-                        if (e.key === 'Escape') onClose();
-                    }}
-                >
-                    <div className="modal-header">
-                        <h2>
-                            {view === "login"
-                                ? "Login"
-                                : view === "signup"
-                                    ? "Sign Up"
-                                    : "Reset Password"}
-                        </h2>
-                        <button className="close-btn" onClick={onClose}>×</button>
-                    </div>
-                    <div className="modal-body">
-                        <form onSubmit={handleSubmit}>
-                            {view === "login" && (
-                                <>
-                                    <RequiredTextValidation
-                                        name="username"
-                                        placeholder="Username"
-                                        value={formData.username}
-                                        onChange={handleInputChange}
+            <BaseModal
+                isOpen={true}
+                onClose={onClose}
+                title={view === "login" ? "Login" : view === "signup" ? "Sign Up" : "Reset Password"}
+            >
+                <form onSubmit={handleSubmit}>
+                    {view === "login" && (
+                        <>
+                            <RequiredTextValidation
+                                name="username"
+                                placeholder="Username"
+                                value={formData.username}
+                                onChange={handleInputChange}
 
-                                    />
-                                    <PasswordValidation
-                                        value={formData.password}
-                                        onChange={handleInputChange}
+                            />
+                            <PasswordValidation
+                                value={formData.password}
+                                onChange={handleInputChange}
 
-                                    />
-                                    <Button
-                                        type="submit"
-                                        aria-label="login"
-                                        fullModalWidth
-                                    >
-                                        Login
-                                    </Button>
-                                </>
-                            )}
-                            {view === "signup" && (
-                                <>
-                                    <RequiredTextValidation
-                                        name="username"
-                                        placeholder="Username"
-                                        value={formData.username}
-                                        onChange={handleInputChange}
-
-                                    />
-                                    <EmailValidation
-                                        value={formData.email}
-                                        onChange={handleInputChange}
-
-                                    />
-                                    <RequiredTextValidation
-                                        name="fullName"
-                                        placeholder="Full Name"
-                                        value={formData.fullName}
-                                        onChange={handleInputChange}
-
-                                    />
-                                    <PasswordValidation
-                                        value={formData.password}
-                                        onChange={handleInputChange}
-
-                                    />
-                                    <ConfirmPasswordValidation
-                                        value={formData.confirmPassword}
-                                        onChange={handleInputChange}
-
-                                    />
-                                    <Button
-                                        type="submit"
-                                        aria-label="sign up"
-                                        fullModalWidth
-                                    >
-                                        Sign Up
-                                    </Button>
-                                </>
-                            )}
-                            {view === "reset" && (
-                                <>
-                                    <RequiredTextValidation
-                                        name="username"
-                                        placeholder="Username or Email"
-                                        value={formData.username}
-                                        onChange={handleInputChange}
-
-                                    />
-                                    <Button
-                                        type="submit"
-                                        aria-label="reset password"
-                                        fullModalWidth
-                                    >
-                                        Reset Password
-                                    </Button>
-                                </>
-                            )}
-                        </form>
-                    </div>
-                    <div className="modal-footer">
-                        {view !== "login" && (
+                            />
                             <Button
-                                onClick={() => setView("login")}
-                                aria-label="switch to login"
+                                type="submit"
+                                aria-label="login"
                                 fullModalWidth
-                                variant="ghost"
                             >
-                                Switch to Login
+                                Login
                             </Button>
-                        )}
-                        {view !== "signup" && (
+                        </>
+                    )}
+                    {view === "signup" && (
+                        <>
+                            <RequiredTextValidation
+                                name="username"
+                                placeholder="Username"
+                                value={formData.username}
+                                onChange={handleInputChange}
+
+                            />
+                            <EmailValidation
+                                value={formData.email}
+                                onChange={handleInputChange}
+
+                            />
+                            <RequiredTextValidation
+                                name="fullName"
+                                placeholder="Full Name"
+                                value={formData.fullName}
+                                onChange={handleInputChange}
+
+                            />
+                            <PasswordValidation
+                                value={formData.password}
+                                onChange={handleInputChange}
+
+                            />
+                            <ConfirmPasswordValidation
+                                value={formData.confirmPassword}
+                                onChange={handleInputChange}
+
+                            />
                             <Button
-                                onClick={() => setView("signup")}
-                                aria-label="switch to sign up"
+                                type="submit"
+                                aria-label="sign up"
                                 fullModalWidth
-                                variant="ghost"
                             >
-                                Switch to Sign Up
+                                Sign Up
                             </Button>
-                        )}
-                        {view !== "reset" && (
+                        </>
+                    )}
+                    {view === "reset" && (
+                        <>
+                            <RequiredTextValidation
+                                name="username"
+                                placeholder="Username or Email"
+                                value={formData.username}
+                                onChange={handleInputChange}
+
+                            />
                             <Button
-                                onClick={() => setView("reset")}
-                                aria-label="forgot password"
+                                type="submit"
+                                aria-label="reset password"
                                 fullModalWidth
-                                variant="ghost"
                             >
-                                Forgot Password?
+                                Reset Password
                             </Button>
-                        )}
-                    </div>
+                        </>
+                    )}
+                </form>
+                <div className="modal-footer">
+                    {view !== "login" && (
+                        <Button
+                            onClick={() => setView("login")}
+                            aria-label="switch to login"
+                            fullModalWidth
+                            variant="ghost"
+                        >
+                            Switch to Login
+                        </Button>
+                    )}
+                    {view !== "signup" && (
+                        <Button
+                            onClick={() => setView("signup")}
+                            aria-label="switch to sign up"
+                            fullModalWidth
+                            variant="ghost"
+                        >
+                            Switch to Sign Up
+                        </Button>
+                    )}
+                    {view !== "reset" && (
+                        <Button
+                            onClick={() => setView("reset")}
+                            aria-label="forgot password"
+                            fullModalWidth
+                            variant="ghost"
+                        >
+                            Forgot Password?
+                        </Button>
+                    )}
                 </div>
-            </div>
+            </BaseModal>
             {showSuccessModal && !!modalMessage && (
                 <SuccessModal
                     isOpen={true}
