@@ -43,6 +43,11 @@ export default function CharacterCardModal({
         className="modal-content"
         style={{ background: "#fff", margin: "5% auto", padding: 24, borderRadius: 8, maxWidth: 400, position: "relative" }}
         onClick={e => e.stopPropagation()}
+        tabIndex={0}
+        role="document"
+        onKeyDown={e => {
+            if (e.key === 'Escape') onClose();
+        }}
       >
         <button
           className="close-btn"
