@@ -158,6 +158,11 @@ export default function LoginModal({ onClose, initialView = "login" }: Readonly<
                     ref={modalContentRef}
                     className="modal-content"
                     onClick={(e) => e.stopPropagation()}
+                    tabIndex={0}
+                    role="document"
+                    onKeyDown={e => {
+                        if (e.key === 'Escape') onClose();
+                    }}
                 >
                     <div className="modal-header">
                         <h2>
