@@ -24,6 +24,7 @@ export function ErrorModal({onClose, message, onBack, backLabel = 'Back', title 
                     className={`modal-content ${className || ''}`}
                     onClick={e => e.stopPropagation()}
                     tabIndex={0}
+                    role="document"
                     onKeyDown={e => {
                         if (e.key === 'Escape') onClose();
                     }}
