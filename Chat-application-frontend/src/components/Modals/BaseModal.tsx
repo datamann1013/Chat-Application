@@ -59,16 +59,24 @@ export function BaseModal({
             className="modal-overlay"
             role="dialog"
             aria-modal="true"
+            tabIndex={-1}
             onMouseDown={handleOverlayMouseDown}
+            onKeyDown={e => {
+                if (e.key === 'Escape') {
+                    onClose();
+                }
+            }}
         >
             <div
                 ref={modalContentRef}
                 className={`modal-content ${className}`}
                 onClick={e => e.stopPropagation()}
+                tabIndex={0}
+                role="document"
             >
                 <div className="modal-header">
                     {title && <h2>{title}</h2>}
-                    <button className="close-btn" onClick={onClose}>×</button>
+                    <button className="close-btn" onClick={onClose} aria-label="Close modal">×</button>
                 </div>
                 <div className="modal-body">
                     {children}
