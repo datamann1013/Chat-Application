@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Button } from '../UI/Button/Button.tsx'
+import {useEffect, useRef, useState} from "react";
+import {Link, useLocation} from "react-router-dom";
+import {Button} from '../UI/Button/Button.tsx'
 import "./Header.css";
 
 interface NavItem {
@@ -118,7 +118,19 @@ export default function Header({ onLoginClick }: Readonly<{ onLoginClick: () => 
                         <div className="dropdown-left">
                             <ul>
                                 {navItems.map((item) => (
-                                    <li key={item.title} onMouseEnter={() => handlePageHover(item)}>
+                                    <li
+                                        key={item.title}
+                                        onMouseEnter={() => handlePageHover(item)}
+                                        role="menuitem"
+                                        tabIndex={0}
+                                        onKeyDown={e => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                setDropdownOpen(false);
+                                                // Optionally, navigate to the link programmatically if needed
+                                            }
+                                        }}
+                                        aria-label={item.title}
+                                    >
                                         <Link to={item.link} onClick={() => setDropdownOpen(false)}>
                                             {item.title}
                                         </Link>

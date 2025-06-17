@@ -57,7 +57,16 @@ export function BaseModal({
     if (!isOpen) return null;
 
     return (
-        <div className="modal-overlay" onMouseDown={handleMouseDown}>
+        <div
+            className="modal-overlay"
+            onMouseDown={handleMouseDown}
+            tabIndex={-1}
+            onKeyDown={e => {
+                if (e.key === 'Escape') onClose();
+            }}
+            role="dialog"
+            aria-modal="true"
+        >
             <div
                 ref={modalContentRef}
                 className={`modal-content ${className}`}
