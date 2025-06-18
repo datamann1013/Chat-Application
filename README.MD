@@ -5,7 +5,6 @@
 [![quality gate](https://sonarcloud.io/api/project_badges/measure?project=datamann1013_Chat-Application&metric=alert_status)](https://sonarcloud.io/dashboard?id=datamann1013_Chat-Application)
 ![GitHub last commit](https://img.shields.io/github/last-commit/datamann1013/Chat-Application)
 ![GitHub license](https://img.shields.io/github/license/datamann1013/Chat-Application)
-![GitHub top language](https://img.shields.io/github/languages/top/datamann1013/Chat-Application)
 
 ## Overview
 
