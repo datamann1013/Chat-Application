@@ -6,6 +6,10 @@ on:
   push:
     branches: [test, net]
 
+concurrency:
+  group: ci-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   backend-build-and-test:
     name: Backend Build & Test
