@@ -1,4 +1,4 @@
-import {BaseModalProps} from './types';
+import {BaseModalProps} from './Types';
 import errorIcon from '../../icons/error.png'; // Place a red X image in assets
 import {BaseModal} from './BaseModal';
 

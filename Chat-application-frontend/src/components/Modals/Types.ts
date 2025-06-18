@@ -25,4 +25,5 @@ export interface LoginModalProps extends BaseModalProps {
         password: string;
     }) => void;
     onResetPassword?: (username: string) => void;
+    initialView?: ModalView;
 }

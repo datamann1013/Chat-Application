@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import {BaseModalProps} from './types';
+import {BaseModalProps} from './Types';
 import checkmark from '../../icons/success.png'; // Place a green checkmark image in assets
 import {BaseModal} from './BaseModal';
 

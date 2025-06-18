@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {BaseModal} from './BaseModal';
-import {NewsletterModalProps} from './types';
+import {NewsletterModalProps} from './Types';
 import {EmailValidation} from './ValidationFields';
 import {isNotEmpty, isValidEmail} from '../../utils/validation';
 import {useFeedbackModal} from './useFeedbackModal';
