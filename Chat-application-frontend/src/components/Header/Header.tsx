@@ -161,7 +161,18 @@ export default function Header({ onLoginClick }: Readonly<{ onLoginClick: () => 
                                 {hoveredPageSections.length > 0 ? (
                                     hoveredPageSections.map((sect) => (
                                         <li key={sect.id}>
-                                            <a href={`#${sect.id}`} onClick={() => setDropdownOpen(false)}>
+                                            <a
+                                                href={`#${sect.id}`}
+                                                role="link"
+                                                tabIndex={0}
+                                                onClick={() => setDropdownOpen(false)}
+                                                onKeyDown={e => {
+                                                    if (e.key === 'Enter' || e.key === ' ') {
+                                                        setDropdownOpen(false);
+                                                        // Let the browser handle anchor navigation
+                                                    }
+                                                }}
+                                            >
                                                 {sect.title}
                                             </a>
                                         </li>
