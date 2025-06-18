@@ -65,8 +65,8 @@ describe('Header', () => {
         // Open the dropdown
         fireEvent.click(screen.getByRole('button', { name: /current page/i }));
 
-        // Hover over the "Landing" nav item
-        const landingNav = screen.getByRole('button', {name: /landing/i});
+        // Hover over the "Landing" nav item (role is 'menuitem', not 'button')
+        const landingNav = screen.getByRole('menuitem', {name: /landing/i});
         fireEvent.mouseEnter(landingNav);
 
         // Now section links should appear
@@ -85,7 +85,7 @@ describe('Header', () => {
         fireEvent.click(toggle);
 
         // Hover to show sections
-        const landingButton = screen.getByRole('button', {name: /landing/i});
+        const landingButton = screen.getByRole('menuitem', {name: /landing/i});
         fireEvent.mouseEnter(landingButton);
 
         // Click a section link
