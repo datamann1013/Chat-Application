@@ -72,6 +72,11 @@ export function BaseModal({
                 className={`modal-content ${className}`}
                 tabIndex={0}
                 role="document"
+                onKeyDown={e => {
+                    if (e.key === 'Escape') {
+                        onClose();
+                    }
+                }}
             >
                 <div className="modal-header">
                     {title && <h2>{title}</h2>}
