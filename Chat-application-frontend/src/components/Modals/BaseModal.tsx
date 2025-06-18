@@ -46,7 +46,7 @@ export function BaseModal({
     if (!isOpen) return null;
 
     // Move click-outside-to-close logic to overlay
-    const handleOverlayMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const handleOverlayMouseDown = (e: React.MouseEvent<HTMLDialogElement>) => {
         if (modalContentRef.current && !modalContentRef.current.contains(e.target as Node)) {
             setMouseDownInside(false);
         } else {
@@ -70,7 +70,6 @@ export function BaseModal({
             <div
                 ref={modalContentRef}
                 className={`modal-content ${className}`}
-                onClick={e => e.stopPropagation()}
                 tabIndex={0}
                 role="document"
             >
