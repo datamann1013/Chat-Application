@@ -1,3 +1,5 @@
+import React, {useRef, useState} from 'react';
+
 interface BaseModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -7,25 +9,83 @@ interface BaseModalProps {
 }
 
 export function BaseModal({
-                              isOpen,
-                              onClose,
-                              children,
-                              title,
-                              className = '',
-                          }: BaseModalProps) {
+    isOpen,
+    onClose,
+    children,
+    title,
+    className = '',
+}: BaseModalProps) {
+    const modalContentRef = useRef<HTMLDivElement>(null);
+    const [mouseDownInside, setMouseDownInside] = useState<null | boolean>(null);
+
+    React.useEffect(() => {
+        if (!isOpen) return;
+        const handleDocumentMouseUp = (e: MouseEvent) => {
+            if (
+                mouseDownInside === false &&
+                modalContentRef.current &&
+                !modalContentRef.current.contains(e.target as Node)
+            ) {
+                onClose();
+            }
+            setMouseDownInside(null);
+        };
+        const handleDocumentKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+        document.addEventListener('mouseup', handleDocumentMouseUp);
+        document.addEventListener('keydown', handleDocumentKeyDown);
+        return () => {
+            document.removeEventListener('mouseup', handleDocumentMouseUp);
+            document.removeEventListener('keydown', handleDocumentKeyDown);
+        };
+    }, [isOpen, mouseDownInside, onClose]);
+
     if (!isOpen) return null;
 
+    // Move click-outside-to-close logic to overlay
+    const handleOverlayMouseDown = (e: React.MouseEvent<HTMLDialogElement>) => {
+        if (modalContentRef.current && !modalContentRef.current.contains(e.target as Node)) {
+            setMouseDownInside(false);
+        } else {
+            setMouseDownInside(true);
+        }
+    };
+
     return (
-        <div className="modal-overlay" onClick={onClose}>
-            <div className={`modal-content ${className}`} onClick={(e) => e.stopPropagation()}>
+        <dialog
+            className="modal-overlay"
+            open={isOpen}
+            aria-modal="true"
+            tabIndex={-1}
+            onMouseDown={handleOverlayMouseDown}
+            onKeyDown={e => {
+                if (e.key === 'Escape') {
+                    onClose();
+                }
+            }}
+        >
+            <div
+                ref={modalContentRef}
+                className={`modal-content ${className}`}
+                tabIndex={0}
+                role="document"
+                onKeyDown={e => {
+                    if (e.key === 'Escape') {
+                        onClose();
+                    }
+                }}
+            >
                 <div className="modal-header">
                     {title && <h2>{title}</h2>}
-                    <button className="close-btn" onClick={onClose}>×</button>
+                    <button className="close-btn" onClick={onClose} aria-label="Close modal">×</button>
                 </div>
                 <div className="modal-body">
                     {children}
                 </div>
             </div>
-        </div>
+        </dialog>
     );
 }

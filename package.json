@@ -1,7 +1,8 @@
 {
   "devDependencies": {
-    "@craco/craco": "^5.9.0",
+    "@craco/craco": "^7.1.0",
     "craco-alias": "^3.0.1",
+    "identity-obj-proxy": "^3.0.0",
     "ts-node": "^10.9.2"
   }
 }

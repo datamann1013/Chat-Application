@@ -1,5 +1,5 @@
 import Header from "../components/Header/Header.tsx";
-import Footer from "../components/Footer";
+import Footer from "../components/Sections/Generics/Footer.tsx";
 import "./FilesPage.css";
 
 export default function FileManagerPage() {

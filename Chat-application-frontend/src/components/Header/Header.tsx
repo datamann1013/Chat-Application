@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Button } from '../UI/Button/Button.tsx'
+import {useEffect, useRef, useState} from "react";
+import {Link, useLocation} from "react-router-dom";
+import {Button} from '../UI/Button/Button.tsx'
 import "./Header.css";
 
 interface NavItem {
@@ -19,12 +19,14 @@ interface Section {
     title: string;
 }
 
-export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
+export default function Header({ onLoginClick }: Readonly<{ onLoginClick: () => void }>) {
     const location = useLocation();
     const [sections, setSections] = useState<Section[]>([]);
     const [currentPageTitle, setCurrentPageTitle] = useState<string>("Current Page");
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [hoveredPageSections, setHoveredPageSections] = useState<Section[]>([]);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         const currentItem = navItems.find((item) => item.link === location.pathname);
@@ -35,7 +37,7 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
             const headers = Array.from(content.querySelectorAll("h2"));
             const sects = headers.map((header, idx) => ({
                 id: header.id || `section-${idx}`,
-                title: header.textContent || `Section ${idx + 1}`,
+                title: header.textContent ?? `Section ${idx + 1}`,
             }));
             setSections(sects);
             // Default to current page sections if nothing is hovered
@@ -47,9 +49,9 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
         let dummySections: Section[] = [];
         if (page.title === "Landing") {
             dummySections = [
-                { id: "overview", title: "Overview" },
-                { id: "features", title: "Features" },
-                { id: "about", title: "About" },
+                { id: "Why Choose Our Platform?", title: "Why Choose Our Platform?" },
+                { id: "Meet the Team", title: "Meet the Team" },
+                { id: "Roadmap", title: "Roadmap" },
             ];
         } else if (page.title === "Chat") {
             dummySections = [
@@ -69,6 +71,24 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
         setHoveredPageSections(sections);
     };
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                dropdownOpen &&
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target as Node) &&
+                buttonRef.current &&
+                !buttonRef.current.contains(event.target as Node)
+            ) {
+                setDropdownOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [dropdownOpen]);
+
     return (
         <header className="global-header">
             {/* Left column: Logo */}
@@ -82,9 +102,11 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
             <div className="header-center">
                 <div className="dropdown-toggle">
                     <Button
+                        ref={buttonRef}
                         variant="default"
                         size="md"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
+                        aria-label="Current Page"
                     >
                         <span className="current-page">{currentPageTitle}</span>
                         <span className="arrow">▼</span>
@@ -92,14 +114,44 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
                 </div>
 
                 {dropdownOpen && (
-                    <div className="dropdown-menu" onMouseLeave={handleDropdownMouseLeave}>
+                    <div className="dropdown-menu" ref={dropdownRef} onMouseLeave={handleDropdownMouseLeave}>
                         <div className="dropdown-left">
                             <ul>
                                 {navItems.map((item) => (
-                                    <li key={item.title} onMouseEnter={() => handlePageHover(item)}>
-                                        <Link to={item.link} onClick={() => setDropdownOpen(false)}>
+                                    <li
+                                        key={item.title}
+                                        onMouseEnter={() => handlePageHover(item)}
+                                        style={{cursor: 'pointer'}}
+                                    >
+                                        <button
+                                            id={`nav-link-${item.title}`}
+                                            type="button"
+                                            onClick={() => {
+                                                setDropdownOpen(false);
+                                                window.location.href = item.link;
+                                            }}
+                                            onKeyDown={e => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    setDropdownOpen(false);
+                                                    window.location.href = item.link;
+                                                }
+                                            }}
+                                            aria-label={item.title}
+                                            style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                padding: 0,
+                                                margin: 0,
+                                                cursor: 'pointer',
+                                                width: '100%',
+                                                textAlign: 'left'
+                                            }}
+                                            role="menuitem"
+                                            tabIndex={0}
+                                            onMouseDown={e => e.preventDefault()} // Prevent focus loss
+                                        >
                                             {item.title}
-                                        </Link>
+                                        </button>
                                     </li>
                                 ))}
                             </ul>
@@ -109,7 +161,18 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
                                 {hoveredPageSections.length > 0 ? (
                                     hoveredPageSections.map((sect) => (
                                         <li key={sect.id}>
-                                            <a href={`#${sect.id}`} onClick={() => setDropdownOpen(false)}>
+                                            <a
+                                                href={`#${sect.id}`}
+                                                role="link"
+                                                tabIndex={0}
+                                                onClick={() => setDropdownOpen(false)}
+                                                onKeyDown={e => {
+                                                    if (e.key === 'Enter' || e.key === ' ') {
+                                                        setDropdownOpen(false);
+                                                        // Let the browser handle anchor navigation
+                                                    }
+                                                }}
+                                            >
                                                 {sect.title}
                                             </a>
                                         </li>
@@ -129,6 +192,7 @@ export default function Header({ onLoginClick }: { onLoginClick: () => void }) {
                     onClick={onLoginClick}
                     variant="default"
                     size="md"
+                    aria-label="Login Button"
                 >
                     Log in
                 </Button>

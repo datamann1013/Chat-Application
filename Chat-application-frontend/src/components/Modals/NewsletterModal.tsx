@@ -1,32 +1,53 @@
-import React from 'react';
-import AbstractModal from './AbstractModal';
-import { NewsletterModalProps } from './types';
+import React, {useState} from 'react';
+import {BaseModal} from './BaseModal';
+import {NewsletterModalProps} from './Types';
+import {EmailValidation} from './ValidationFields';
+import {isNotEmpty, isValidEmail} from '../../utils/validation';
+import {useFeedbackModal} from './useFeedbackModal';
 
-export class NewsletterModal extends AbstractModal<NewsletterModalProps> {
-    private handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const email = formData.get('email') as string;
+const tempNewsletter: Array<{ email: string }> = [];
 
-        if (this.props.onSubmit) {
-            this.props.onSubmit(email);
-        }
+export function NewsletterModal({isOpen, onClose, onSubmit, className}: NewsletterModalProps) {
+    const [email, setEmail] = useState('');
+    const {
+        showSuccess,
+        showError,
+        feedbackModals,
+    } = useFeedbackModal();
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
     };
 
-    protected renderContent(): React.ReactNode {
-        return (
-            <form onSubmit={this.handleSubmit}>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Your Email"
-                    required
-                    className="modal-input"
-                />
-                <button type="submit" className="modal-submit">
-                    Subscribe
-                </button>
-            </form>
-        );
-    }
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const errors: string[] = [];
+        if (!isNotEmpty(email)) errors.push('Email is required.');
+        else if (!isValidEmail(email)) errors.push('Invalid email format.');
+        if (errors.length > 0) {
+            showError(errors.join("\n"));
+            return;
+        }
+        tempNewsletter.push({ email });
+        if (onSubmit) onSubmit(email);
+        showSuccess('Subscribed! (TEMP: No backend yet)');
+        setEmail('');
+    };
+
+    return (
+        <>
+            <BaseModal isOpen={isOpen} onClose={onClose} title="Newsletter" className={className}>
+                <form onSubmit={handleSubmit}>
+                    <EmailValidation
+                        value={email}
+                        onChange={handleInputChange}
+                    />
+                    <button type="submit" className="modal-submit">
+                        Subscribe
+                    </button>
+                </form>
+            </BaseModal>
+            {feedbackModals}
+        </>
+    );
 }
