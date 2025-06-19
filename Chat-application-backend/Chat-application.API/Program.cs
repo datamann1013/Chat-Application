@@ -1,7 +1,6 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Chat_application.API.Data;
+using Chat_application.API.Hubs;
 
 namespace Chat_application.API
 {
@@ -15,6 +14,9 @@ namespace Chat_application.API
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddSignalR();
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 
@@ -26,8 +28,12 @@ namespace Chat_application.API
             }
 
             app.UseHttpsRedirection();
+            app.UseRouting();
             app.UseAuthorization();
+
             app.MapControllers();
+            app.MapHub<ChatHub>("/chathub");
+
             app.Run();
         }
     }

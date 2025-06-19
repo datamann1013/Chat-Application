@@ -11,4 +11,5 @@ public class ApplicationDbContext : DbContext
 
     // For example, a DbSet of users
     public DbSet<User> Users { get; set; }
+    public DbSet<ChatMessage> ChatMessages { get; set; }
 }
