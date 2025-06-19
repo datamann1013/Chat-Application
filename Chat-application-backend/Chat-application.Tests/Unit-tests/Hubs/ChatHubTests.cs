@@ -32,4 +32,3 @@ namespace Chat_application.Tests.Unit_tests.Hubs
         }
     }
 }
-
