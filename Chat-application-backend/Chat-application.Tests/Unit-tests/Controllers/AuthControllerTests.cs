@@ -6,7 +6,7 @@ using Chat_application.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace Chat_application.Tests.Controllers
+namespace Chat_Application.Tests.Unit_Tests.Controllers
 {
     public class AuthControllerTests
     {

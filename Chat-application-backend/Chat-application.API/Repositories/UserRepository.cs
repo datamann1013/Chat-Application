@@ -1,6 +1,7 @@
 using Chat_application.API.Data;
 using Chat_application.API.Interfaces;
 using Chat_application.API.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chat_application.API.Repositories;
 
@@ -14,16 +15,14 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> AddUserAsync(User user)
     {
-        // Implementation
-        return await Task.FromResult<User?>(null);
-
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+        return user;
     }
 
     public async Task<User?> GetUserByUsernameAsync(string username)
     {
-       // Implementation
-       return await Task.FromResult<User?>(null);
-
+        return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
     }
     public async Task<bool> DeleteUserAsync(Guid userId)
     {

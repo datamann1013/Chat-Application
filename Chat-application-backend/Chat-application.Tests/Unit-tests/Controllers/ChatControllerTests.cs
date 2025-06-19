@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Chat_application.API.Controllers;
 using Chat_application.API.Services;
 
-namespace Chat_application.Tests.Controllers
+namespace Chat_Application.Tests.Unit_Tests.Controllers
 {
     public class ChatControllerTests
     {

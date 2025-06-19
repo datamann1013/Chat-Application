@@ -3,7 +3,7 @@ using Chat_application.API;
 using Chat_application.API.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Chat_application.Tests.Integration_tests.Controllers
+namespace Chat_Application.Tests.Integration_Tests.Controllers
 {
     public class ChatControllerIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using Chat_application.API;
 
-namespace Chat_application.Tests.Integration_tests.Controllers
+namespace Chat_Application.Tests.Integration_Tests.Controllers
 {
     public class ChatControllerEdgeCasesIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     {

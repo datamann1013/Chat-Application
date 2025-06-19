@@ -2,7 +2,7 @@
 using Chat_application.API;
 using Microsoft.AspNetCore.SignalR.Client;
 
-namespace Chat_application.Tests.Integration_tests.Controllers
+namespace Chat_Application.Tests.Integration_Tests.Controllers
 {
     public class ChatHubIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     {

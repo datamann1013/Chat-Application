@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 using Chat_application.API.Hubs;
 using System.Threading.Tasks;
 
-namespace Chat_application.Tests.Unit_tests.Hubs
+namespace Chat_Application.Tests.Unit_Tests.Hubs
 {
     public class ChatHubTests
     {

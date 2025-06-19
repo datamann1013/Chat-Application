@@ -5,7 +5,7 @@ using Xunit;
 using Chat_application.API.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Chat_application.Tests.Integration_tests.Controllers
+namespace Chat_Application.Tests.Integration_Tests.Controllers
 {
     public class AuthControllerIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     {
