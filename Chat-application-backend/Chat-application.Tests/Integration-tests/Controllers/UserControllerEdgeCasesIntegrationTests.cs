@@ -1,7 +1,4 @@
-﻿using System.Net.Http.Json;
-using System.Threading.Tasks;
-using Xunit;
-using Chat_application.API.Models;
+﻿using Chat_application.API;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Chat_application.Tests.Integration_tests.Controllers

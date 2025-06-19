@@ -437,3 +437,14 @@
 /home/martin/RiderProjects/Chat-Application/Chat-application-backend/Chat-application.Tests/bin/Debug/net8.0/Chat-application.API.dll
 /home/martin/RiderProjects/Chat-Application/Chat-application-backend/Chat-application.Tests/bin/Debug/net8.0/Chat-application.API.pdb
 /home/martin/RiderProjects/Chat-Application/Chat-application-backend/Chat-application.Tests/obj/Debug/net8.0/MvcTestingAppManifest.json
+C:\Users\data0\RiderProjects\Chat-Application\Chat-application-backend\Chat-application.Tests\bin\Debug\net8.0\CoverletSourceRootsMapping_Chat-application.Tests
+C:\Users\data0\RiderProjects\Chat-Application\Chat-application-backend\Chat-application.Tests\obj\Debug\net8.0\Chat-application.Tests.csproj.AssemblyReference.cache
+C:\Users\data0\RiderProjects\Chat-Application\Chat-application-backend\Chat-application.Tests\obj\Debug\net8.0\MvcTestingAppManifest.json
+C:\Users\data0\RiderProjects\Chat-Application\Chat-application-backend\Chat-application.Tests\obj\Debug\net8.0\Chat-application.Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\data0\RiderProjects\Chat-Application\Chat-application-backend\Chat-application.Tests\obj\Debug\net8.0\Chat-application.Tests.AssemblyInfoInputs.cache
+C:\Users\data0\RiderProjects\Chat-Application\Chat-application-backend\Chat-application.Tests\obj\Debug\net8.0\Chat-application.Tests.AssemblyInfo.cs
+C:\Users\data0\RiderProjects\Chat-Application\Chat-application-backend\Chat-application.Tests\obj\Debug\net8.0\Chat-application.Tests.csproj.CoreCompileInputs.cache
+C:\Users\data0\RiderProjects\Chat-Application\Chat-application-backend\Chat-application.Tests\obj\Debug\net8.0\Chat-application.Tests.sourcelink.json
+C:\Users\data0\RiderProjects\Chat-Application\Chat-application-backend\Chat-application.Tests\obj\Debug\net8.0\Chat-application.Tests.dll
+C:\Users\data0\RiderProjects\Chat-Application\Chat-application-backend\Chat-application.Tests\obj\Debug\net8.0\refint\Chat-application.Tests.dll
+C:\Users\data0\RiderProjects\Chat-Application\Chat-application-backend\Chat-application.Tests\obj\Debug\net8.0\Chat-application.Tests.pdb

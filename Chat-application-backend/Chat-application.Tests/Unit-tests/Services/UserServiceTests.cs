@@ -39,7 +39,7 @@ namespace Chat_Application.Tests.Unit_Tests.Services
             _userRepositoryMock.Setup(repo => repo.GetUserByUsernameAsync("testuser"))
                 .ReturnsAsync((User?)null); // explicitly nullable
 
-            var result = await _userService.CreateUser(user);
+            var result = await _userService.CreateUserAsync(user);
 
             result.Should().NotBeNull();
             result.Username.Should().Be("testuser");
@@ -51,7 +51,7 @@ namespace Chat_Application.Tests.Unit_Tests.Services
             _userRepositoryMock.Setup(repo => repo.GetUserByUsernameAsync("testuser"))
                 .ReturnsAsync((User?)null);
 
-            var result = await _userService.Login("testuser", "wrongpassword");
+            var result = await _userService.LoginAsync("testuser", "wrongpassword");
             result.Should().BeNull();
         }
     }
