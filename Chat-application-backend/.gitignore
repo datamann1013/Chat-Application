@@ -75,3 +75,8 @@ rider.project.restore.info
 
 Chat-application.API/appsettings.json
 Chat-application.API/Properties/launchSettings.json
+
+# Ignore build artifacts and user/machine-specific files
+*.dll
+*.pdb
+*.FileListAbsolute.txt
