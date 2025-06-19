@@ -14,13 +14,11 @@ public class ChatService
 
     public async Task SendMessage(ChatMessage message)
     {
-        // Implementation
-        await Task.CompletedTask;
+        await _chatRepository.SaveMessageAsync(message);
     }
 
     public async Task<List<ChatMessage>?> GetMessages(Guid user1, Guid user2)
     {
-        // Implementation
-        return await Task.FromResult<List<ChatMessage>?>(null);
+        return await _chatRepository.GetMessagesAsync(user1, user2);
     }
 }
