@@ -72,6 +72,3 @@ project.nuget.cache
 project.packagespec.json
 rider.project.model.nuget.info
 rider.project.restore.info
-
-Chat-application.API/appsettings.json
-Chat-application.API/Properties/launchSettings.json
