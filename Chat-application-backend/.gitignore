@@ -59,3 +59,16 @@ appsettings.Production.json
 # Local scripts or notes (customize as needed)
 *.sh
 notes/
+
+*.AssemblyInfo.cs
+*.AssemblyInfoInputs.cache
+*.assets.cache
+*.csproj.AssemblyReference.cache
+*.csproj.nuget.*
+*.GeneratedMSBuildEditorConfig.editorconfig
+*.DotSettings.user
+project.assets.json
+project.nuget.cache
+project.packagespec.json
+rider.project.model.nuget.info
+rider.project.restore.info
