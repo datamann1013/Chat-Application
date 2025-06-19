@@ -19,14 +19,21 @@ namespace Chat_application.Tests.Controllers
                 null, null, null, null, null, null, null, null);
             var contextAccessor = new Mock<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
             var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>();
-            var signInManager = new Mock<SignInManager<User>>(
+            var options = new Mock<Microsoft.Extensions.Options.IOptions<IdentityOptions>>();
+            var logger = new Mock<Microsoft.Extensions.Logging.ILogger<SignInManager<User>>>();
+            var schemes = new Mock<Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider>();
+            var confirmation = new Mock<IUserConfirmation<User>>();
+            var signInManager = new SignInManager<User>(
                 userManager.Object,
                 contextAccessor.Object,
                 userPrincipalFactory.Object,
-                null, null, null, null, null);
+                options.Object,
+                logger.Object,
+                schemes.Object,
+                confirmation.Object);
             userManager.Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);
-            var controller = new AuthController(userManager.Object, signInManager.Object);
+            var controller = new AuthController(userManager.Object, signInManager);
             var result = await controller.Register(new RegisterRequest { Username = "test", Email = "test@test.com", Password = "Password123!" });
             Assert.IsType<OkResult>(result);
         }
