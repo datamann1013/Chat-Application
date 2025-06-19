@@ -80,3 +80,4 @@ Chat-application.API/Properties/launchSettings.json
 *.dll
 *.pdb
 *.FileListAbsolute.txt
+Chat-application-backend.sln.DotSettings.user
