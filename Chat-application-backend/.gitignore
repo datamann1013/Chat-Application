@@ -1,0 +1,48 @@
+﻿# Build results
+bin/
+obj/
+out/
+
+# Rider project files
+.idea/
+*.sln.iml
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Visual Studio Code settings
+.vscode/
+
+# NuGet packages
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Publish output
+publish/
+*.Publish.xml
+
+# Secrets and config
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+# Test results
+TestResults/
+*.coverage
+*.coveragexml
+
+# Others
+*.tmp
+*.bak
