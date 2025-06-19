@@ -30,7 +30,7 @@ namespace Chat_Application.Tests.Unit_Tests.Repositories
             var user = new User
             {
                 Id = Guid.NewGuid(),
-                Username = "TestUser",
+                UserName = "TestUser",
                 Email = "test@example.com"
             };
 

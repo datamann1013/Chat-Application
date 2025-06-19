@@ -29,7 +29,7 @@ namespace Chat_Application.Tests.Unit_Tests.Services
             var user = new User
             {
                 Id = Guid.NewGuid(),
-                Username = "testuser",
+                UserName = "testuser",
                 Email = "test@example.com"
             };
 
@@ -42,7 +42,7 @@ namespace Chat_Application.Tests.Unit_Tests.Services
             var result = await _userService.CreateUserAsync(user);
 
             result.Should().NotBeNull();
-            result.Username.Should().Be("testuser");
+            result.UserName.Should().Be("testuser");
         }
 
         [Fact]

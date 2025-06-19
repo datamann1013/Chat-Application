@@ -32,7 +32,7 @@ namespace Chat_Application.Tests.Integration_Tests.Repositories
             var user = new User
             {
                 Id = Guid.NewGuid(),
-                Username = "testuser",
+                UserName = "testuser",
                 Email = "test@example.com"
             };
 
@@ -40,7 +40,7 @@ namespace Chat_Application.Tests.Integration_Tests.Repositories
             var result = await _userRepository.GetUserByUsernameAsync("testuser");
 
             result.Should().NotBeNull();
-            result.Username.Should().Be("testuser");
+            result.UserName.Should().Be("testuser");
         }
 
         /// <summary>

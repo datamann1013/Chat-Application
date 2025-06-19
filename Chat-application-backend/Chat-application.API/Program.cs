@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Chat_application.API.Data;
 using Chat_application.API.Hubs;
+using Microsoft.AspNetCore.Identity;
+using Chat_application.API.Models;
 
 namespace Chat_application.API
 {
@@ -16,7 +18,12 @@ namespace Chat_application.API
             builder.Services.AddSwaggerGen();
             builder.Services.AddSignalR();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Add ASP.NET Core Identity for User<Guid>
+            builder.Services.AddIdentity<User, IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             var app = builder.Build();
 

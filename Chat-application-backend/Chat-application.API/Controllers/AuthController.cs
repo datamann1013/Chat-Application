@@ -20,7 +20,7 @@ namespace Chat_application.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            var user = new User { Username = request.Username, Email = request.Email };
+            var user = new User { UserName = request.Username, Email = request.Email };
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
@@ -30,10 +30,18 @@ namespace Chat_application.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var result = await _signInManager.PasswordSignInAsync(request.Username, request.Password, false, false);
-            if (!result.Succeeded)
+            try
+            {
+                var result = await _signInManager.PasswordSignInAsync(request.Username, request.Password, false, false);
+                if (!result.Succeeded)
+                    return Unauthorized();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Login exception: {ex.Message}\n{ex.StackTrace}");
                 return Unauthorized();
-            return Ok();
+            }
         }
     }
 }
