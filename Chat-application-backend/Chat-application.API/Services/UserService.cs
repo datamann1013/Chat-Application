@@ -26,8 +26,10 @@ public class UserService : IUserService
 
     public async Task<User?> CreateUserAsync(User user)
     {
-        // Implementation
-        return await Task.FromResult<User?>(null);
+        var existingUser = await _userRepository.GetUserByUsernameAsync(user.UserName);
+        if (existingUser != null)
+            return null;
+        return await _userRepository.AddUserAsync(user);
     }
 
     public async Task<User?> LoginAsync(string username, string password)
