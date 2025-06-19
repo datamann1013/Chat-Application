@@ -1,6 +1,5 @@
 ﻿using Chat_application.API.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+
 
 namespace Chat_application.API.Services
 {

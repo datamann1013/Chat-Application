@@ -3,7 +3,7 @@ using Chat_application.API.Models;
 
 namespace Chat_application.API.Services;
 
-public class UserService
+public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
 
@@ -12,13 +12,25 @@ public class UserService
         _userRepository = userRepository;
     }
     
-    public async Task<User?> CreateUser(User user)
+    public async Task<IEnumerable<User>> GetAllUsersAsync()
+    {
+        // Implementation
+        return await Task.FromResult<IEnumerable<User>>(new List<User>());
+    }
+
+    public async Task<User?> GetUserByIdAsync(string id)
     {
         // Implementation
         return await Task.FromResult<User?>(null);
     }
 
-    public async Task<User?> Login(string username, string password)
+    public async Task<User?> CreateUserAsync(User user)
+    {
+        // Implementation
+        return await Task.FromResult<User?>(null);
+    }
+
+    public async Task<User?> LoginAsync(string username, string password)
     {
         // Implementation
         return await Task.FromResult<User?>(null);
