@@ -13,8 +13,17 @@ namespace Chat_application.Tests.Controllers
         [Fact]
         public async Task Register_ReturnsOk_WhenRegistrationSucceeds()
         {
-            var userManager = new Mock<UserManager<User>>(MockBehavior.Default, null, null, null, null, null, null, null, null);
-            var signInManager = new Mock<SignInManager<User>>(userManager.Object, null, null, null, null, null, null, null);
+            var store = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(
+                store.Object,
+                null, null, null, null, null, null, null, null);
+            var contextAccessor = new Mock<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>();
+            var signInManager = new Mock<SignInManager<User>>(
+                userManager.Object,
+                contextAccessor.Object,
+                userPrincipalFactory.Object,
+                null, null, null, null, null);
             userManager.Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success);
             var controller = new AuthController(userManager.Object, signInManager.Object);
@@ -25,14 +34,37 @@ namespace Chat_application.Tests.Controllers
         [Fact]
         public async Task Login_ReturnsOk_WhenLoginSucceeds()
         {
-            var userManager = new Mock<UserManager<User>>(MockBehavior.Default, null, null, null, null, null, null, null, null);
-            var signInManager = new Mock<SignInManager<User>>(userManager.Object, null, null, null, null, null, null, null);
-            signInManager.Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
+            var store = new Mock<IUserStore<User>>();
+            var userManager = new Mock<UserManager<User>>(
+                store.Object,
+                null, null, null, null, null, null, null, null);
+            var contextAccessor = new Mock<Microsoft.AspNetCore.Http.IHttpContextAccessor>();
+            var userPrincipalFactory = new Mock<IUserClaimsPrincipalFactory<User>>();
+            var options = new Mock<Microsoft.Extensions.Options.IOptions<IdentityOptions>>();
+            var logger = new Mock<Microsoft.Extensions.Logging.ILogger<SignInManager<User>>>();
+            var schemes = new Mock<Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider>();
+            var confirmation = new Mock<IUserConfirmation<User>>();
+            var signInManager = new SignInManager<User>(
+                userManager.Object,
+                contextAccessor.Object,
+                userPrincipalFactory.Object,
+                options.Object,
+                logger.Object,
+                schemes.Object,
+                confirmation.Object);
+            var signInManagerMock = new Mock<SignInManager<User>>(
+                userManager.Object,
+                contextAccessor.Object,
+                userPrincipalFactory.Object,
+                options.Object,
+                logger.Object,
+                schemes.Object,
+                confirmation.Object);
+            signInManagerMock.Setup(x => x.PasswordSignInAsync(It.IsAny<string>(), It.IsAny<string>(), false, false))
                 .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
-            var controller = new AuthController(userManager.Object, signInManager.Object);
+            var controller = new AuthController(userManager.Object, signInManagerMock.Object);
             var result = await controller.Login(new LoginRequest { Username = "test", Password = "Password123!" });
             Assert.IsType<OkResult>(result);
         }
     }
 }
-
