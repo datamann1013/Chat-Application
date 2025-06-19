@@ -46,3 +46,16 @@ TestResults/
 # Others
 *.tmp
 *.bak
+
+# Rider run configurations
+.run/
+
+# Local database files
+*.db
+
+# Additional environment configs
+appsettings.Production.json
+
+# Local scripts or notes (customize as needed)
+*.sh
+notes/
