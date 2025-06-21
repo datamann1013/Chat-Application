@@ -19,7 +19,6 @@ public class FileService
 
     public async Task<bool> DeleteFile(Guid fileId)
     {
-        // Implementation
-        return await Task.FromResult(false);
+        return await _fileRepository.DeleteFileAsync(fileId);
     }
 }
