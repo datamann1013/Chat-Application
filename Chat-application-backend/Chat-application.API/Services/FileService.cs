@@ -14,8 +14,7 @@ public class FileService
 
     public async Task UploadFile(FileMetadata file)
     {
-        // Implementation
-        await Task.CompletedTask;
+        await _fileRepository.SaveFileAsync(file);
     }
 
     public async Task<bool> DeleteFile(Guid fileId)
