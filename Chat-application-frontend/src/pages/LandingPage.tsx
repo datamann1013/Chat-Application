@@ -1,5 +1,5 @@
 import "./LandingPage.css";
-import React, { useState } from "react";
+import React, {useState} from "react";
 import ThreeBoxSection from "../components/Sections/Generics/ThreeBoxSection.tsx";
 import HeroSection from "../components/Sections/Landingspesific/HeroSection.tsx";
 import TeamSection from "../components/Sections/Landingspesific/TeamSection.tsx";
@@ -10,7 +10,6 @@ import Footer from "../components/Sections/Generics/Footer.tsx";
 import LoginModal from "../components/Modals/LoginModal";
 import {FeedbackModal} from "../components/Modals/FeedbackModal";
 import {NewsletterModal} from "../components/Modals/NewsletterModal";
-
 
 
 const heroData = [
@@ -106,7 +105,8 @@ const LandingPage: React.FC = () => {
                 isOpen={feedbackOpen}
                 children={undefined}
             />
-            {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} initialView={loginView} />}
+            {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} initialView={loginView} isOpen={loginOpen}
+                                      children={null}/>}
         </div>
     );
 };
