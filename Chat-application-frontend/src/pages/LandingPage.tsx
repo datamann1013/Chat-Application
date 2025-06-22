@@ -14,7 +14,7 @@ import {NewsletterModal} from "../components/Modals/NewsletterModal";
 
 const heroData = [
     {
-        imageUrl: "/3Dmodel.jpg",
+        imageUrl: "/src/images/3Dmodel.jpg",
         title: "Welcome to Our Secure Platform",
         subtitle:
             "Experience unparalleled security and privacy with our state-of-the-art tools designed for businesses and safety services.",
@@ -43,10 +43,30 @@ const boxData = [
 ];
 
 const teamMembers = [
-    { name: "Alice", role: "Backend Engineer", image: "../public/placeholderPerson.jpg", qualifications: "MSc Computer Science, 5+ years backend experience, expert in Node.js and .NET." },
-    { name: "Bob", role: "Frontend Engineer", image: "../public/placeholderPerson.jpg", qualifications: "BSc Interaction Design, React specialist, UI/UX enthusiast." },
-    { name: "Charlie", role: "DevOps Engineer", image: "../public/placeholderPerson.jpg", qualifications: "Certified AWS Solutions Architect, CI/CD automation expert." },
-    { name: "Diana", role: "Security Specialist", image: "../public/placeholderPerson.jpg", qualifications: "Ethical hacker, OSCP certified, 7+ years in cybersecurity." }
+    {
+        name: "Alice",
+        role: "Backend Engineer",
+        image: "/src/images/placeholderPerson.jpg",
+        qualifications: "MSc Computer Science, 5+ years backend experience, expert in Node.js and .NET."
+    },
+    {
+        name: "Bob",
+        role: "Frontend Engineer",
+        image: "/src/images/placeholderPerson.jpg",
+        qualifications: "BSc Interaction Design, React specialist, UI/UX enthusiast."
+    },
+    {
+        name: "Charlie",
+        role: "DevOps Engineer",
+        image: "/src/images/placeholderPerson.jpg",
+        qualifications: "Certified AWS Solutions Architect, CI/CD automation expert."
+    },
+    {
+        name: "Diana",
+        role: "Security Specialist",
+        image: "/src/images/placeholderPerson.jpg",
+        qualifications: "Ethical hacker, OSCP certified, 7+ years in cybersecurity."
+    }
 
 ];
 const roadmap = [
