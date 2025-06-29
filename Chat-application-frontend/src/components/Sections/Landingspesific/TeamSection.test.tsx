@@ -1,10 +1,10 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import {fireEvent, render, screen} from "@testing-library/react";
 import TeamSection from "./TeamSection";
 
 describe("TeamSection", () => {
     const team = [
-        { name: "Alice", role: "Developer", image: "alice.png" },
-        { name: "Bob", role: "Designer", image: "bob.png" }
+        {name: "Alice", role: "Developer", image: "alice.png", qualifications: "Expert in Node.js and .NET."},
+        {name: "Bob", role: "Designer", image: "bob.png", qualifications: "UI/UX specialist."}
     ];
     const mission = "Our mission is to build a secure and user-friendly chat platform.";
     const roadmap = [

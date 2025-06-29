@@ -94,7 +94,7 @@ export default function Header({ onLoginClick }: Readonly<{ onLoginClick: () => 
             {/* Left column: Logo */}
             <div className="header-left">
                 <Link to="/">
-                    <img src="/logo.png" alt="Logo" className="logo" />
+                    <img src="/logo.png" alt="Logo" className="logo"/>
                 </Link>
             </div>
 

@@ -1,5 +1,5 @@
 import "./LandingPage.css";
-import React, { useState } from "react";
+import React, {useState} from "react";
 import ThreeBoxSection from "../components/Sections/Generics/ThreeBoxSection.tsx";
 import HeroSection from "../components/Sections/Landingspesific/HeroSection.tsx";
 import TeamSection from "../components/Sections/Landingspesific/TeamSection.tsx";
@@ -10,7 +10,6 @@ import Footer from "../components/Sections/Generics/Footer.tsx";
 import LoginModal from "../components/Modals/LoginModal";
 import {FeedbackModal} from "../components/Modals/FeedbackModal";
 import {NewsletterModal} from "../components/Modals/NewsletterModal";
-
 
 
 const heroData = [
@@ -44,10 +43,30 @@ const boxData = [
 ];
 
 const teamMembers = [
-    { name: "Alice", role: "Backend Engineer", image: "../public/placeholderPerson.jpg", qualifications: "MSc Computer Science, 5+ years backend experience, expert in Node.js and .NET." },
-    { name: "Bob", role: "Frontend Engineer", image: "../public/placeholderPerson.jpg", qualifications: "BSc Interaction Design, React specialist, UI/UX enthusiast." },
-    { name: "Charlie", role: "DevOps Engineer", image: "../public/placeholderPerson.jpg", qualifications: "Certified AWS Solutions Architect, CI/CD automation expert." },
-    { name: "Diana", role: "Security Specialist", image: "../public/placeholderPerson.jpg", qualifications: "Ethical hacker, OSCP certified, 7+ years in cybersecurity." }
+    {
+        name: "Alice",
+        role: "Backend Engineer",
+        image: "/placeholderPerson.jpg",
+        qualifications: "MSc Computer Science, 5+ years backend experience, expert in Node.js and .NET."
+    },
+    {
+        name: "Bob",
+        role: "Frontend Engineer",
+        image: "/placeholderPerson.jpg",
+        qualifications: "BSc Interaction Design, React specialist, UI/UX enthusiast."
+    },
+    {
+        name: "Charlie",
+        role: "DevOps Engineer",
+        image: "/placeholderPerson.jpg",
+        qualifications: "Certified AWS Solutions Architect, CI/CD automation expert."
+    },
+    {
+        name: "Diana",
+        role: "Security Specialist",
+        image: "/placeholderPerson.jpg",
+        qualifications: "Ethical hacker, OSCP certified, 7+ years in cybersecurity."
+    }
 
 ];
 const roadmap = [
@@ -106,7 +125,8 @@ const LandingPage: React.FC = () => {
                 isOpen={feedbackOpen}
                 children={undefined}
             />
-            {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} initialView={loginView} />}
+            {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} initialView={loginView} isOpen={loginOpen}
+                                      children={null}/>}
         </div>
     );
 };

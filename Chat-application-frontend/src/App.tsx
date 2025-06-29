@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import {useState} from "react";
 import Header from "./components/Header/Header.tsx";
 import LandingPage from "./pages/LandingPage";
 import ChatPage from "./pages/ChatPage";
@@ -13,7 +13,7 @@ export default function App() {
     return (
         <Router>
             <Header onLoginClick={() => setModalOpen(true)} />
-            {isModalOpen && <LoginModal onClose={() => setModalOpen(false)} />}
+            {isModalOpen && <LoginModal onClose={() => setModalOpen(false)} isOpen={isModalOpen} children={null}/>}
             {/* Wrap routes in a div with an ID so Header can dynamically scan for H2s */}
             <div id="page-content">
                 <Routes>
