@@ -36,7 +36,20 @@ export default function TeamSection({
 
             <div className="team-grid">
                 {team.map((member, idx) => (
-                    <div className="team-card" key={idx} onClick={() => setSelectedMember(member)} style={{ cursor: "pointer" }}>
+                    <div
+                        className="team-card"
+                        key={idx}
+                        onClick={() => setSelectedMember(member)}
+                        tabIndex={0}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                setSelectedMember(member);
+                            }
+                        }}
+                        style={{cursor: "pointer"}}
+                        role="button"
+                        aria-pressed={selectedMember === member}
+                    >
                         <img src={member.image} alt={member.name} className="team-image" />
                         <h3>{member.name}</h3>
                         <p>{member.role}</p>

@@ -1,5 +1,6 @@
-import { BaseModalProps } from './types';
+import {BaseModalProps} from './Types';
 import errorIcon from '../../icons/error.png'; // Place a red X image in assets
+import {BaseModal} from './BaseModal';
 
 interface ErrorModalProps extends Omit<BaseModalProps, 'children'> {
     message: string;
@@ -7,25 +8,23 @@ interface ErrorModalProps extends Omit<BaseModalProps, 'children'> {
     backLabel?: string;
 }
 
-export function ErrorModal({onClose, message, onBack, backLabel = 'Back', title = 'Error', className }: ErrorModalProps) {
+export function ErrorModal({
+                               onClose,
+                               message,
+                               onBack,
+                               backLabel = 'Back',
+                               title = 'Error',
+                               className
+                           }: Readonly<ErrorModalProps>) {
     return (
-        <div>
-            <div className="modal-overlay" onClick={onClose}>
-                <div className={`modal-content ${className || ''}`} onClick={e => e.stopPropagation()}>
-                    <div className="modal-header">
-                        <h2>{title}</h2>
-                        <button className="close-btn" onClick={onClose}>×</button>
-                    </div>
-                    <div className="modal-body" style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                        <img src={errorIcon} alt="Error" style={{ width: 48, height: 48 }} />
-                        <span style={{ fontSize: 18 }}>{message}</span>
-                    </div>
-                    <div className="modal-footer">
-                        <button onClick={onBack} className="modal-submit">{backLabel}</button>
-                    </div>
-                </div>
+        <BaseModal isOpen={true} onClose={onClose} title={title} className={className}>
+            <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
+                <img src={errorIcon} alt="Error" style={{width: 48, height: 48}}/>
+                <span style={{fontSize: 18}}>{message}</span>
             </div>
-        </div>
+            <div className="modal-footer">
+                <button onClick={onBack} className="modal-submit">{backLabel}</button>
+            </div>
+        </BaseModal>
     );
 }
-

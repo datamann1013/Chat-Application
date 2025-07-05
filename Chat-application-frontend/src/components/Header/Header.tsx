@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Button } from '../UI/Button/Button.tsx'
+import {useEffect, useRef, useState} from "react";
+import {Link, useLocation} from "react-router-dom";
+import {Button} from '../UI/Button/Button.tsx'
 import "./Header.css";
 
 interface NavItem {
@@ -118,10 +118,40 @@ export default function Header({ onLoginClick }: Readonly<{ onLoginClick: () => 
                         <div className="dropdown-left">
                             <ul>
                                 {navItems.map((item) => (
-                                    <li key={item.title} onMouseEnter={() => handlePageHover(item)}>
-                                        <Link to={item.link} onClick={() => setDropdownOpen(false)}>
+                                    <li
+                                        key={item.title}
+                                        onMouseEnter={() => handlePageHover(item)}
+                                        style={{cursor: 'pointer'}}
+                                    >
+                                        <button
+                                            id={`nav-link-${item.title}`}
+                                            type="button"
+                                            onClick={() => {
+                                                setDropdownOpen(false);
+                                                window.location.href = item.link;
+                                            }}
+                                            onKeyDown={e => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    setDropdownOpen(false);
+                                                    window.location.href = item.link;
+                                                }
+                                            }}
+                                            aria-label={item.title}
+                                            style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                padding: 0,
+                                                margin: 0,
+                                                cursor: 'pointer',
+                                                width: '100%',
+                                                textAlign: 'left'
+                                            }}
+                                            role="menuitem"
+                                            tabIndex={0}
+                                            onMouseDown={e => e.preventDefault()} // Prevent focus loss
+                                        >
                                             {item.title}
-                                        </Link>
+                                        </button>
                                     </li>
                                 ))}
                             </ul>
@@ -131,7 +161,18 @@ export default function Header({ onLoginClick }: Readonly<{ onLoginClick: () => 
                                 {hoveredPageSections.length > 0 ? (
                                     hoveredPageSections.map((sect) => (
                                         <li key={sect.id}>
-                                            <a href={`#${sect.id}`} onClick={() => setDropdownOpen(false)}>
+                                            <a
+                                                href={`#${sect.id}`}
+                                                role="link"
+                                                tabIndex={0}
+                                                onClick={() => setDropdownOpen(false)}
+                                                onKeyDown={e => {
+                                                    if (e.key === 'Enter' || e.key === ' ') {
+                                                        setDropdownOpen(false);
+                                                        // Let the browser handle anchor navigation
+                                                    }
+                                                }}
+                                            >
                                                 {sect.title}
                                             </a>
                                         </li>

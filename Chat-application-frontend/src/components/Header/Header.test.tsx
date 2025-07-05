@@ -1,5 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import {fireEvent, render, screen} from '@testing-library/react';
+import {MemoryRouter} from 'react-router-dom';
 import Header from './Header';
 
 describe('Header', () => {
@@ -65,8 +65,8 @@ describe('Header', () => {
         // Open the dropdown
         fireEvent.click(screen.getByRole('button', { name: /current page/i }));
 
-        // Hover over the "Landing" nav item
-        const landingNav = screen.getByRole('link', { name: /landing/i });
+        // Hover over the "Landing" nav item (role is 'menuitem', not 'button')
+        const landingNav = screen.getByRole('menuitem', {name: /landing/i});
         fireEvent.mouseEnter(landingNav);
 
         // Now section links should appear
@@ -85,8 +85,8 @@ describe('Header', () => {
         fireEvent.click(toggle);
 
         // Hover to show sections
-        const landingLink = screen.getAllByRole('link', { name: /landing/i })[0];
-        fireEvent.mouseEnter(landingLink);
+        const landingButton = screen.getByRole('menuitem', {name: /landing/i});
+        fireEvent.mouseEnter(landingButton);
 
         // Click a section link
         const sectionLink = screen.getByText("Why Choose Our Platform?");

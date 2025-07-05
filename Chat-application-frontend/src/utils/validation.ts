@@ -1,6 +1,7 @@
 // Email validation
 export function isValidEmail(email: string): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    // Safe, efficient regex for email validation (avoids super-linear backtracking)
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 }
 
 // Required field validation
