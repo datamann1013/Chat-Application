@@ -9,14 +9,14 @@ describe("LoginModal", () => {
     });
 
     it("renders login view by default", () => {
-        render(<LoginModal onClose={onClose} />);
+        render(<LoginModal onClose={onClose} isOpen={false} children={undefined} />);
         expect(screen.getAllByText("Login")[0]).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Username")).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Password")).toBeInTheDocument();
     });
 
     it("switches to signup view", () => {
-        render(<LoginModal onClose={onClose} />);
+        render(<LoginModal onClose={onClose} isOpen={false} children={undefined} />);
         fireEvent.click(screen.getByText("Switch to Sign Up"));
         // Use getAllByText and pick the heading (h2) for "Sign Up"
         const headings = screen.getAllByText("Sign Up");
@@ -30,7 +30,7 @@ describe("LoginModal", () => {
     });
 
     it("switches to reset password view", () => {
-        render(<LoginModal onClose={onClose} />);
+        render(<LoginModal onClose={onClose} isOpen={false} children={undefined} />);
         fireEvent.click(screen.getByText("Forgot Password?"));
         // Use getAllByText and pick the heading (h2) for "Reset Password"
         const headings = screen.getAllByText("Reset Password");
@@ -42,13 +42,13 @@ describe("LoginModal", () => {
     });
 
     it("calls onClose when close button is clicked", () => {
-        render(<LoginModal onClose={onClose} />);
+        render(<LoginModal onClose={onClose} isOpen={false} children={undefined} />);
         fireEvent.click(screen.getByText("×"));
         expect(onClose).toHaveBeenCalled();
     });
 
     it("submits login form", () => {
-        render(<LoginModal onClose={onClose} />);
+        render(<LoginModal onClose={onClose} isOpen={false} children={undefined} />);
         fireEvent.change(screen.getByPlaceholderText("Username"), { target: { value: "user" } });
         fireEvent.change(screen.getByPlaceholderText("Password"), { target: { value: "pass" } });
         // Use getAllByText and pick the button for "Login"
@@ -59,7 +59,7 @@ describe("LoginModal", () => {
     });
 
     it("submits signup form", () => {
-        render(<LoginModal onClose={onClose} />);
+        render(<LoginModal onClose={onClose} isOpen={false} children={undefined} />);
         fireEvent.click(screen.getByText("Switch to Sign Up"));
         fireEvent.change(screen.getByPlaceholderText("Username"), { target: { value: "user" } });
         fireEvent.change(screen.getByPlaceholderText("Your Email"), { target: { value: "test@example.com" } });
@@ -75,7 +75,7 @@ describe("LoginModal", () => {
     });
 
     it("submits reset password form", () => {
-        render(<LoginModal onClose={onClose} />);
+        render(<LoginModal onClose={onClose} isOpen={false} children={undefined} />);
         fireEvent.click(screen.getByText("Forgot Password?"));
         fireEvent.change(screen.getByPlaceholderText("Username or Email"), { target: { value: "user" } });
         // Use getAllByText and pick the button for "Reset Password"

@@ -3,8 +3,8 @@ import TeamSection from "./TeamSection";
 
 describe("TeamSection", () => {
     const team = [
-        { name: "Alice", role: "Developer", image: "alice.png" },
-        { name: "Bob", role: "Designer", image: "bob.png" }
+        { name: "Alice", role: "Developer", image: "alice.png", qualifications: ["BSc CS"] },
+        { name: "Bob", role: "Designer", image: "bob.png", qualifications: ["BSc CS"] }
     ];
     const mission = "Our mission is to build a secure and user-friendly chat platform.";
     const roadmap = [
