@@ -19,7 +19,7 @@ RUN pacman -Syu --noconfirm nginx && \
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Replace default Nginx config (optional, for SPA routing)
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf nginx.conf
 
 EXPOSE 80
 
